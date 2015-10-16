@@ -1,0 +1,32 @@
+
+cd: <path>
+
+  Changes the current directory to the directory specified in <path>. If <path> is not found returns an error. If <path> is null then returns the current path.
+
+clr
+
+  Clears the screen.
+
+dir <directory>
+
+  List the contents of <directory>.
+
+environ
+
+  Lists all environment variables and their values.
+
+echo <comment>
+
+  Displays <comment> followed by a newline.
+
+help
+
+  Displays the help manual.
+
+pause
+
+  Halts operation of the shell until 'Enter' is pressed.
+
+quit
+
+  Quits the shell.
