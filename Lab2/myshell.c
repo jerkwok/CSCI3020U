@@ -18,6 +18,7 @@
 #define BUFFER_LEN 256
 
 // Put global environment variables here
+char *user_output[BUFFER_LEN];
 
 // Define functions declared in myshell.h here
 
@@ -34,6 +35,9 @@ int main(int argc, char *argv[])
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
         // Perform string tokenization to get the command and argument
+        buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
+        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
+        strcpy(command,user_output[0]);
 
         // Check the command and execute the operations for each command
         // cd command -- change the current directory
