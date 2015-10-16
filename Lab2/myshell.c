@@ -46,6 +46,17 @@ int main(int argc, char *argv[])
             // your code here
         }
 
+
+        if (strcmp(command, "echo") == 0)
+        {
+						for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
+								char *pos = user_output[i];
+								while (*pos != '\0') {
+										printf("%c ", *(pos++));
+								}
+						}
+        }
+
         // other commands here...
         
         // quit command -- exit the shell
