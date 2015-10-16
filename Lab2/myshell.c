@@ -45,9 +45,42 @@ int main(int argc, char *argv[])
         {
             // your code here
         }
+        // Check the command and execute the operations for each command
+        // cd command -- change the current directory
+        if (strcmp(command, "cd") == 0)
+        {
+            // your code here
+        }
+        // Clears the terminal by pushing everything up off the screen
+        else if (strcmp(command, "clr"))
+        {
 
-        // other commands here...
-        
+        }
+        // Changes the directory to the directory specified as an arguement
+        else if (strcmp(command, "dir"))
+        {
+
+        }
+        // Displays all environment variables
+        else if (strcmp(command, "environ"))
+        {
+
+        }
+        // Displays the argument passed in the shell
+        else if (strcmp(command, "echo"))
+        {
+
+        }
+        // Displays the manual using more
+        else if (strcmp(command, "help"))
+        {
+
+        }
+        // Pauses the shell until enter is pressed
+        else if (strcmp(command, "pause"))
+        {
+
+        }  
         // quit command -- exit the shell
         else if (strcmp(command, "quit") == 0)
         {
