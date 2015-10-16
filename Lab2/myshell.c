@@ -31,23 +31,42 @@ int main(int argc, char *argv[])
 
     // Parse the commands provided using argc and argv
 
+    //display prompt
+    printf(">");
     // Perform an infinite loop getting command input from users
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
+        //display prompt
+        printf(">");
         // Perform string tokenization to get the command and argument
         buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
+        printf("%s\n",buffer );
         tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
         strcpy(command,user_output[0]);
+        printf("%s\n",buffer );
 
         // Check the command and execute the operations for each command
         // cd command -- change the current directory
         if (strcmp(command, "cd") == 0)
         {
             // your code here
+            char directory[BUFFER_LEN];
+            // strcpy(directory,user_output[1]);
+            strcpy(directory,"..");
+
+            execl("cd", directory);
+            printf("dir:%s\n",directory );
+            system("ls -al");
+            system("pwd");
         }
 
         // other commands here...
         
+        else if (strcmp(command, "clr") == 0)
+        {
+            system("clear");
+        }
+
         // quit command -- exit the shell
         else if (strcmp(command, "quit") == 0)
         {
@@ -68,8 +87,10 @@ void tokenize(char *input, char **tokens, char *delim){
   // const char delim[2] = " ";       //set delimiter
   char *token;                     //placeholder for token
   int i = 0;                       //keep track of array index
-   
-  token = strtok(input, delim);    //get the first token
+  char inputcopy[BUFFER_LEN];
+
+  strcpy(inputcopy,input);
+  token = strtok(inputcopy, delim);    //get the first token
 
   while( token != NULL ){          //walk through other tokens */
     trim(token);
