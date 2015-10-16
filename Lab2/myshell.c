@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         // Displays all environment variables
         else if (strcmp(command, "environ") == 0)
         {
-
+          system("printenv");
         }
         // Displays the argument passed in the shell
         else if (strcmp(command, "echo") == 0)
@@ -82,12 +82,12 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(command, "help") == 0)
         {
-
+          system("more README");
         }
         // Pauses the shell until enter is pressed
         else if (strcmp(command, "pause") == 0)
         {
-
+          fgets(buffer, BUFFER_LEN, stdin);
         }
         // quit command -- exit the shell
         else if (strcmp(command, "quit") == 0)
