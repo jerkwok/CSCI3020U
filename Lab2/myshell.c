@@ -59,16 +59,10 @@ int main(int argc, char *argv[])
             system("ls -al");
             system("pwd");
         }
-        // Check the command and execute the operations for each command
-        // cd command -- change the current directory
-        if (strcmp(command, "cd") == 0)
-        {
-            // your code here
-        }
         // Clears the terminal by pushing everything up off the screen
         else if (strcmp(command, "clr") == 0)
         {
-
+          system("clear");
         }
         // Changes the directory to the directory specified as an arguement
         else if (strcmp(command, "dir") == 0)
@@ -100,7 +94,6 @@ int main(int argc, char *argv[])
         {
             return EXIT_SUCCESS;
         }
-
         // Unsupported command
         else
         {
