@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
         else if (strcmp(command, "echo") == 0)
         {
 
+<<<<<<< HEAD
         }
         // Displays the manual using more
         else if (strcmp(command, "help") == 0)
@@ -89,6 +90,21 @@ int main(int argc, char *argv[])
         {
           fgets(buffer, BUFFER_LEN, stdin);
         }
+=======
+
+        if (strcmp(command, "echo") == 0)
+        {
+						for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
+								char *pos = user_output[i];
+								while (*pos != '\0') {
+										printf("%c ", *(pos++));
+								}
+						}
+        }
+
+        // other commands here...
+        
+>>>>>>> ea
         // quit command -- exit the shell
         else if (strcmp(command, "quit") == 0)
         {
