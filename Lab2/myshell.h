@@ -12,4 +12,8 @@
 // extern keyword such as in the following example:
 // extern void display_help(void);
 
+extern void tokenize (char *input, char **tokens, char *delim);
+extern void trim(char padded_string[]);
+
+
 #endif /* MYSHELL_H_ */

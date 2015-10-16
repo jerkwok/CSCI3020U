@@ -58,3 +58,62 @@ int main(int argc, char *argv[])
     }
     return EXIT_SUCCESS;
 }
+
+void tokenize(char *input, char **tokens, char *delim){
+  
+  // const char delim[2] = " ";       //set delimiter
+  char *token;                     //placeholder for token
+  int i = 0;                       //keep track of array index
+   
+  token = strtok(input, delim);    //get the first token
+
+  while( token != NULL ){          //walk through other tokens */
+    trim(token);
+    tokens[i] = token;             //store current token in array      
+    token = strtok(NULL, delim);   //read next token
+    i++;
+  }
+  tokens[i] = NULL;                //to indicate where the tokens end
+}
+
+void trim(char padded_string[]){
+  //Takes a string and removes any existing whitespace before or after the string
+  //@param padded_string A string with whitespace before and/or after it
+  char trimmed_string[strlen(padded_string)];  //The original string with the 
+  int j = 0;                                   //keeps track of the new trimmed string
+  int a = 0;                                   //start of trimmed string
+  int z = 0;                                   //end of trimmed string
+  
+  //find the index for the first nonwhitespace character
+  for (int i = 0; i < strlen(padded_string); i++){
+    if (padded_string[i] == ' '){
+      a++;                                    //only increment a when a whitespace is found
+    }else{
+      break;                                  //exit for loop once we reach the actual string
+    }    
+  }
+  //a no contains the index for where the string actually begins
+
+  //Find the index for the last ninwhitespace character
+  for (int i = strlen(padded_string) - 1; i >=0; i--){
+    if (padded_string[i] == ' '){
+      z++;                                  //only increment z when a whitespace is found
+    }else{
+      break;                                //exit the for loop once the actual string is found
+    }
+  }
+  //z no contains the number of whitespaces from right to left
+  //get the index of where the actual string ends  
+  z = strlen(padded_string) - z;
+
+  //Now that we have the indicies of where the actual string begins and ends we can copy it
+  //copy only the string without whitespace
+  //i is used to iterate through original string, j is used as index for the trimmed string
+  for (int i = a; i < z; i++){             
+    trimmed_string[j] = padded_string[i];
+    j++;  
+  }
+
+  trimmed_string[j] = 0;                  //indicate where the string should end
+  strcpy(padded_string,trimmed_string);   //copy the actual string into the trimmed one
+}
