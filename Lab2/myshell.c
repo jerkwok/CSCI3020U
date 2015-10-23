@@ -28,20 +28,23 @@ int main(int argc, char *argv[])
     // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
-    char arg[BUFFER_LEN] = { "0" };
-    char *shellvar;
+    char arg[BUFFER_LEN] = { 0 };
+    char *pwdvar;
     char startenv[BUFFER_LEN] = { "shell=" };
 
     //set environment variable
-    shellvar= getenv("PWD");
-    strcat(shellvar,"/myshell");
-    strcat(startenv, shellvar);
+    pwdvar= getenv("PWD");
+    strcat(pwdvar,"/myshell");
+    strcat(startenv, pwdvar);
     putenv(startenv);
 
     // Parse the commands provided using argc and argv
 
     //display prompt
-    printf(">");
+    pwdvar= getenv("PWD");
+    // printf("%s\n",pwdvar );
+    printf("%s$ ",pwdvar);
+
     // Perform an infinite loop getting command input from users
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
@@ -51,6 +54,8 @@ int main(int argc, char *argv[])
         tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
 
         strcpy(command,user_output[0]);
+
+        //if we have an argument, set arg to that argument. If we dont set it to string 0.
         if (user_output[1] != NULL)
     	{
 	        strcpy(arg,user_output[1]);
@@ -87,6 +92,9 @@ int main(int argc, char *argv[])
 	            }
 			}
             system("pwd");
+            pwdvar= getenv("PWD");
+            // strcpy(pwdvar,"$ ");
+            printf("pwdvar:%s\n",pwdvar);
         }
         // Clears the terminal by pushing everything up off the screen
         else if (strcmp(command, "clr") == 0)
@@ -131,12 +139,19 @@ int main(int argc, char *argv[])
             return EXIT_SUCCESS;
         }
         // Unsupported command
+        else if (strcmp(command, "pwd") == 0)
+        {
+            getcwd(pwdvar, BUFFER_LEN);
+            printf("pwdvar:%s\n",pwdvar);
+        }
         else
         {
             fputs("Unsupported command, use help to display the manual\n", stderr);
         }
         //display prompt
-        printf(">");
+	    // strcat(pwdvar,"$ ");
+	    getcwd(pwdvar, BUFFER_LEN);
+	    printf("%s$ ",pwdvar);
     }
     return EXIT_SUCCESS;
 }
