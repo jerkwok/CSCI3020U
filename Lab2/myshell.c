@@ -23,11 +23,20 @@ char *user_output[BUFFER_LEN];
 // Define functions declared in myshell.h here
 
 int main(int argc, char *argv[])
-{
+{	
+
     // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
     char arg[BUFFER_LEN] = { "0" };
+    char *shellvar;
+    char startenv[BUFFER_LEN] = { "shell=" };
+
+    //set environment variable
+    shellvar= getenv("PWD");
+    strcat(shellvar,"/myshell");
+    strcat(startenv, shellvar);
+    putenv(startenv);
 
     // Parse the commands provided using argc and argv
 
@@ -53,26 +62,30 @@ int main(int argc, char *argv[])
         printf("Command:%s\n", command);
 		printf("Arg:%s\n", arg);
     	printf("User Output[1]: %s\n", user_output[1]);
+    	printf("---------------\n");
 
         // Check the command and execute the operations for each command
         // cd command -- change the current directory
         if (strcmp(command, "cd") == 0)
         {
+            // your code here
+
 			// printf("Command:%s\n", command);
 			// printf("Arg:%s\n", arg);
 			// printf("User Output[1]: %s\n", user_output[1]);
+
         	if (strcmp(arg,"0") != 0)
         	{
-    		    char directory[BUFFER_LEN] = { "/" };
-	            // your code here
-	            // strcat(directory,arg);
-	            strcat(arg,directory);
+        		int ret;
+    		    // char directory[BUFFER_LEN] = { "/" };
+	            // strcat(arg,directory);
 	            // printf("%s\n",directory);
-	            chdir(arg);
-	            // system("ls -al");
-        	}else{
-        	}
-
+	            ret = chdir(arg);
+	            if (ret == -1)
+	            {
+	            	printf("No such directory %s\n",arg);
+	            }
+			}
             system("pwd");
         }
         // Clears the terminal by pushing everything up off the screen
@@ -82,8 +95,10 @@ int main(int argc, char *argv[])
         }
         // Changes the directory to the directory specified as an arguement
         else if (strcmp(command, "dir") == 0)
-        {
-
+        {	
+        	strcpy(command,"ls ");
+        	strcat(command, arg);
+	    	system(command);
         }
         // Displays all environment variables
         else if (strcmp(command, "environ") == 0)
@@ -93,12 +108,12 @@ int main(int argc, char *argv[])
         // Displays the argument passed in the shell
         else if (strcmp(command, "echo") == 0)
         {
-						for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
-								char *pos = user_output[i];
-								while (*pos != '\0') {
-										printf("%c ", *(pos++));
-								}
-						}
+			for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
+					char *pos = user_output[i];
+					while (*pos != '\0') {
+							printf("%c ", *(pos++));
+					}
+			}
         }
         // Displays the manual using more
         else if (strcmp(command, "help") == 0)
