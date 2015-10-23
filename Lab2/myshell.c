@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
-    char arg[BUFFER_LEN] = { 0 };
+    char arg[BUFFER_LEN] = { "0" };
 
     // Parse the commands provided using argc and argv
 
@@ -36,27 +36,43 @@ int main(int argc, char *argv[])
     // Perform an infinite loop getting command input from users
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
-        //display prompt
-        printf(">");
         // Perform string tokenization to get the command and argument
         buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
-        printf("%s\n",buffer );
+        // printf("%s\n",buffer );
         tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
+
         strcpy(command,user_output[0]);
-        printf("%s\n",buffer );
+        if (user_output[1] != NULL)
+    	{
+	        strcpy(arg,user_output[1]);
+        } else{
+	        strcpy(arg,"0");
+        }
+
+        printf("Buffer:%s\n",buffer );
+        printf("Command:%s\n", command);
+		printf("Arg:%s\n", arg);
+    	printf("User Output[1]: %s\n", user_output[1]);
 
         // Check the command and execute the operations for each command
         // cd command -- change the current directory
         if (strcmp(command, "cd") == 0)
         {
-            // your code here
-            char directory[BUFFER_LEN];
-            // strcpy(directory,user_output[1]);
-            strcpy(directory,"..");
+			// printf("Command:%s\n", command);
+			// printf("Arg:%s\n", arg);
+			// printf("User Output[1]: %s\n", user_output[1]);
+        	if (strcmp(arg,"0") != 0)
+        	{
+    		    char directory[BUFFER_LEN] = { "/" };
+	            // your code here
+	            // strcat(directory,arg);
+	            strcat(arg,directory);
+	            // printf("%s\n",directory);
+	            chdir(arg);
+	            // system("ls -al");
+        	}else{
+        	}
 
-            execl("cd", directory);
-            printf("dir:%s\n",directory );
-            system("ls -al");
             system("pwd");
         }
         // Clears the terminal by pushing everything up off the screen
@@ -75,7 +91,7 @@ int main(int argc, char *argv[])
           system("printenv");
         }
         // Displays the argument passed in the shell
-        if (strcmp(command, "echo") == 0)
+        else if (strcmp(command, "echo") == 0)
         {
 						for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
 								char *pos = user_output[i];
@@ -104,6 +120,8 @@ int main(int argc, char *argv[])
         {
             fputs("Unsupported command, use help to display the manual\n", stderr);
         }
+        //display prompt
+        printf(">");
     }
     return EXIT_SUCCESS;
 }
