@@ -28,44 +28,59 @@ int main(int argc, char *argv[])
     // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
     char command[BUFFER_LEN] = { 0 };
-    char arg[BUFFER_LEN] = { 0 };
+    char arg[20][BUFFER_LEN] = { 0 };
     char *pwdvar;
     char startenv[BUFFER_LEN] = { "shell=" };
 
     //set environment variable
     pwdvar= getenv("PWD");
+    //display prompt
+    printf("%s$ ",pwdvar);
     strcat(pwdvar,"/myshell");
     strcat(startenv, pwdvar);
     putenv(startenv);
 
+    printf("%d\n",argc );
+	FILE *stream;
+
+    if (argc == 1){
+    	stream = stdin;
+    }else if (argc == 2){
+    	stream = fopen(argv[1],"r");
+    }
+
     // Parse the commands provided using argc and argv
 
-    //display prompt
-    pwdvar= getenv("PWD");
-    // printf("%s\n",pwdvar );
-    printf("%s$ ",pwdvar);
-
     // Perform an infinite loop getting command input from users
-    while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
+    while (fgets(buffer, BUFFER_LEN, stream) != NULL)
     {
         // Perform string tokenization to get the command and argument
         buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
         // printf("%s\n",buffer );
         tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
-
         strcpy(command,user_output[0]);
 
         //if we have an argument, set arg to that argument. If we dont set it to string 0.
-        if (user_output[1] != NULL)
-    	{
-	        strcpy(arg,user_output[1]);
-        } else{
-	        strcpy(arg,"0");
+        int counter = 1;
+        strcpy(arg[1],"0");
+        // strcpy(arg[1],user_output[1]);
+        printf("UO0: %s\n",user_output[0]);
+        printf("UO1: %s\n",user_output[1]);
+        //copy the arguments into a array
+        while(1)
+        {
+        	if (user_output[counter] != NULL){
+		        strcpy(arg[counter],user_output[counter]);
+		        printf("A%d: %s\n", counter, arg[counter]);
+		        counter++;
+        	}else{
+        		break;
+        	}
         }
 
         printf("Buffer:%s\n",buffer );
         printf("Command:%s\n", command);
-		printf("Arg:%s\n", arg);
+		printf("Arg:%s\n", arg[1]);
     	printf("User Output[1]: %s\n", user_output[1]);
     	printf("---------------\n");
 
@@ -79,22 +94,22 @@ int main(int argc, char *argv[])
 			// printf("Arg:%s\n", arg);
 			// printf("User Output[1]: %s\n", user_output[1]);
 
-        	if (strcmp(arg,"0") != 0)
+        	if (strcmp(arg[1],"0") != 0)
         	{
         		int ret;
     		    // char directory[BUFFER_LEN] = { "/" };
 	            // strcat(arg,directory);
 	            // printf("%s\n",directory);
-	            ret = chdir(arg);
+	            ret = chdir(arg[1]);
 	            if (ret == -1)
 	            {
-	            	printf("No such directory %s\n",arg);
+	            	printf("No such directory %s\n",arg[1]);
 	            }
 			}
             system("pwd");
             pwdvar= getenv("PWD");
             // strcpy(pwdvar,"$ ");
-            printf("pwdvar:%s\n",pwdvar);
+            // printf("pwdvar:%s\n",pwdvar);
         }
         // Clears the terminal by pushing everything up off the screen
         else if (strcmp(command, "clr") == 0)
@@ -104,8 +119,13 @@ int main(int argc, char *argv[])
         // Changes the directory to the directory specified as an arguement
         else if (strcmp(command, "dir") == 0)
         {	
-        	strcpy(command,"ls ");
-        	strcat(command, arg);
+        	strcpy(command,"ls");
+        	if (strcmp(arg[1],"0") != 0){
+	        	strcat(command, " ");
+	        	strcat(command, arg[1]);
+        	}
+        	printf("Command:%s\n",command );
+        	printf("arg[1]:%s\n",arg[1] );
 	    	system(command);
         }
         // Displays all environment variables
@@ -116,12 +136,26 @@ int main(int argc, char *argv[])
         // Displays the argument passed in the shell
         else if (strcmp(command, "echo") == 0)
         {
-			for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
-					char *pos = user_output[i];
-					while (*pos != '\0') {
-							printf("%c ", *(pos++));
-					}
-			}
+
+			// for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
+			// 		char *pos = user_output[i];
+			// 		while (*pos != '\0') {
+			// 				printf("%c ", *(pos++));
+			// 		}
+			// }
+			counter = 1;
+			printf("arg1:%s\n",user_output[1]);
+			printf("arg2:%s\n",user_output[2]);
+			while(1)
+	        {
+	        	if (user_output[counter] != NULL){
+	        		printf("%s\n",user_output[counter]);
+			        counter++;
+	        	}else{
+	        		break;
+	        	}
+	        }
+
         }
         // Displays the manual using more
         else if (strcmp(command, "help") == 0)
@@ -138,12 +172,12 @@ int main(int argc, char *argv[])
         {
             return EXIT_SUCCESS;
         }
-        // Unsupported command
         else if (strcmp(command, "pwd") == 0)
         {
-            getcwd(pwdvar, BUFFER_LEN);
-            printf("pwdvar:%s\n",pwdvar);
+            // getcwd(pwdvar, BUFFER_LEN);
+            // printf("pwdvar:%s\n",pwdvar);
         }
+        // Unsupported command
         else
         {
             fputs("Unsupported command, use help to display the manual\n", stderr);
