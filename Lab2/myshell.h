@@ -13,6 +13,7 @@
 // extern void display_help(void);
 
 extern void tokenize (char *input, char **tokens, char *delim);
+extern char** tokenize2(char *input, char *delim);
 extern void trim(char padded_string[]);
 
 

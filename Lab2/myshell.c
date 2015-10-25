@@ -18,7 +18,7 @@
 #define BUFFER_LEN 256
 
 // Put global environment variables here
-char *user_output[BUFFER_LEN];
+char **user_output;//[BUFFER_LEN];
 
 // Define functions declared in myshell.h here
 
@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
         // Perform string tokenization to get the command and argument
         buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
         // printf("%s\n",buffer );
-        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
+	//        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
+	user_output = tokenize2(buffer, " ");
         strcpy(command,user_output[0]);
 
         //if we have an argument, set arg to that argument. If we dont set it to string 0.
@@ -180,7 +181,37 @@ int main(int argc, char *argv[])
         // Unsupported command
         else
         {
-            fputs("Unsupported command, use help to display the manual\n", stderr);
+	  //Assume that any other command is an executable
+
+	  //set the parent environment variable
+	  char parent_env[BUFFER_LEN];
+	  strcpy(parent_env,"parent=");
+	  strcat(parent_env,getenv("PWD"));
+	  printf("%s\n",parent_env);
+	  putenv(parent_env);
+
+	  pid_t pid = fork();
+	  if(pid == 0){
+	    //child process
+	    printf("child process:\n");
+	    char exec_command[BUFFER_LEN];
+	    strcpy(exec_command,"/bin/"); 
+	    strcat(exec_command,command);
+	    //	    printf("%s\n",command);
+	    //printf("%s\n",arg[1]);
+	    printf("%s\n",exec_command);	    
+	    //	    printf("%s\n",user_output[0]);
+	    //	    printf("%s\n",user_output[1]);
+	    execl(exec_command,command,arg[1],(char *)0);
+	    //execv(user_output[0],(char *[])user_output);
+	  }else if(pid > 0){
+	    printf("parent process:\n");
+	    wait(NULL);//wait for child to terminate
+	    //parent process
+	  }else{
+	    printf("fork failed\n");
+	    fputs("Unsupported command, use help to display the manual\n", stderr);
+	  }	  
         }
         //display prompt
 	    // strcat(pwdvar,"$ ");
@@ -207,6 +238,50 @@ void tokenize(char *input, char **tokens, char *delim){
     i++;
   }
   tokens[i] = NULL;                //to indicate where the tokens end
+}
+
+char** tokenize2(char *input, char *delim)
+{
+  //takes an input string with some delimiter and returns an array
+  //with all the tokens split by the provided delimiter
+  
+  //Sample usage:
+  //char buffer[] = "a b c";
+  //char **user_output;
+  //user_output = tokenize(buffer, " ");
+  
+  char** tokens = 0;
+  size_t num_elements = 0;
+  char* input_cpy = input;
+  size_t tokens_index  = 0; //keep tracks of the tokens offset when adding them
+
+  //iterate through the intput and count # of delims
+  while (*input_cpy != NULL)
+    {
+      if (*delim == *input_cpy)
+        {
+	  num_elements++;
+        }
+      input_cpy++;
+    }
+  
+  num_elements++; //for last object
+  num_elements++; //for null terminating value
+  //  printf("%d\n",num_elements);
+
+  //create enough memory for all the elements
+  tokens = malloc(sizeof(char*) * num_elements);
+ 
+  char* token = strtok(input, delim);
+  while (token){
+    //store the token in the tokens array
+    *(tokens + tokens_index++) = strdup(token);   //strdup duplicates the string
+    token = strtok(0, delim); //next token
+  }
+  //finally add null value at the end
+  *(tokens + tokens_index) = 0;
+
+  return tokens;
 }
 
 void trim(char padded_string[]){
