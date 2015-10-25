@@ -1,3 +1,6 @@
+clr
 echo hello world
-echo one two
-echo three four
+echo TEST1 TEST2 TEST3
+cd ..
+cd
+dir
