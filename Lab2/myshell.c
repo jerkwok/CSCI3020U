@@ -30,17 +30,19 @@ int main(int argc, char *argv[])
     char command[BUFFER_LEN] = { 0 };
     char arg[20][BUFFER_LEN] = { 0 };
     char *pwdvar;
+    char rmdvar[BUFFER_LEN] = { 0 };
     char startenv[BUFFER_LEN] = { "shell=" };
 
     //set environment variable
     pwdvar= getenv("PWD");
     //display prompt
     printf("%s$ ",pwdvar);
+    strcpy(rmdvar,pwdvar);
     strcat(pwdvar,"/myshell");
     strcat(startenv, pwdvar);
     putenv(startenv);
 
-    printf("%d\n",argc );
+    // printf("%d\n",argc );
 	FILE *stream;
 
     if (argc == 1){
@@ -57,8 +59,8 @@ int main(int argc, char *argv[])
         // Perform string tokenization to get the command and argument
         buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
         // printf("%s\n",buffer );
-	//        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
-	user_output = tokenize2(buffer, " ");
+		//        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
+		user_output = tokenize2(buffer, " ");
         strcpy(command,user_output[0]);
 
         //if we have an argument, set arg to that argument. If we dont set it to string 0.
@@ -150,18 +152,23 @@ int main(int argc, char *argv[])
 			while(1)
 	        {
 	        	if (user_output[counter] != NULL){
-	        		printf("%s\n",user_output[counter]);
+	        		printf("%s ",user_output[counter]);
 			        counter++;
 	        	}else{
 	        		break;
 	        	}
 	        }
-
+	        printf("\n");
         }
         // Displays the manual using more
         else if (strcmp(command, "help") == 0)
         {
-          system("more README");
+          printf("%s\n", rmdvar );
+      		strcpy(startenv,"more ");
+          strcat(startenv,rmdvar);
+      		strcat(startenv,"/README");
+      		printf("%s\n",startenv );
+  	      system(startenv);
         }
         // Pauses the shell until enter is pressed
         else if (strcmp(command, "pause") == 0)
