@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
     // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
-    char arg[20][BUFFER_LEN] = { 0 };
+    char arg[20][BUFFER_LEN] = { };
     char *pwdvar;
     char rmdvar[BUFFER_LEN] = { 0 };
     char startenv[BUFFER_LEN] = { "shell=" };
@@ -43,12 +43,12 @@ int main(int argc, char *argv[])
 
 
     // printf("%d\n",argc );
-  FILE *stream;
+    FILE *stream;
 
-    if (argc == 1){
-      stream = stdin;
-    }else if (argc == 2){
+      if (argc == 2){
       stream = fopen(argv[1],"r");
+    }else{
+      stream = stdin;
     }
 
     // Parse the commands provided using argc and argv
