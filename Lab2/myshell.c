@@ -41,15 +41,23 @@ int main(int argc, char *argv[])
     strcat(startenv, pwdvar);
     putenv(startenv);
 
+    //need to implement input and output
+    //iterate through the arguments
+    //if one is "<" then the next argument will replace stdin
+    //if one is ">" then the next argument will replace stdout
 
+
+    //commands from file I/O.
     // printf("%d\n",argc );
     FILE *stream;
 
-      if (argc == 2){
+    if (argc == 2){
       stream = fopen(argv[1],"r");
     }else{
       stream = stdin;
     }
+
+
 
     // Parse the commands provided using argc and argv
 
