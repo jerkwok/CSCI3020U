@@ -23,7 +23,7 @@ char **user_output;//[BUFFER_LEN];
 // Define functions declared in myshell.h here
 
 int main(int argc, char *argv[])
-{ 
+{
 
     // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
@@ -45,24 +45,40 @@ int main(int argc, char *argv[])
     //iterate through the arguments
     //if one is "<" then the next argument will replace stdin
     //if one is ">" then the next argument will replace stdout
+    //if one is ">>" then the next arguement will replace stdout but will be appended to
 
+    FILE *input_stream = stdin;
+    FILE *output_stream = stdout;
+
+    if (argc == 2)
+      input_stream = fopen(argv[1],"r");
+
+    for(int i = 0; i < argc; i++)
+    {
+
+      if(strcmp(argv[i], "<") == 0)
+      {
+        input_stream = fopen(argv[i+1], "r");
+      }
+
+      if(strcmp(argv[i], ">") == 0)
+      {
+        output_stream = fopen(argv[i+1], "w");
+      }
+
+      if(strcmp(argv[i], ">>") == 0)
+      {
+        output_stream = fopen(argv[i+1], "a");
+      }
+    }
 
     //commands from file I/O.
     // printf("%d\n",argc );
-    FILE *stream;
-
-    if (argc == 2){
-      stream = fopen(argv[1],"r");
-    }else{
-      stream = stdin;
-    }
-
-
 
     // Parse the commands provided using argc and argv
 
     // Perform an infinite loop getting command input from users
-    while (fgets(buffer, BUFFER_LEN, stream) != NULL)
+    while (fgets(buffer, BUFFER_LEN, input_stream) != NULL)
     {
       // Perform string tokenization to get the command and argument
       buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
@@ -108,13 +124,13 @@ int main(int argc, char *argv[])
           ret = chdir(arg[1]);
           if (ret == -1)
           {
-            printf("No such directory %s\n",arg[1]);
+            fprintf(output_stream, "No such directory %s\n",arg[1]);
           }
          }
-          
+
           // system("pwd");
           pwdvar = getcwd(buffer, BUFFER_LEN);
-          printf("%s\n",pwdvar );
+          fprintf(stdout, "%s\n",pwdvar );
           // strcpy(pwdvar,"$ ");
           // printf("pwdvar:%s\n",pwdvar);
         }
@@ -125,7 +141,7 @@ int main(int argc, char *argv[])
         }
         // Changes the directory to the directory specified as an arguement
         else if (strcmp(user_output[0], "dir") == 0)
-        { 
+        {
           // strcpy(user_output[0],"ls");
           if (strcmp(arg[1],"0") != 0){
             strcat(user_output[0], " ");
@@ -156,7 +172,7 @@ int main(int argc, char *argv[])
           while(1)
           {
               if (user_output[counter] != NULL){
-                printf("%s ",user_output[counter]);
+                fprintf(output_stream, "%s ",user_output[counter]);
                 counter++;
               }else{
               break;
@@ -198,36 +214,36 @@ int main(int argc, char *argv[])
           char parent_env[BUFFER_LEN];
           strcpy(parent_env,"parent=");
           strcat(parent_env,getenv("PWD"));
-          printf("%s\n",parent_env);
+          fprintf(output_stream, "%s\n",parent_env);
           putenv(parent_env);
 
           pid_t pid = fork();
           if(pid == 0){
             //child process
-            printf("child process:\n");
+            fprintf(output_stream, "child process:\n");
             char exec_command[BUFFER_LEN];
-            strcpy(exec_command,"/bin/"); 
+            strcpy(exec_command,"/bin/");
             strcat(exec_command,user_output[0]);
             //      printf("%s\n",command);
             //printf("%s\n",arg[1]);
-            printf("%s\n",exec_command);      
+            fprintf(output_stream, "%s\n",exec_command);
             //      printf("%s\n",user_output[0]);
             //      printf("%s\n",user_output[1]);
             execl(exec_command,user_output[0],arg[1],(char *)0);
             //execv(user_output[0],(char *[])user_output);
           }else if(pid > 0){
-            printf("parent process:\n");
+            fprintf(output_stream, "parent process:\n");
             wait(NULL);//wait for child to terminate
             //parent process
           }else{
-            printf("fork failed\n");
-            fputs("Unsupported command, use help to display the manual\n", stderr);
-          }   
+            fprintf(output_stream, "fork failed\n");
+            fputs("Unsupported command, use help to display the manual\n", output_stream);
+          }
         }
         //display prompt
       // strcat(pwdvar,"$ ");
       getcwd(pwdvar, BUFFER_LEN);
-      printf("%s$ ",pwdvar);
+      fprintf(stdout, "%s$ ",pwdvar);
     }
     return EXIT_SUCCESS;
 }
@@ -255,12 +271,12 @@ char** tokenize2(char *input, char *delim)
 {
   //takes an input string with some delimiter and returns an array
   //with all the tokens split by the provided delimiter
-  
+
   //Sample usage:
   //char buffer[] = "a b c";
   //char **user_output;
   //user_output = tokenize(buffer, " ");
-  
+
   char** tokens = 0;
   size_t num_elements = 0;
   char* input_cpy = input;
@@ -275,14 +291,14 @@ char** tokenize2(char *input, char *delim)
         }
       input_cpy++;
     }
-  
+
   num_elements++; //for last object
   num_elements++; //for null terminating value
   //  printf("%d\n",num_elements);
 
   //create enough memory for all the elements
   tokens = malloc(sizeof(char*) * num_elements);
- 
+
   char* token = strtok(input, delim);
   while (token){
     //store the token in the tokens array
