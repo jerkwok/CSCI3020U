@@ -224,6 +224,7 @@ int main(int argc, char *argv[])
           char parent_env[BUFFER_LEN];
           strcpy(parent_env,"parent=");
           strcat(parent_env,getenv("PWD"));
+      	  strcat(parent_env,"/myshell");
           putenv(parent_env);
 
           pid_t pid = fork();
