@@ -121,14 +121,11 @@ int main(int argc, char *argv[])
          }
 
           pwdvar = getcwd(buffer, BUFFER_LEN);
-          // fprintf(stdout, "%s\n",pwdvar );
         }
         // Clears the terminal by pushing everything up off the screen
         else if (strcmp(user_output[0], "clr") == 0)
         {
           printf("\033[H\033[2J");
-          // printf("TEST\n");
-          // clear_terminal();
         }
 
         // Print the contents of the current directory.
@@ -166,22 +163,13 @@ int main(int argc, char *argv[])
             printf("%s\n",environ[i] );
             i++;
           }
-          // system("printenv");
         }
         // Displays the argument passed in the shell
         else if (strcmp(user_output[0], "echo") == 0)
         {
 
-          // for (int i = 0; i < sizeof(user_output)/sizeof(user_output[0]); i++) {
-          //    char *pos = user_output[i];
-          //    while (*pos != '\0') {
-          //        printf("%c ", *(pos++));
-          //    }
-          // }
 
           counter = 1;
-          // printf("arg1:%s\n",user_output[1]);
-          // printf("arg2:%s\n",user_output[2]);
           while(1)
           {
               if (user_output[counter] != NULL){
@@ -284,7 +272,7 @@ char** tokenize2(char *input, char *delim){
 
   char** tokens = 0;
   size_t num_elements = 0;
-  size_t tokens_index  = 0; //keep tracks of the tokens offset when adding them
+  size_t tokens_index  = 0; //keep tracks of the  tokens offset when adding them
   char* input_cpy = input;
   //char* input_cpy2 = input;
   char *input_cpy2 = malloc(1 + strlen(input)); //used with strtok
@@ -362,3 +350,4 @@ void trim(char padded_string[]){
   trimmed_string[j] = 0;                  //indicate where the string should end
   strcpy(padded_string,trimmed_string);   //copy the actual string into the trimmed one
 }
+
