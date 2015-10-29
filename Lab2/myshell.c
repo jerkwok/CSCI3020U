@@ -194,12 +194,26 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-          // printf("%s\n", rmdvar );
-          strcpy(startenv,"more ");
-          strcat(startenv,rmdvar);
-          strcat(startenv,"/README");
+          printf("%s\n", rmdvar );
+          // strcpy(startenv,"more ");
+          // strcat(startenv,rmdvar);
+          strcat(rmdvar,"/README");
           // printf("%s\n",startenv );
-          system(startenv);
+          // system(startenv);
+
+          char currLine[256];
+
+          FILE *fp;
+          fp =fopen(rmdvar, "r");
+
+          if (fp != NULL){
+            while(fgets(currLine,256,fp) != NULL){
+              printf("%s\n",currLine );
+            }
+            printf("\n");
+          }
+
+          fclose(fp);
         }
         // Pauses the shell until enter is pressed
         else if (strcmp(user_output[0], "pause") == 0)
