@@ -42,31 +42,26 @@ int main(int argc, char *argv[])
     strcat(startenv, pwdvar);
     putenv(startenv);
 
-    //need to implement input and output
-    //iterate through the arguments
-    //if one is "<" then the next argument will replace stdin
-    //if one is ">" then the next argument will replace stdout
-    //if one is ">>" then the next arguement will replace stdout but will be appended to
-
     FILE *input_stream = stdin;
     FILE *output_stream = stdout;
 
     if (argc == 2)
       input_stream = fopen(argv[1],"r");
 
+    //iterate through the arguments
     for(int i = 0; i < argc; i++)
     {
-
+      //if one is "<" then the next argument will replace stdin
       if(strcmp(argv[i], "<") == 0)
       {
         input_stream = fopen(argv[i+1], "r");
       }
-
+      //if one is ">" then the next argument will replace stdout
       if(strcmp(argv[i], ">") == 0)
       {
         output_stream = fopen(argv[i+1], "w");
       }
-
+      //if one is ">>" then the next arguement will replace stdout but will be appended to
       if(strcmp(argv[i], ">>") == 0)
       {
         output_stream = fopen(argv[i+1], "a");
@@ -85,7 +80,7 @@ int main(int argc, char *argv[])
       buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
       // printf("%s\n",buffer );
       //        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
-      printf("%s\n",buffer );
+      // printf("%s\n",buffer );
       user_output = tokenize2(buffer, " ");
 
       //if we have an argument, set arg to that argument. If we dont set it to string 0.
@@ -114,11 +109,6 @@ int main(int argc, char *argv[])
       // cd command -- change the current directory
       if (strcmp(user_output[0], "cd") == 0)
       {
-          // your code here
-
-      // printf("Command:%s\n", command);
-      // printf("Arg:%s\n", arg);
-      // printf("User Output[1]: %s\n", user_output[1]);
 
         if (strcmp(arg[1],"0") != 0)
         {
@@ -130,16 +120,15 @@ int main(int argc, char *argv[])
           }
          }
 
-          // system("pwd");
           pwdvar = getcwd(buffer, BUFFER_LEN);
-          fprintf(stdout, "%s\n",pwdvar );
-          // strcpy(pwdvar,"$ ");
-          // printf("pwdvar:%s\n",pwdvar);
+          // fprintf(stdout, "%s\n",pwdvar );
         }
         // Clears the terminal by pushing everything up off the screen
         else if (strcmp(user_output[0], "clr") == 0)
         {
           printf("\033[H\033[2J");
+          // printf("TEST\n");
+          // clear_terminal();
         }
 
         // Print the contents of the current directory.
@@ -244,12 +233,7 @@ int main(int argc, char *argv[])
         {
             return EXIT_SUCCESS;
         }
-        // else if (strcmp(command, "pwd") == 0)
-        // {
-        //     getcwd(pwdvar, BUFFER_LEN);
-        //     printf("pwdvar:%s\n",pwdvar);
-        // }
-        // Unsupported command
+
         else
         {
           //Assume that any other command is an executable
@@ -258,11 +242,12 @@ int main(int argc, char *argv[])
           char parent_env[BUFFER_LEN];
           strcpy(parent_env,"parent=");
           strcat(parent_env,getenv("PWD"));
-          fprintf(output_stream, "%s\n",parent_env);
+          // fprintf(output_stream, "%s\n",parent_env);
           putenv(parent_env);
 
           pid_t pid = fork();
           if(pid == 0){
+
 	    //	    system(buffer);
             execvp(user_output[0],user_output);
 	    exit(0);
@@ -274,8 +259,6 @@ int main(int argc, char *argv[])
             fputs("Unsupported command, use help to display the manual\n", output_stream);
           }
         }
-        //display prompt
-      // strcat(pwdvar,"$ ");
       getcwd(pwdvar, BUFFER_LEN);
       fprintf(stdout, "%s$ ",pwdvar);
     }
