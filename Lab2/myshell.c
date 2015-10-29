@@ -1,7 +1,7 @@
 /*
  * MyShell Project for SOFE 3950U / CSCI 3020U: Operating Systems
  *
- * Copyright (C) 2015, <GROUP MEMBERS>
+ * Copyright (C) 2015, Elias Amal, Jeremy Kwok, Alexander Mihaylov, Taylor Smith
  * All rights reserved.
  *
  */
@@ -18,35 +18,45 @@
 #define BUFFER_LEN 256
 
 // Put global environment variables here
-char **user_output;//[BUFFER_LEN];
+char **user_output;
 
 // Define functions declared in myshell.h here
 
 int main(int argc, char *argv[])
 {
 
-    // Input buffer and and commands
+    // Input buffer commands and other variables
     char buffer[BUFFER_LEN] = { 0 };
     char arg[20][BUFFER_LEN] = { };
     char *pwdvar;
     char rmdvar[BUFFER_LEN] = { 0 };
     char startenv[BUFFER_LEN] = { "shell=" };
+    int inputcommands = 0;
 
     //set environment variable
     pwdvar = getcwd(buffer, BUFFER_LEN);
+
     //display prompt
     printf("%s$ ",pwdvar);
+
+    //set the readme variable
     strcpy(rmdvar,pwdvar);
     strcat(rmdvar,"/README");
+
+    //set environment variable
     strcat(pwdvar,"/myshell");
     strcat(startenv, pwdvar);
     putenv(startenv);
 
+    //check for input output flags
     FILE *input_stream = stdin;
     FILE *output_stream = stdout;
 
-    if (argc == 2)
+    //if there are 2 args then the second one is read
+    if (argc == 2){
       input_stream = fopen(argv[1],"r");
+      inputcommands = 1;
+    }
 
     //iterate through the arguments
     for(int i = 0; i < argc; i++)
@@ -68,9 +78,6 @@ int main(int argc, char *argv[])
       }
     }
 
-    //commands from file I/O.
-    // printf("%d\n",argc );
-
     // Parse the commands provided using argc and argv
 
     // Perform an infinite loop getting command input from users
@@ -78,38 +85,27 @@ int main(int argc, char *argv[])
     {
       // Perform string tokenization to get the command and argument
       buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
-      // printf("%s\n",buffer );
-      //        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
-      // printf("%s\n",buffer );
       user_output = tokenize2(buffer, " ");
 
       //if we have an argument, set arg to that argument. If we dont set it to string 0.
       int counter = 1;
       strcpy(arg[1],"0");
-      // printf("UO0: %s\n",user_output[0]);
-      // printf("UO1: %s\n",user_output[1]);
+
       //copy the arguments into a array
       while(1)
       {
         if (user_output[counter] != NULL){
           strcpy(arg[counter],user_output[counter]);
-          // printf("A%d: %s\n", counter, arg[counter]);
           counter++;
         }else{
           break;
         }
       }
 
-      // printf("Buffer:%s\n",buffer );
-      // printf("Arg:%s\n", arg[1]);
-      // printf("User Output[1]: %s\n", user_output[1]);
-      // printf("---------------\n");
-
       // Check the command and execute the operations for each command
       // cd command -- change the current directory
       if (strcmp(user_output[0], "cd") == 0)
       {
-
         if (strcmp(arg[1],"0") != 0)
         {
           int ret;
@@ -179,7 +175,6 @@ int main(int argc, char *argv[])
         else if (strcmp(user_output[0], "echo") == 0)
         {
 
-
           counter = 1;
           while(1)
           {
@@ -195,7 +190,6 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-          // display_help(rmdvar);
             printf("%s\n", rmdvar);
             char currLine[256];
 
@@ -230,17 +224,15 @@ int main(int argc, char *argv[])
           char parent_env[BUFFER_LEN];
           strcpy(parent_env,"parent=");
           strcat(parent_env,getenv("PWD"));
-          // fprintf(output_stream, "%s\n",parent_env);
           putenv(parent_env);
 
           pid_t pid = fork();
           if(pid == 0){
 
-	    //	    system(buffer);
             execvp(user_output[0],user_output);
-	    exit(0);
+	           exit(0);
           }else if(pid > 0){
-            wait(NULL);//wait for child to terminate
+            wait(NULL);//wait for child to terminate  
             //parent process
           }else{
             fprintf(output_stream, "fork failed\n");
@@ -248,7 +240,9 @@ int main(int argc, char *argv[])
           }
         }
       getcwd(pwdvar, BUFFER_LEN);
-      fprintf(stdout, "%s$ ",pwdvar);
+      if (inputcommands == 0){
+        fprintf(stdout, "%s$ ",pwdvar);
+      }
     }
     return EXIT_SUCCESS;
 }
@@ -285,11 +279,9 @@ char** tokenize2(char *input, char *delim){
   size_t num_elements = 0;
   size_t tokens_index  = 0; //keep tracks of the  tokens offset when adding them
   char* input_cpy = input;
-  //char* input_cpy2 = input;
   char *input_cpy2 = malloc(1 + strlen(input)); //used with strtok
   if (input_cpy2){
     strcpy(input_cpy2, input);
-    //    printf("Successfully copied input:%s\n",input_cpy2);
   }else{
     printf("error copying input\n");
   }
@@ -303,11 +295,9 @@ char** tokenize2(char *input, char *delim){
 
   num_elements++; //for last object
   num_elements++; //for null terminating value
-  //  printf("%d\n",num_elements);
 
   //create enough memory for all the elements
   tokens = malloc(sizeof(char*) * num_elements);
-  //  printf("1%s\n",input);
   char* token = strtok(input_cpy2, delim);
   while (token){
     //store the token in the tokens array
@@ -316,7 +306,6 @@ char** tokenize2(char *input, char *delim){
   }
   //finally add null value at the end
   *(tokens + tokens_index) = 0;
-  //  printf("2%s\n",input);
   return tokens;
 }
 
