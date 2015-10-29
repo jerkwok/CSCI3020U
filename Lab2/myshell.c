@@ -131,9 +131,20 @@ int main(int argc, char *argv[])
         // Print the contents of the current directory.
         else if (strcmp(user_output[0], "dir") == 0)
         {
-          // Open current directory.
-          DIR* directory = opendir(".");
+
+          DIR* directory;
           struct dirent * directory_pointer;
+
+          // Open specified directory, if no director is specified opens the
+          // curent directory.
+          if(user_output[1] != NULL)
+          {
+            directory = opendir(user_output[1]);
+          }
+          else
+          {
+            directory = opendir(".");
+          }
 
           // Make sure the current directory exists.
           if(directory != NULL)
@@ -147,7 +158,7 @@ int main(int argc, char *argv[])
           }
           else
           {
-            fprintf(output_stream, "Error: Couldn't open current directory");
+            fprintf(output_stream, "Error: Couldn't open specified directory\n");
           }
         }
 
