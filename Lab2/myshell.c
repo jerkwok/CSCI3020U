@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
           struct dirent * directory_pointer;
 
           // Open specified directory, if no director is specified opens the
-          // curent director.
+          // curent directory.
           if(user_output[1] != NULL)
           {
             directory = opendir(user_output[1]);
