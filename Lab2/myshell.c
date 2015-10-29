@@ -252,22 +252,10 @@ int main(int argc, char *argv[])
 
           pid_t pid = fork();
           if(pid == 0){
-            printf("buffer:%s\n",buffer);
-            system(buffer);
-            //child process
-            //fprintf(output_stream, "child process:\n");
-            //char exec_command[BUFFER_LEN];
-            //strcpy(exec_command,"/bin/");
-            //strcat(exec_command,user_output[0]);
-            //      printf("%s\n",command);
-            //printf("%s\n",arg[1]);
-            //fprintf(output_stream, "%s\n",exec_command);
-            //      printf("%s\n",user_output[0]);
-            //      printf("%s\n",user_output[1]);
-            //execl(exec_command,user_output[0],arg[1],(char *)0);
-            //execv(user_output[0],(char *[])user_output);
+	    //	    system(buffer);
+            execvp(user_output[0],user_output);
+	    exit(0);
           }else if(pid > 0){
-            fprintf(output_stream, "parent process:\n");
             wait(NULL);//wait for child to terminate
             //parent process
           }else{
