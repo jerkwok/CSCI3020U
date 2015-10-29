@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     //display prompt
     printf("%s$ ",pwdvar);
     strcpy(rmdvar,pwdvar);
+    strcat(rmdvar,"/README");
     strcat(pwdvar,"/myshell");
     strcat(startenv, pwdvar);
     putenv(startenv);
@@ -138,17 +139,19 @@ int main(int argc, char *argv[])
         // Clears the terminal by pushing everything up off the screen
         else if (strcmp(user_output[0], "clr") == 0)
         {
-          printf("\033[J"  );
-          // system("clear");
+          printf("\033[J");
         }
         // Changes the directory to the directory specified as an arguement
         else if (strcmp(user_output[0], "dir") == 0)
         {
           // strcpy(user_output[0],"ls");
+
+          //if the first argument ISNT empty
           if (strcmp(arg[1],"0") != 0){
             strcat(user_output[0], " ");
             strcat(user_output[0], arg[1]);
           }
+
           // printf("arg[1]:%s\n",arg[1] );
           system(user_output[0]);
         }
@@ -197,7 +200,6 @@ int main(int argc, char *argv[])
           printf("%s\n", rmdvar );
           // strcpy(startenv,"more ");
           // strcat(startenv,rmdvar);
-          strcat(rmdvar,"/README");
           // printf("%s\n",startenv );
           // system(startenv);
 
