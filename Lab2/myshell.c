@@ -134,7 +134,6 @@ int main(int argc, char *argv[])
         // Print the contents of the current directory.
         else if (strcmp(user_output[0], "dir") == 0)
         {
-
           // Open current directory.
           DIR* directory = opendir(".");
           struct dirent * directory_pointer;
@@ -142,6 +141,8 @@ int main(int argc, char *argv[])
           // Make sure the current directory exists.
           if(directory != NULL)
           {
+            // Read the next struct from the directory stream and if it is not
+            // NULL it will print the name of that struct.
             while((directory_pointer = readdir(directory)) != NULL)
             {
               fprintf(output_stream, "%s \n", directory_pointer->d_name);
@@ -151,17 +152,8 @@ int main(int argc, char *argv[])
           {
             fprintf(output_stream, "Error: Couldn't open current directory");
           }
-          // strcpy(user_output[0],"ls");
-
-          //if the first argument ISNT empty
-          // if (strcmp(arg[1],"0") != 0){
-          //   strcat(user_output[0], " ");
-          //   strcat(user_output[0], arg[1]);
-          // }
-
-          // printf("arg[1]:%s\n",arg[1] );
-          // system(user_output[0]);
         }
+
         // Displays all environment variables
         else if (strcmp(user_output[0], "environ") == 0)
         {
@@ -244,22 +236,11 @@ int main(int argc, char *argv[])
 
           pid_t pid = fork();
           if(pid == 0){
-            // printf("buffer:%s\n",buffer);
-            system(buffer);
-            //child process
-            //fprintf(output_stream, "child process:\n");
-            //char exec_command[BUFFER_LEN];
-            //strcpy(exec_command,"/bin/");
-            //strcat(exec_command,user_output[0]);
-            //      printf("%s\n",command);
-            //printf("%s\n",arg[1]);
-            //fprintf(output_stream, "%s\n",exec_command);
-            //      printf("%s\n",user_output[0]);
-            //      printf("%s\n",user_output[1]);
-            //execl(exec_command,user_output[0],arg[1],(char *)0);
-            //execv(user_output[0],(char *[])user_output);
+
+	    //	    system(buffer);
+            execvp(user_output[0],user_output);
+	    exit(0);
           }else if(pid > 0){
-            // fprintf(output_stream, "parent process:\n");
             wait(NULL);//wait for child to terminate
             //parent process
           }else{
@@ -295,12 +276,12 @@ void tokenize(char *input, char **tokens, char *delim){
 char** tokenize2(char *input, char *delim){
   //takes an input string with some delimiter and returns an array
   //with all the tokens split by the provided delimiter
-  
+
   //Sample usage:
   //char buffer[] = "a b c";
   //char **user_output;
   //user_output = tokenize(buffer, " ");
-  
+
   char** tokens = 0;
   size_t num_elements = 0;
   size_t tokens_index  = 0; //keep tracks of the tokens offset when adding them
@@ -320,7 +301,7 @@ char** tokenize2(char *input, char *delim){
       num_elements++;
     }input_cpy++;
   }
-  
+
   num_elements++; //for last object
   num_elements++; //for null terminating value
   //  printf("%d\n",num_elements);
