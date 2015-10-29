@@ -292,39 +292,43 @@ void tokenize(char *input, char **tokens, char *delim){
   tokens[i] = NULL;                //to indicate where the tokens end
 }
 
-char** tokenize2(char *input, char *delim)
-{
+char** tokenize2(char *input, char *delim){
   //takes an input string with some delimiter and returns an array
   //with all the tokens split by the provided delimiter
-
+  
   //Sample usage:
   //char buffer[] = "a b c";
   //char **user_output;
   //user_output = tokenize(buffer, " ");
-
+  
   char** tokens = 0;
   size_t num_elements = 0;
-  char* input_cpy = input;
   size_t tokens_index  = 0; //keep tracks of the tokens offset when adding them
+  char* input_cpy = input;
+  //char* input_cpy2 = input;
+  char *input_cpy2 = malloc(1 + strlen(input)); //used with strtok
+  if (input_cpy2){
+    strcpy(input_cpy2, input);
+    //    printf("Successfully copied input:%s\n",input_cpy2);
+  }else{
+    printf("error copying input\n");
+  }
 
   //iterate through the intput and count # of delims
-  while (*input_cpy != NULL)
-    {
-      if (*delim == *input_cpy)
-        {
-    num_elements++;
-        }
-      input_cpy++;
-    }
-
+  while (*input_cpy != NULL){
+    if (*delim == *input_cpy){
+      num_elements++;
+    }input_cpy++;
+  }
+  
   num_elements++; //for last object
   num_elements++; //for null terminating value
   //  printf("%d\n",num_elements);
 
   //create enough memory for all the elements
   tokens = malloc(sizeof(char*) * num_elements);
-
-  char* token = strtok(input, delim);
+  //  printf("1%s\n",input);
+  char* token = strtok(input_cpy2, delim);
   while (token){
     //store the token in the tokens array
     *(tokens + tokens_index++) = strdup(token);   //strdup duplicates the string
@@ -332,7 +336,7 @@ char** tokenize2(char *input, char *delim)
   }
   //finally add null value at the end
   *(tokens + tokens_index) = 0;
-
+  //  printf("2%s\n",input);
   return tokens;
 }
 
