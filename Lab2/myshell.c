@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
       buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
       // printf("%s\n",buffer );
       //        tokenize(buffer,user_output," ");              //store all the strings delimited by a space into an array
+      printf("%s\n",buffer );
       user_output = tokenize2(buffer, " ");
 
       //if we have an argument, set arg to that argument. If we dont set it to string 0.
@@ -153,7 +154,16 @@ int main(int argc, char *argv[])
         // Displays all environment variables
         else if (strcmp(user_output[0], "environ") == 0)
         {
-          system("printenv");
+
+          extern char **environ;
+
+          int i = 0;
+
+          while(environ[i] != NULL){
+            printf("%s\n",environ[i] );
+            i++;
+          }
+          // system("printenv");
         }
         // Displays the argument passed in the shell
         else if (strcmp(user_output[0], "echo") == 0)
@@ -219,17 +229,19 @@ int main(int argc, char *argv[])
 
           pid_t pid = fork();
           if(pid == 0){
+            printf("buffer:%s\n",buffer);
+            system(buffer);
             //child process
-            fprintf(output_stream, "child process:\n");
-            char exec_command[BUFFER_LEN];
-            strcpy(exec_command,"/bin/");
-            strcat(exec_command,user_output[0]);
+            //fprintf(output_stream, "child process:\n");
+            //char exec_command[BUFFER_LEN];
+            //strcpy(exec_command,"/bin/");
+            //strcat(exec_command,user_output[0]);
             //      printf("%s\n",command);
             //printf("%s\n",arg[1]);
-            fprintf(output_stream, "%s\n",exec_command);
+            //fprintf(output_stream, "%s\n",exec_command);
             //      printf("%s\n",user_output[0]);
             //      printf("%s\n",user_output[1]);
-            execl(exec_command,user_output[0],arg[1],(char *)0);
+            //execl(exec_command,user_output[0],arg[1],(char *)0);
             //execv(user_output[0],(char *[])user_output);
           }else if(pid > 0){
             fprintf(output_stream, "parent process:\n");
