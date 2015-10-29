@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
           }
           else
           {
-            fprintf(output_stream, "Error: Couldn't open current directory\n");
+            fprintf(output_stream, "Error: Couldn't open specified directory\n");
           }
         }
 
