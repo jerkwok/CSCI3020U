@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
           // printf("pwdvar:%s\n",pwdvar);
         }
         // Clears the terminal by pushing everything up off the screen
-        else if (strcmp(user_output[0], "clear") == 0)
+        else if (strcmp(user_output[0], "clr") == 0)
         {
           printf("\033[J");
         }
