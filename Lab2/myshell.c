@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
         // Clears the terminal by pushing everything up off the screen
         else if (strcmp(user_output[0], "clr") == 0)
         {
-          printf("\033[J");
+          printf("\033[H\033[2J");
         }
         // Changes the directory to the directory specified as an arguement
         else if (strcmp(user_output[0], "dir") == 0)
@@ -197,25 +197,21 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-          printf("%s\n", rmdvar );
-          // strcpy(startenv,"more ");
-          // strcat(startenv,rmdvar);
-          // printf("%s\n",startenv );
-          // system(startenv);
+          // display_help(rmdvar);
+            printf("%s\n", rmdvar);
+            char currLine[256];
 
-          char currLine[256];
+            FILE *fp;
+            fp =fopen(rmdvar, "r");
 
-          FILE *fp;
-          fp =fopen(rmdvar, "r");
-
-          if (fp != NULL){
-            while(fgets(currLine,256,fp) != NULL){
-              printf("%s\n",currLine );
+            if (fp != NULL){
+              while(fgets(currLine,256,fp) != NULL){
+                printf("%s\n",currLine );
+              }
+              printf("\n");
             }
-            printf("\n");
-          }
-
-          fclose(fp);
+            
+            fclose(fp);
         }
         // Pauses the shell until enter is pressed
         else if (strcmp(user_output[0], "pause") == 0)
