@@ -1,32 +1,25 @@
+This shell is a text based command interface that allows users to interact with the system. It supports a variety of commands as well as several ways to use these commands.
+
+This shell supports:
+  I/O Redirection
+  Background Execution
+
+I/O Redirection:
+  This text based shell works on the basis that you type in your commands. Where you type them and how they are sent to the system is referred to STDIN, or standard input. The systems response to you is referred to STDOUT, for standard output. Both of these can be overwritten so that the system takes input or displays output from or to a file respectively. This is achieved by using the operators: "<", ">", ">>". The operator "<" overrides stdin so that all input to the system is taken from the file specified as such: program < inputFile.txt, each line is read in and the end line character signals execution of the command on that line. The operator ">" overrides stdout and stores all system output in the file specified as such: program > outputFile, all previous data in outputFile is overwritten by the system output. If you don't want the data in the file to be overwritten you use the operator ">>" it has the same functionality as the ">" operator but it appends to the file instead.
 
 cd: <path>
-
   Changes the current directory to the directory specified in <path>. If <path> is not found returns an error. If <path> is null then returns the current path.
-
 clr
-
   Clears the screen.
-
 dir <directory>
-
   List the contents of <directory>.
-
 environ
-
   Lists all environment variables and their values.
-
 echo <comment>
-
   Displays <comment> followed by a newline.
-
 help
-
   Displays the help manual.
-
 pause
-
   Halts operation of the shell until 'Enter' is pressed.
-
 quit
-
   Quits the shell.
