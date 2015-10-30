@@ -17,8 +17,69 @@ typedef struct
 
 } parameters;
 
-void load_sudokuGrid(char *filename[],  parameters *data);
-char** tokenize2(char *input, char *delim);
+
+char** tokenize2(char *input, char *delim){
+  //takes an input string with some delimiter and returns an array
+  //with all the tokens split by the provided delimiter
+
+  //Sample usage:
+  //char buffer[] = "a b c";
+  //char **user_output;
+  //user_output = tokenize(buffer, " ");
+
+  char** tokens = 0;
+  size_t num_elements = 0;
+  size_t tokens_index  = 0; //keep tracks of the  tokens offset when adding them
+  char* input_cpy = input;
+  char *input_cpy2 = malloc(1 + strlen(input)); //used with strtok
+  if (input_cpy2){
+    strcpy(input_cpy2, input);
+  }else{
+    printf("error copying input\n");
+  }
+
+  //iterate through the intput and count # of delims
+  while (*input_cpy != NULL){
+    if (*delim == *input_cpy){
+      num_elements++;
+    }input_cpy++;
+  }
+
+  num_elements++; //for last object
+  num_elements++; //for null terminating value
+
+  //create enough memory for all the elements
+  tokens = malloc(sizeof(char*) * num_elements);
+  char* token = strtok(input_cpy2, delim);
+  while (token){
+    //store the token in the tokens array
+    *(tokens + tokens_index++) = strdup(token);   //strdup duplicates the string
+    token = strtok(0, delim); //next token
+  }
+  //finally add null value at the end
+  *(tokens + tokens_index) = 0;
+  return tokens;
+}
+
+void load_sudokuGrid(char *filename[],  parameters *data){
+  FILE *f;
+
+  f = fopen(filename,"r");
+  char buffer[BUFFER_LEN];
+  char rowArray[BUFFER_LEN];
+
+  //out now contains the whole row
+  for (int i = 0; i < 9; i++){
+    fgets(buffer,BUFFER_LEN, f);
+    char **out = tokenize2(buffer, " ");
+    for (int j = 0; j < 9; j++){
+      data->sudokuGrid[i][j] = atoi(out[j]);
+    }
+    free(out);
+  }
+  fclose(f);
+}
+
 
 int *validate_row(void *arg){
 
@@ -176,68 +237,6 @@ int main(int argc,char *argv[])
 }
 
 
-void load_sudokuGrid(char *filename[],  parameters *data){
-  FILE *f;
-
-  f = fopen(filename,"r");
-  char buffer[BUFFER_LEN];
-  char rowArray[BUFFER_LEN];
-
-  //out now contains the whole row
-  for (int i = 0; i < 9; i++){
-    fgets(buffer,BUFFER_LEN, f);
-    char **out = tokenize2(buffer, " ");
-    for (int j = 0; j < 9; j++){
-      data->sudokuGrid[i][j] = atoi(out[j]);
-    }
-    free(out);
-  }
-  fclose(f);
-}
-
-
-char** tokenize2(char *input, char *delim){
-  //takes an input string with some delimiter and returns an array
-  //with all the tokens split by the provided delimiter
-
-  //Sample usage:
-  //char buffer[] = "a b c";
-  //char **user_output;
-  //user_output = tokenize(buffer, " ");
-
-  char** tokens = 0;
-  size_t num_elements = 0;
-  size_t tokens_index  = 0; //keep tracks of the  tokens offset when adding them
-  char* input_cpy = input;
-  char *input_cpy2 = malloc(1 + strlen(input)); //used with strtok
-  if (input_cpy2){
-    strcpy(input_cpy2, input);
-  }else{
-    printf("error copying input\n");
-  }
-
-  //iterate through the intput and count # of delims
-  while (*input_cpy != NULL){
-    if (*delim == *input_cpy){
-      num_elements++;
-    }input_cpy++;
-  }
-
-  num_elements++; //for last object
-  num_elements++; //for null terminating value
-
-  //create enough memory for all the elements
-  tokens = malloc(sizeof(char*) * num_elements);
-  char* token = strtok(input_cpy2, delim);
-  while (token){
-    //store the token in the tokens array
-    *(tokens + tokens_index++) = strdup(token);   //strdup duplicates the string
-    token = strtok(0, delim); //next token
-  }
-  //finally add null value at the end
-  *(tokens + tokens_index) = 0;
-  return tokens;
-}
 
 
 
