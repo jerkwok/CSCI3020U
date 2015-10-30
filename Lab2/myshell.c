@@ -190,7 +190,8 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-            printf("%s\n", rmdvar);
+	  execlp("more","README", NULL);
+	  /*            printf("%s\n", rmdvar);
             char currLine[256];
 
             FILE *fp;
@@ -203,7 +204,7 @@ int main(int argc, char *argv[])
               printf("\n");
             }
 
-            fclose(fp);
+            fclose(fp); */
         }
         // Pauses the shell until enter is pressed
         else if (strcmp(user_output[0], "pause") == 0)
