@@ -7,12 +7,17 @@ This shell supports:
 I/O Redirection:
   This text based shell works on the basis that you type in your commands. Where you type them and how they are sent to the system is referred to STDIN, or standard input. The systems response to you is referred to STDOUT, for standard output. Both of these can be overwritten so that the system takes input or displays output from or to a file respectively. This is achieved by using the operators: "<", ">", ">>". The operator "<" overrides stdin so that all input to the system is taken from the file specified as such: program < inputFile.txt, each line is read in and the end line character signals execution of the command on that line. The operator ">" overrides stdout and stores all system output in the file specified as such: program > outputFile, all previous data in outputFile is overwritten by the system output. If you don't want the data in the file to be overwritten you use the operator ">>" it has the same functionality as the ">" operator but it appends to the file instead.
 
+Background Execution:
+  Normally when programs are executed from the shell the shell will wait for them to complete running before returning and asking the user for the next command. This can be counter productive when executing programs that will run for a long time. This can be solved by telling the shell you want it to run the program in the background and not wait for completion before asking for the next command. This is done by adding an ampersand - "&" to the end of the command. An example would be program <arguments> &.
+
+The list of commands supported by this shell are:
+
 cd: <path>
   Changes the current directory to the directory specified in <path>. If <path> is not found returns an error. If <path> is null then returns the current path.
 clr
   Clears the screen.
 dir <directory>
-  List the contents of <directory>.
+  List the contents of <directory>. If <directory> is not specified lists the contents of the current directory.
 environ
   Lists all environment variables and their values.
 echo <comment>
