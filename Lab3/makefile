@@ -1,23 +1,23 @@
 CC = clang
 CFLAGS = -Wall -Wextra -std=c99
 LFLAGS =
-LIBS = -lm
-SOURCES = sudoku.c
+LIBS = -lm -lpthread
+SOURCES = validator.c
 OBJECTS = $(subst .c,.o,$(SOURCES))
-EXE = sudoku.exe
+EXE = validator.exe
 .PHONY: clean help
 
 %.exe : %.o
-        $(CC) $(CFLAGS) $< $(LIBS) -o $@
+		$(CC) $(CFLAGS) $< $(LIBS) -o $@
 
 %.o : %.c
-        $(CC) $(CFLAGS) -c $<
+		$(CC) $(CFLAGS) -c $<
 
 all : $(EXE)
 
 clean:
-        rm -f $(OBJECTS) $(EXE) *~
+		rm -f $(OBJECTS) $(EXE) *~
 
 help:
-        @echo "Valid targets:"
-        @echo "  clean:  removes .o and .exe files"
+		@echo "Valid targets:"
+		@echo "  clean:  removes .o and .exe files"
