@@ -84,14 +84,17 @@ int main(int argc, char *argv[])
     // Perform an infinite loop getting command input from users
     while (fgets(buffer, BUFFER_LEN, input_stream) != NULL)
     {
+    //  puts("seg fault? - -1");
 
+
+      //functionCall();
       //do a check to see if user didn't type any input
       while(strcmp("\n",buffer)==0){
-	//user just typed in enter
-	//display prompt
-	pwdvar = getcwd(buffer, BUFFER_LEN);
-	printf("%s$ ",pwdvar);
-	fgets(buffer, BUFFER_LEN, input_stream);
+    	//user just typed in enter
+    	//display prompt
+    	pwdvar = getcwd(buffer, BUFFER_LEN);
+    	printf("%s$ ",pwdvar);
+    	fgets(buffer, BUFFER_LEN, input_stream);
       }
       // Perform string tokenization to get the command and argument
       buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
@@ -104,12 +107,47 @@ int main(int argc, char *argv[])
       //copy the arguments into a array
       while(1)
       {
+
         if (user_output[counter] != NULL){
           strcpy(arg[counter],user_output[counter]);
           counter++;
         }else{
           break;
         }
+      }
+
+      //iterate through the arguments
+      int arg_counter = 0;
+
+      FILE *curr_input = input_stream;
+      FILE *curr_output = output_stream;
+
+      while(user_output[arg_counter] != NULL)
+      {
+        //if one is "<" then the next argument will replace stdin
+        if(strcmp(user_output[arg_counter], "<") == 0)
+        {
+          curr_input = input_stream;
+        //  fprintf(stdout,"%s", curr_input);
+          input_stream = fopen(user_output[arg_counter+1], "r");
+        }
+        //if one is ">" then the next argument will replace stdout
+        if(strcmp(user_output[arg_counter], ">") == 0)
+        {
+          curr_output = output_stream;
+          //fprintf(stdout,"%s", curr_output);
+          output_stream = fopen(user_output[arg_counter+1], "w");
+        }
+        //if one is ">>" then the next arguement will replace stdout but will be appended to
+        if(strcmp(user_output[arg_counter], ">>") == 0)
+        {
+          curr_output = output_stream;
+          //fprintf(stdout,"%s", curr_output);
+          output_stream = fopen(user_output[arg_counter+1], "a");
+        }
+        arg_counter++;
+
+      //  puts("seg fault? - 1");
       }
 
       // Check the command and execute the operations for each command
@@ -145,7 +183,14 @@ int main(int argc, char *argv[])
           // curent directory.
           if(user_output[1] != NULL)
           {
-            directory = opendir(user_output[1]);
+            if(strcmp(user_output[1], ">") == 0 || strcmp(user_output[1], ">") == 0)
+            {
+              directory = opendir(".");
+            }
+            else
+            {
+              directory = opendir(user_output[1]);
+            }
           }
           else
           {
@@ -177,57 +222,77 @@ int main(int argc, char *argv[])
           int i = 0;
 
           while(environ[i] != NULL){
-            printf("%s\n",environ[i] );
+            fprintf(output_stream, "%s\n",environ[i] );
             i++;
           }
         }
         // Displays the argument passed in the shell
         else if (strcmp(user_output[0], "echo") == 0)
         {
-
+          bool resume = true;
           counter = 1;
-          while(1)
+          while(resume)
           {
-              if (user_output[counter] != NULL){
-                fprintf(output_stream, "%s ",user_output[counter]);
-                counter++;
-              }else{
-              break;
+              if (user_output[counter] != NULL)
+              {
+                if(strcmp(user_output[counter], ">") == 0 ||strcmp(user_output[counter], ">>") == 0)
+                {
+                  resume = false;
+                }
+                else
+                {
+                  fprintf(output_stream, "%s ",user_output[counter]);
+                  counter++;
+                }
+              }
+              else
+              {
+                resume = false;
               }
           }
-          printf("\n");
+          fprintf(output_stream, "\n");
         }
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-	  pid_t pid = fork();
-          if(pid == 0){
-	    //child
-	    char *flags[] = {"more","readme", NULL};
-	    execvp("more",flags);
-	    exit(0);
-          }else if(pid > 0){
-	    //parent process
-	    wait(NULL);//wait for child to terminate
-            //parent process
-          }else{
-            fprintf(output_stream, "fork failed\n");
-            fputs("Unsupported command, use help to display the manual\n", output_stream);
+          if(user_output[1] == NULL)
+          {
+            pid_t pid = fork();
+            if(pid == 0)
+            {
+              char *flags[] = {"more","readme", NULL};
+              execvp("more",flags);
+              exit(0);
+            }
+            else if(pid > 0)
+            {
+               //parent process
+               wait(NULL);//wait for child to terminate
+            }
+            else
+            {
+              fprintf(output_stream, "fork failed\n");
+              fputs("Unsupported command, use help to display the manual\n", output_stream);
+            }
           }
-	  /*            printf("%s\n", rmdvar);
-            char currLine[256];
+          else
+          {
+            //printf("%s\n", rmdvar);
+            char currLine[512];
 
             FILE *fp;
             fp =fopen(rmdvar, "r");
 
-            if (fp != NULL){
-              while(fgets(currLine,256,fp) != NULL){
-                printf("%s\n",currLine );
+            if (fp != NULL)
+            {
+              while(fgets(currLine,512,fp) != NULL)
+              {
+                fprintf(output_stream, "%s\n",currLine );
               }
-              printf("\n");
+              fprintf(output_stream,"\n");
             }
-
-            fclose(fp); */
+            fclose(fp);
+          }
         }
         // Pauses the shell until enter is pressed
         else if (strcmp(user_output[0], "pause") == 0)
@@ -264,7 +329,7 @@ int main(int argc, char *argv[])
 	    user_output[num_args-1] = NULL;
 	    printf("is background\n");
 	  }
-	  
+
           pid_t pid = fork();
           if(pid == 0){
 
@@ -274,7 +339,7 @@ int main(int argc, char *argv[])
 	    //parent process
 	    //only wait if it is not a background process
 	    if (!isBackground){
-	      wait(NULL);//not background: wait for child to terminate  
+	      wait(NULL);//not background: wait for child to terminate
 	    }
           }else{
             fprintf(output_stream, "fork failed\n");
@@ -285,6 +350,12 @@ int main(int argc, char *argv[])
       if (inputcommands == 0){
         fprintf(stdout, "%s$ ",pwdvar);
       }
+    //  puts("seg fault? - 2");
+    //  fprintf(stdout,"%s", curr_output);
+      output_stream = curr_output;
+      //fprintf(stdout,"%s", curr_input);
+      input_stream = curr_input;
+    //  puts("seg fault? - 3");
     }
     return EXIT_SUCCESS;
 }
