@@ -209,28 +209,36 @@ int main(int argc,char *argv[])
       //printf("\n");
     } 
 
-
+	for (int i = 0; i < 9; ++i)
+	{
+		data -> selector = i;
+		pthread_create(&boxthread, 0, validate_box, (void *) data);
+		pthread_create(&rowthread, 0, validate_row, (void *) data);
+		pthread_create(&colthread, 0, validate_col, (void *) data);
+		(void) pthread_join(boxthread,NULL);
+		/* code */
+	}
   //Test Cases
   // pthread_mutex_lock (&mutex);
   //Validate Box 4
-  data -> selector = 4;
-  pthread_create(&boxthread, 0, validate_box, (void *) data);
-  (void) pthread_join(boxthread,NULL);
-  // pthread_mutex_unlock (&mutex);
+  // data -> selector = 4;
+  // pthread_create(&boxthread, 0, validate_box, (void *) data);
+  // (void) pthread_join(boxthread,NULL);
+  // // pthread_mutex_unlock (&mutex);
 
-  // pthread_mutex_lock (&mutex);
-  //Validate Row 7
-  data -> selector = 7;
-  pthread_create(&rowthread, 0, validate_row, (void *) data);
-  (void) pthread_join(rowthread,NULL);
-  // pthread_mutex_unlock (&mutex);
+  // // pthread_mutex_lock (&mutex);
+  // //Validate Row 7
+  // data -> selector = 7;
+  // pthread_create(&rowthread, 0, validate_row, (void *) data);
+  // (void) pthread_join(rowthread,NULL);
+  // // pthread_mutex_unlock (&mutex);
 
-  // pthread_mutex_lock (&mutex);
-  //Validate Col 1
-  data -> selector = 1;
-  pthread_create(&colthread, 0, validate_col, (void *) data);
-  (void) pthread_join(colthread,NULL);
-  // pthread_mutex_unlock (&mutex);
+  // // pthread_mutex_lock (&mutex);
+  // //Validate Col 1
+  // data -> selector = 1;
+  // pthread_create(&colthread, 0, validate_col, (void *) data);
+  // (void) pthread_join(colthread,NULL);
+  // // pthread_mutex_unlock (&mutex);
 
   //join all threads
   return 0;
