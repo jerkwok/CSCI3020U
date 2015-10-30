@@ -190,8 +190,20 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-	  char *flags[] = {"more","readme", NULL};
-	  execvp("more",flags);
+	  pid_t pid = fork();
+          if(pid == 0){
+	    //child
+	    char *flags[] = {"more","readme", NULL};
+	    execvp("more",flags);
+	    exit(0);
+          }else if(pid > 0){
+	    //parent process
+            wait(NULL);//wait for child to terminate
+            //parent process
+          }else{
+            fprintf(output_stream, "fork failed\n");
+            fputs("Unsupported command, use help to display the manual\n", output_stream);
+          }
 	  /*            printf("%s\n", rmdvar);
             char currLine[256];
 
