@@ -83,6 +83,15 @@ int main(int argc, char *argv[])
     // Perform an infinite loop getting command input from users
     while (fgets(buffer, BUFFER_LEN, input_stream) != NULL)
     {
+
+      //do a check to see if user didn't type any input
+      while(strcmp("\n",buffer)==0){
+	//user just typed in enter
+	//display prompt
+	pwdvar = getcwd(buffer, BUFFER_LEN);
+	printf("%s$ ",pwdvar);
+	fgets(buffer, BUFFER_LEN, input_stream);
+      }
       // Perform string tokenization to get the command and argument
       buffer[strlen(buffer)-1] = 0;              //remove the newline from last char
       user_output = tokenize2(buffer, " ");
