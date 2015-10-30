@@ -13,6 +13,7 @@
 #include <string.h>
 #include "utility.h"
 #include "myshell.h"
+#include <stdbool.h>
 
 // Put macros or constants here using #define
 #define BUFFER_LEN 256
@@ -207,7 +208,7 @@ int main(int argc, char *argv[])
 	    exit(0);
           }else if(pid > 0){
 	    //parent process
-            wait(NULL);//wait for child to terminate
+	    wait(NULL);//wait for child to terminate
             //parent process
           }else{
             fprintf(output_stream, "fork failed\n");
@@ -245,19 +246,36 @@ int main(int argc, char *argv[])
 
           //set the parent environment variable
           char parent_env[BUFFER_LEN];
+	  bool isBackground = false;
           strcpy(parent_env,"parent=");
           strcat(parent_env,getenv("PWD"));
       	  strcat(parent_env,"/myshell");
           putenv(parent_env);
 
+	  //Check if the user put & at the end of the input
+	  int num_args = 0;
+	  //obtain the number of arguments to see if last argument is &
+	  while(user_output[num_args] != NULL){
+	    num_args++;
+	  }
+	  if (strcmp(user_output[num_args-1],"&") == 0){
+	    isBackground = true;
+	    //set last element to NULL
+	    user_output[num_args-1] = NULL;
+	    printf("is background\n");
+	  }
+	  
           pid_t pid = fork();
           if(pid == 0){
 
             execvp(user_output[0],user_output);
-	           exit(0);
+	    exit(0);
           }else if(pid > 0){
-            wait(NULL);//wait for child to terminate
-            //parent process
+	    //parent process
+	    //only wait if it is not a background process
+	    if (!isBackground){
+	      wait(NULL);//not background: wait for child to terminate  
+	    }
           }else{
             fprintf(output_stream, "fork failed\n");
             fputs("Unsupported command, use help to display the manual\n", output_stream);
