@@ -190,8 +190,8 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-	  char *flags[] = {"/bin/more","readme", NULL};
-	  execv("/bin/more",flags);
+	  char *flags[] = {"more","readme", NULL};
+	  execvp("more",flags);
 	  /*            printf("%s\n", rmdvar);
             char currLine[256];
 
