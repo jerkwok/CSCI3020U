@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     //set the readme variable
     strcpy(rmdvar,pwdvar);
-    strcat(rmdvar,"/README");
+    strcat(rmdvar,"/readme");
 
     //set environment variable
     strcat(pwdvar,"/myshell");
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
         // Displays the manual using more
         else if (strcmp(user_output[0], "help") == 0)
         {
-	  execlp("more","README", NULL);
+	         execlp("more","readme", NULL);
 	  /*            printf("%s\n", rmdvar);
             char currLine[256];
 
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
             execvp(user_output[0],user_output);
 	           exit(0);
           }else if(pid > 0){
-            wait(NULL);//wait for child to terminate  
+            wait(NULL);//wait for child to terminate
             //parent process
           }else{
             fprintf(output_stream, "fork failed\n");
@@ -352,4 +352,3 @@ void trim(char padded_string[]){
   trimmed_string[j] = 0;                  //indicate where the string should end
   strcpy(padded_string,trimmed_string);   //copy the actual string into the trimmed one
 }
-
