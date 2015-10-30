@@ -14,13 +14,12 @@ typedef struct
 	int selector;
 } parameters;
 
-void *validate_row(void *arg){
+int *validate_row(void *arg){
 	parameters* data = (parameters*) arg;
 	// int* rownum = (int*) arg;
 	//used track tells which numbers have been used in this row
 	int used[10] = {0};
 
-	printf("Hello From Thread\n");
 	//iterate through each element in the row
 	for (int i = 0; i < 9; i++)
 	{
@@ -32,16 +31,16 @@ void *validate_row(void *arg){
 			if (used[currElement] == 1)
 			{
 				//row is not valid, return false 0
-				printf("0\n");
-				return NULL;
+				printf("Row %d Not Valid\n", data -> selector);
+				return 0;
 			}else{
 				used[currElement] = 1;
 			}
 		}
 	}
 	//row is valid, return true 1;
-	printf("1\n");
-	return NULL;
+	printf("Row %d Valid\n", data -> selector);
+	return 1;
 }
 
 int *validate_col(void *arg){
@@ -49,7 +48,6 @@ int *validate_col(void *arg){
 	//used track tells which numbers have been used in this col
 	int used[10] = {0};
 
-	printf("Hello From Thread\n");
 	//iterate through each element in the col
 	for (int i = 0; i < 9; i++)
 	{
@@ -61,16 +59,16 @@ int *validate_col(void *arg){
 			if (used[currElement] == 1)
 			{
 				//col is not valid, return false 0
-				printf("0\n");
-				return NULL;
+				printf("Col %d Not Valid\n", data -> selector);
+				return 0;
 			}else{
 				used[currElement] = 1;
 			}
 		}
 	}
 	//cpl is valid, return true 1;
-	printf("1\n");
-	return NULL;
+	printf("Col %d Valid\n", data -> selector);
+	return 1;
 }
 
 int *validate_box(void *arg){
@@ -78,7 +76,6 @@ int *validate_box(void *arg){
 	//used track tells which numbers have been used in this box
 	int used[10] = {0};
 
-	printf("Hello From Thread\n");
 	//iterate through each element in the box
 	for (int i = 0; i < 3; i++)
 	{
@@ -94,15 +91,15 @@ int *validate_box(void *arg){
 
 			//if the element is nonzero (actual data)
 			int currElement = data -> sudokuGrid[i+(data -> selector/3)*3][j+(data -> selector%3)*3];
-			printf("row:%d col:%d\n",i+(data -> selector/3)*3,j+(data -> selector%3)*3 );
+			// printf("row:%d col:%d\n",i+(data -> selector/3)*3,j+(data -> selector%3)*3 );
 			if (currElement != 0)
 			{
 				//if the element has already been used this box
 				if (used[currElement] == 1)
 				{
 					//box is not valid, return false 0
-					printf("0\n");
-					return NULL;
+					printf("Box %d Not Valid\n", data -> selector);
+					return 0;
 				}else{
 					used[currElement] = 1;
 				}
@@ -110,8 +107,8 @@ int *validate_box(void *arg){
 		}
 	}
 	//box is valid, return true 1;
-	printf("1\n");
-	return NULL;
+	printf("Box %d Valid\n", data -> selector);
+	return 1;
 }
 
 int main(int argc,char *argv[])
@@ -139,9 +136,22 @@ int main(int argc,char *argv[])
 	}
 
 
+	//Test Cases
+	//Validate Box 4
 	data -> selector = 4;
 	pthread_create(&boxthread, 0, validate_box, (void *) data);
 
+	//Validate Row 7
+	data -> selector = 7;
+	pthread_create(&rowthread, 0, validate_row, (void *) data);
+
+	//Validate Col 1
+	data -> selector = 1;
+	pthread_create(&colthread, 0, validate_col, (void *) data);
+
+	//join all threads
 	(void) pthread_join(boxthread,NULL);
+	(void) pthread_join(rowthread,NULL);
+	(void) pthread_join(colthread,NULL);
   return 0;
 }
