@@ -245,13 +245,6 @@ int solve(int row, int col, parameters *data){
 int main(int argc,char *argv[])
 {
 
-  //init threads
-  pthread_t rowthread;
-  pthread_t colthread;
-  pthread_t boxthread;
-
-  int *rowvalid = 0 ,*colvalid = 0,*boxvalid = 0;
-
   //init data structure
   parameters *data = (parameters *) malloc(sizeof(parameters));
 
