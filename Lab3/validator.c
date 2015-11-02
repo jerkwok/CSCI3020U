@@ -11,7 +11,7 @@ typedef struct
 {
   //row is the first number, col is second 
   int sudokuGrid[9][9];
-  //selector is the row/col/box number we're checking
+  //[R/C/B]selector is the row/col/box number we're checking
   int Rselector;
   int Cselector;
   int Bselector;
@@ -100,7 +100,6 @@ int *validate_row(void *arg){
 	  if (used[currElement] == 1)
 	    {
 	      //row is not valid, return false 0
-	      // printf("Row %d Not Valid\n", myselector);
 	      pthread_exit(0);;
 	    }else{
 	    used[currElement] = 1;
@@ -108,7 +107,6 @@ int *validate_row(void *arg){
 	}
     }
   //row is valid, return true 1;
-  // printf("Row %d Valid\n", myselector);
   pthread_exit(1);
 
 }
@@ -130,7 +128,6 @@ int *validate_col(void *arg){
 	  if (used[currElement] == 1)
 	    {
 	      //col is not valid, return false 0
-	      // printf("Col %d Not Valid\n", myselector);
 	      pthread_exit(0);
 	    }else{
 	    used[currElement] = 1;
@@ -138,7 +135,6 @@ int *validate_col(void *arg){
 	}
     }
   //cpl is valid, return true 1;
-  // printf("Col %d Valid\n", myselector);
   pthread_exit(1);
 }
 
@@ -163,14 +159,12 @@ int *validate_box(void *arg){
 
 	  //if the element is nonzero (actual data)
 	  int currElement = data -> sudokuGrid[i+(myselector/3)*3][j+(myselector%3)*3];
-	  // printf("row:%d col:%d\n",i+(data -> selector/3)*3,j+(data -> selector%3)*3 );
 	  if (currElement != 0)
 	    {
 	      //if the element has already been used this box
 	      if (used[currElement] == 1)
 		{
 		  //box is not valid, return false 0
-		  // printf("Box %d Not Valid\n", myselector);
 		  pthread_exit(0);
 		}else{
 		used[currElement] = 1;
@@ -179,12 +173,12 @@ int *validate_box(void *arg){
 	}
     }
   //box is valid, return true 1;
-  // printf("Box %d Valid\n", myselector);
   pthread_exit(1);
 }
 
 int solve(int row, int col, parameters *data){
-  // printf("Row:%d, Col:%d\n",row,col);
+  int *rowvalid = 0 ,*colvalid = 0,*boxvalid = 0;
+
   pthread_t rowthread;
   pthread_t colthread;
   pthread_t boxthread;
@@ -205,23 +199,20 @@ int solve(int row, int col, parameters *data){
   // if the row is 9 then we are DONE return true
   if (row == 9)
   {
-    // printf("Stop\n");
     return 1;
   }
 
   //iterate through the pssibilities.
   for (int i = 1; i <= 9; i++)
   {
-    // printf("Row:%d, Col:%d, i:%d\n",row,col,i);
 
-    int *rowvalid = 0 ,*colvalid = 0,*boxvalid = 0;
+    rowvalid = 0 , colvalid = 0, boxvalid = 0;
 
     //set the current square to the current guess
     data -> sudokuGrid[row][col] = i;
     //if the current row, box and column are all okay recursively call solve on myself
 
     data -> Bselector = (col/3) + (row/3)*3;
-    // printf("Checking box:%d from Element at Row:%d, Col:%d\n",(col/3) + (row/3)*3, row,col );
     pthread_create(&boxthread, 0, validate_box, (void *) data);
 
     data -> Cselector = col;
@@ -264,38 +255,8 @@ int main(int argc,char *argv[])
   //init data structure
   parameters *data = (parameters *) malloc(sizeof(parameters));
 
-  //init mutex
-  // pthread_mutex_init(&mutex,NULL); 
-
   //load the sudokuGrid
   load_sudokuGrid("puzzle.txt",data);
-  //print array
-  for (int i = 0; i < 9; i++)
-    {
-      for (int j = 0; j < 9; j++)
-	{
-	  //printf("%d", data->sudokuGrid[i][j]);
-	}
-      //printf("\n");
-    } 
-
-	for (int i = 0; i < 9; ++i)
-	{
-    // boxvalid = 0;
-    // colvalid = 0;
-    // rowvalid = 0;
-    data -> Rselector = i;
-    data -> Cselector = i;
-		data -> Bselector = i;
-		pthread_create(&boxthread, 0, validate_box, (void *) data);
-		pthread_create(&rowthread, 0, validate_row, (void *) data);
-		pthread_create(&colthread, 0, validate_col, (void *) data);
-    (void) pthread_join(boxthread,&boxvalid);
-    (void) pthread_join(colthread,&colvalid);
-		(void) pthread_join(rowthread,&rowvalid);
-    // printf("Selector:%d, R:%d,  C:%d, B:%d\n",data->selector,rowvalid,colvalid,boxvalid );
-		/* code */
-	}
 
   solve(0,0,data);
 
@@ -308,29 +269,5 @@ int main(int argc,char *argv[])
       }
       printf("\n");
   } 
-
-  //Test Cases
-  // pthread_mutex_lock (&mutex);
-  //Validate Box 4
-  // data -> selector = 4;
-  // pthread_create(&boxthread, 0, validate_box, (void *) data);
-  // (void) pthread_join(boxthread,NULL);
-  // // pthread_mutex_unlock (&mutex);
-
-  // // pthread_mutex_lock (&mutex);
-  // //Validate Row 7
-  // data -> selector = 7;
-  // pthread_create(&rowthread, 0, validate_row, (void *) data);
-  // (void) pthread_join(rowthread,NULL);
-  // // pthread_mutex_unlock (&mutex);
-
-  // // pthread_mutex_lock (&mutex);
-  // //Validate Col 1
-  // data -> selector = 1;
-  // pthread_create(&colthread, 0, validate_col, (void *) data);
-  // (void) pthread_join(colthread,NULL);
-  // // pthread_mutex_unlock (&mutex);
-
-  //join all threads
   return 0;
 }
