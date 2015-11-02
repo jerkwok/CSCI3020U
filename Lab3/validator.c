@@ -258,7 +258,11 @@ int main(int argc,char *argv[])
   //load the sudokuGrid
   load_sudokuGrid("puzzle.txt",data);
 
-  solve(0,0,data);
+  if(solve(0,0,data)){
+    printf("Puzzle Solved\n");    
+  }else{
+    printf("Puzzle Unsolvable\n");
+  }
 
   //print array
   for (int i = 0; i < 9; i++)
