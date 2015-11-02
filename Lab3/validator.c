@@ -264,14 +264,21 @@ int main(int argc,char *argv[])
     printf("Puzzle Unsolvable\n");
   }
 
+  FILE *file = fopen("solution.txt", "w");
+
   //print array
   for (int i = 0; i < 9; i++)
   {
       for (int j = 0; j < 9; j++)
       {
-        printf("%d", data->sudokuGrid[i][j]);
+        fprintf(file, "%d ", data->sudokuGrid[i][j]);
+        printf("%d ", data->sudokuGrid[i][j]);
       }
+      fprintf(file, "\n");
       printf("\n");
   } 
+									
+  fclose(file);
+
   return 0;
 }
