@@ -12,7 +12,9 @@ typedef struct
   //row is the first number, col is second 
   int sudokuGrid[9][9];
   //selector is the row/col/box number we're checking
-  int selector;
+  int Rselector;
+  int Cselector;
+  int Bselector;
 
 } parameters;
 
@@ -82,7 +84,7 @@ void load_sudokuGrid(char *filename[],  parameters *data){
 int *validate_row(void *arg){
 
   parameters* data = (parameters*) arg;
-  int myselector = data -> selector;
+  int myselector = data -> Rselector;
   // int* rownum = (int*) arg;
   //used track tells which numbers have been used in this row
   int used[10] = {0};
@@ -113,7 +115,7 @@ int *validate_row(void *arg){
 
 int *validate_col(void *arg){
   parameters* data = (parameters*) arg;
-  int myselector = data -> selector;
+  int myselector = data -> Cselector;
   //used track tells which numbers have been used in this col
   int used[10] = {0};
 
@@ -142,7 +144,7 @@ int *validate_col(void *arg){
 
 int *validate_box(void *arg){
   parameters* data = (parameters*) arg;
-  int myselector = data -> selector;
+  int myselector = data -> Bselector;
   //used track tells which numbers have been used in this box
   int used[10] = {0};
 
@@ -218,17 +220,19 @@ int solve(int row, int col, parameters *data){
     data -> sudokuGrid[row][col] = i;
     //if the current row, box and column are all okay recursively call solve on myself
 
-    data -> selector = (col/3) + (row/3)*3;
+    data -> Bselector = (col/3) + (row/3)*3;
     // printf("Checking box:%d from Element at Row:%d, Col:%d\n",(col/3) + (row/3)*3, row,col );
     pthread_create(&boxthread, 0, validate_box, (void *) data);
-    (void) pthread_join(boxthread,&boxvalid);
 
-    data -> selector = col;
+    data -> Cselector = col;
     pthread_create(&colthread, 0, validate_col, (void *) data);
-    (void) pthread_join(colthread,&colvalid);
 
-    data -> selector = row;
+    data -> Rselector = row;
     pthread_create(&rowthread, 0, validate_row, (void *) data);
+
+
+    (void) pthread_join(boxthread,&boxvalid);
+    (void) pthread_join(colthread,&colvalid);
     (void) pthread_join(rowthread,&rowvalid);
     //if the recursive call returns true return true
 
@@ -280,7 +284,9 @@ int main(int argc,char *argv[])
     // boxvalid = 0;
     // colvalid = 0;
     // rowvalid = 0;
-		data -> selector = i;
+    data -> Rselector = i;
+    data -> Cselector = i;
+		data -> Bselector = i;
 		pthread_create(&boxthread, 0, validate_box, (void *) data);
 		pthread_create(&rowthread, 0, validate_row, (void *) data);
 		pthread_create(&colthread, 0, validate_col, (void *) data);
@@ -328,29 +334,3 @@ int main(int argc,char *argv[])
   //join all threads
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
