@@ -9,14 +9,12 @@
 /* structure for passing data to threads */
 typedef struct
 {
-
   //row is the first number, col is second 
   int sudokuGrid[9][9];
   //selector is the row/col/box number we're checking
   int selector;
 
 } parameters;
-
 
 char** tokenize2(char *input, char *delim){
   //takes an input string with some delimiter and returns an array
@@ -183,7 +181,71 @@ int *validate_box(void *arg){
   pthread_exit(1);
 }
 
+int solve(int row, int col, parameters *data){
+  // printf("Row:%d, Col:%d\n",row,col);
+  pthread_t rowthread;
+  pthread_t colthread;
+  pthread_t boxthread;
 
+  //row and col is the current square that we are trying to solve
+
+  //if the current square is not 0, skip over it and increase col
+  while((row < 9) && (data -> sudokuGrid[row][col] != 0)){
+    col++;
+    //if the current column is 9 increase the row and set the column to 0
+    if (col == 9)
+    {
+      row++;
+      col = 0;
+    }
+  }
+
+  // if the row is 9 then we are DONE return true
+  if (row == 9)
+  {
+    // printf("Stop\n");
+    return 1;
+  }
+
+  //iterate through the pssibilities.
+  for (int i = 1; i <= 9; i++)
+  {
+    // printf("Row:%d, Col:%d, i:%d\n",row,col,i);
+
+    int *rowvalid = 0 ,*colvalid = 0,*boxvalid = 0;
+
+    //set the current square to the current guess
+    data -> sudokuGrid[row][col] = i;
+    //if the current row, box and column are all okay recursively call solve on myself
+
+    data -> selector = (col/3) + (row/3)*3;
+    // printf("Checking box:%d from Element at Row:%d, Col:%d\n",(col/3) + (row/3)*3, row,col );
+    pthread_create(&boxthread, 0, validate_box, (void *) data);
+    (void) pthread_join(boxthread,&boxvalid);
+
+    data -> selector = col;
+    pthread_create(&colthread, 0, validate_col, (void *) data);
+    (void) pthread_join(colthread,&colvalid);
+
+    data -> selector = row;
+    pthread_create(&rowthread, 0, validate_row, (void *) data);
+    (void) pthread_join(rowthread,&rowvalid);
+    //if the recursive call returns true return true
+
+    if ((rowvalid == 1) && (colvalid == 1) && (boxvalid == 1))
+    {
+      if (solve(row,col,data) == 1)
+      {
+        return 1;
+      }
+    }
+  }
+
+  //if we have iterated through the possibilities and nothing works then we need to backtrack
+  //set current square to 0 and return false
+  data -> sudokuGrid[row][col] = 0;
+  return 0;
+}
 
 int main(int argc,char *argv[])
 {
@@ -225,9 +287,22 @@ int main(int argc,char *argv[])
     (void) pthread_join(boxthread,&boxvalid);
     (void) pthread_join(colthread,&colvalid);
 		(void) pthread_join(rowthread,&rowvalid);
-    printf("Selector:%d, R:%d,  C:%d, B:%d\n",data->selector,rowvalid,colvalid,boxvalid );
+    // printf("Selector:%d, R:%d,  C:%d, B:%d\n",data->selector,rowvalid,colvalid,boxvalid );
 		/* code */
 	}
+
+  solve(0,0,data);
+
+  //print array
+  for (int i = 0; i < 9; i++)
+  {
+      for (int j = 0; j < 9; j++)
+      {
+        printf("%d", data->sudokuGrid[i][j]);
+      }
+      printf("\n");
+  } 
+
   //Test Cases
   // pthread_mutex_lock (&mutex);
   //Validate Box 4
