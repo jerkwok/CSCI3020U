@@ -260,7 +260,7 @@ int main(int argc,char *argv[])
 
   solve(0,0,data);
 
-  FILE *file = fopen("puzzle_solved.txt", "w");
+  FILE *file = fopen("solution.txt", "w");
 
   //print array
   for (int i = 0; i < 9; i++)
