@@ -260,21 +260,21 @@ int main(int argc,char *argv[])
 
   solve(0,0,data);
 
-	FILE *file = fopen("puzzle_solved.txt", "w");
+  FILE *file = fopen("puzzle_solved.txt", "w");
 
   //print array
   for (int i = 0; i < 9; i++)
   {
       for (int j = 0; j < 9; j++)
       {
-				fprintf(file, "%d ", data->sudokuGrid[i][j]);
+        fprintf(file, "%d ", data->sudokuGrid[i][j]);
         printf("%d ", data->sudokuGrid[i][j]);
       }
-			fprintf(file, "\n");
+      fprintf(file, "\n");
       printf("\n");
   } 
 									
-	fclose(file);
+  fclose(file);
 
   return 0;
 }
