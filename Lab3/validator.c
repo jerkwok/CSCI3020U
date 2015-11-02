@@ -100,16 +100,16 @@ int *validate_row(void *arg){
 	  if (used[currElement] == 1)
 	    {
 	      //row is not valid, return false 0
-	      printf("Row %d Not Valid\n", myselector);
-	      return 0;
+	      // printf("Row %d Not Valid\n", myselector);
+	      pthread_exit(0);;
 	    }else{
 	    used[currElement] = 1;
 	  }
 	}
     }
   //row is valid, return true 1;
-  printf("Row %d Valid\n", myselector);
-  return 1;
+  // printf("Row %d Valid\n", myselector);
+  pthread_exit(1);
 
 }
 
@@ -130,16 +130,16 @@ int *validate_col(void *arg){
 	  if (used[currElement] == 1)
 	    {
 	      //col is not valid, return false 0
-	      printf("Col %d Not Valid\n", myselector);
-	      return 0;
+	      // printf("Col %d Not Valid\n", myselector);
+	      pthread_exit(0);
 	    }else{
 	    used[currElement] = 1;
 	  }
 	}
     }
   //cpl is valid, return true 1;
-  printf("Col %d Valid\n", myselector);
-  return 1;
+  // printf("Col %d Valid\n", myselector);
+  pthread_exit(1);
 }
 
 int *validate_box(void *arg){
@@ -170,8 +170,8 @@ int *validate_box(void *arg){
 	      if (used[currElement] == 1)
 		{
 		  //box is not valid, return false 0
-		  printf("Box %d Not Valid\n", myselector);
-		  return 0;
+		  // printf("Box %d Not Valid\n", myselector);
+		  pthread_exit(0);
 		}else{
 		used[currElement] = 1;
 	      }
@@ -179,9 +179,11 @@ int *validate_box(void *arg){
 	}
     }
   //box is valid, return true 1;
-  printf("Box %d Valid\n", myselector);
-  return 1;
+  // printf("Box %d Valid\n", myselector);
+  pthread_exit(1);
 }
+
+
 
 int main(int argc,char *argv[])
 {
@@ -190,6 +192,8 @@ int main(int argc,char *argv[])
   pthread_t rowthread;
   pthread_t colthread;
   pthread_t boxthread;
+
+  int *rowvalid = 0 ,*colvalid = 0,*boxvalid = 0;
 
   //init data structure
   parameters *data = (parameters *) malloc(sizeof(parameters));
@@ -211,11 +215,17 @@ int main(int argc,char *argv[])
 
 	for (int i = 0; i < 9; ++i)
 	{
+    // boxvalid = 0;
+    // colvalid = 0;
+    // rowvalid = 0;
 		data -> selector = i;
 		pthread_create(&boxthread, 0, validate_box, (void *) data);
 		pthread_create(&rowthread, 0, validate_row, (void *) data);
 		pthread_create(&colthread, 0, validate_col, (void *) data);
-		(void) pthread_join(boxthread,NULL);
+    (void) pthread_join(boxthread,&boxvalid);
+    (void) pthread_join(colthread,&colvalid);
+		(void) pthread_join(rowthread,&rowvalid);
+    printf("Selector:%d, R:%d,  C:%d, B:%d\n",data->selector,rowvalid,colvalid,boxvalid );
 		/* code */
 	}
   //Test Cases
