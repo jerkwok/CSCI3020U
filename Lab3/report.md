@@ -1,16 +1,30 @@
 #CSCI 3020U
 #Lab #3: Sudoku Solution Validator
 
+####Objective
+Design a multithreaded application that determines whether the solution to a sudoku puzzle is valid.
+
+####Program Flow
+
+######Passing Parameters to Each Thread:
+
 Our implementation first opens a file **puzzle.txt** and loads the Sudoku into a 2D array defined within the structure:
 
 	typedef struct{	
-	int sudokuGrid[9][9];
-	int Rselector;
-	int Cselector;
-	int Bselector;
+	
+		int sudokuGrid[9][9];
+		int Rselector;
+		int Cselector;
+		int Bselector;
+	
 	} parameters;
 
-In our solver starts by iterating through the first column and finds the first empty(zero) slot of the Sudoku. The main idea is that for the current row we are iterating over, we begin with the first 0 element and increment a counter variable i. We then create 3 different threads, 1 for validating the box, 1 for validating the column, and lastly 1 to validate the row. 
+The program starts iterating through the first column and finds the first empty(zero) slot of the Sudoku using the `solve(int row, int col, parameters *data)` function.
+
+If the current square being validated is **not** 0, then it skips over it and increases the column number by one. Then, if the current column is 9, increase the row number by one and set the column number to 0. After this, check if the current row number is 9; if it is, then the validation is done and the return value is `true`.
+
+
+We then create three different threads (using a `for` loop to iterate through the possibilities), one for validating the box, one for validating the column, and lastly one for validating the row:
 
 	pthread_t rowthread;
 	pthread_t colthread;
@@ -25,33 +39,33 @@ In our solver starts by iterating through the first column and finds the first e
     data -> Rselector = row;
     pthread_create(&rowthread, 0, validate_row, (void *) data);
 
+As seen above, the data pointer will be passed to the `pthread_create()` function, which in turn will pass it as parameter to the funtion that is to run as a separate thread.
+	
+######Returning Results to the Parent Thread:
+When a worker (thread) finishes it's valitidy check, it passes its results back to the parent using the `pthread_join()` function, passing its corresponding thread and validation boolean value as parameters.
 
-Once we join the validating threads we check that the box, column, and row validators return true, and if they do, we recursively call solve with the next row,column iteration. The function eventually terminates when the row reaches 9 and it returns 1. In the even that we have iterated through all the possibilities then we must set the current row,col to 0 and return false:
+    (void) pthread_join(boxthread,&boxvalid);
+    (void) pthread_join(colthread,&colvalid);
+    (void) pthread_join(rowthread,&rowvalid); 
+
+Once we join the validating threads, the parent checks that the box, column, and row validators return true. If they do, then they are called recursively to solve the next row,column iteration. The function eventually terminates when the row reaches 9 and it returns 1.
+
+In the event that we have iterated through all the possibilities and no value was set, then we must set the current `row,col` to 0 and return `false`.
 
 	data -> sudokuGrid[row][col] = 0;
 
+######Reading the Puzzle and Writing the Solution:
+Note that the content of the **puzzle.txt** file is the Sudoku puzzle to solve, using spaces to delimit each column. For this reason a tokenizer had to be implemented: `tokenize2(char *input, char *delim)` when loading the Sudoku Grid from the file.
 
+	char buffer[BUFFER_LEN];
+	
+	for (int i = 0; i < 9; i++){
+    fgets(buffer,BUFFER_LEN, f);
+    char **out = tokenize2(buffer, " ");
+    for (int j = 0; j < 9; j++){
+      data->sudokuGrid[i][j] = atoi(out[j]);
+    }
 
+After it's been established by the `solve(int row, int col, parameters *data)` function that the puzzle is solvable, the solution to said puzzle is written to a file called **solution.txt** in the same format as the input file and the array is printed on the screen.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	FILE *file = fopen("solution.txt", "w");
