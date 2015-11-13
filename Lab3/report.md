@@ -1,5 +1,12 @@
 #CSCI 3020U
 #Lab #3: Sudoku Solution Validator
+#####Alexandar Mihaylov 100536396
+#####Jeremy Kwok - 100341977
+#####Taylor Smith - 100372402
+#####Elias Amal - 100494613
+#####Luisa Rojas - 100518772
+
+--------------------------------
 
 ####Objective
 Design a multithreaded application that determines whether the solution to a sudoku puzzle is valid.
@@ -69,3 +76,17 @@ Note that the content of the **puzzle.txt** file is the Sudoku puzzle to solve, 
 After it's been established by the `solve(int row, int col, parameters *data)` function that the puzzle is solvable, the solution to said puzzle is written to a file called **solution.txt** in the same format as the input file and the array is printed on the screen.
 
 	FILE *file = fopen("solution.txt", "w");
+
+Example of `solution.txt`
+
+	6 3 8 7 2 1 5 9 4 
+	5 9 1 4 3 6 2 7 8 
+	7 4 2 9 5 8 1 6 3 
+	2 6 4 5 9 7 8 3 1 
+	8 7 3 2 1 4 9 5 6 
+	1 5 9 6 8 3 4 2 7 
+	4 1 5 3 6 2 7 8 9 
+	9 8 6 1 7 5 3 4 2 
+	3 2 7 8 4 9 6 1 5 
+
+
