@@ -265,10 +265,10 @@ int main(int argc,char *argv[])
       for (int j = 0; j < 9; j++)
       {
         fprintf(file, "%d ", data->sudokuGrid[i][j]);
-        printf("%d ", data->sudokuGrid[i][j]);
+        // printf("%d ", data->sudokuGrid[i][j]);
       }
       fprintf(file, "\n");
-      printf("\n");
+      // printf("\n");
   } 
 									
   fclose(file);
