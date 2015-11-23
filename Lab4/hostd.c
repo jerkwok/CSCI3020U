@@ -1,7 +1,7 @@
 /*
  * Host Dispatcher Shell Project for SOFE 3950U / CSCI 3020U: Operating Systems
  *
- * Copyright (C) 2015, <GROUP MEMBERS>
+ * Copyright (C) 2015, <Alexandar Mihaylov, Jeremy Kwok, Taylor Smith, Elias Amal, Luisa Rojas>
  * All rights reserved.
  * 
  */
@@ -24,9 +24,33 @@
 
 // Define functions declared in hostd.h here
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // ==================== YOUR CODE HERE ==================== //
+
+    // 4 queues: real time, and priority 1 - 3:
+    // Processes are executed immediately until their runtime is completed.
+    // Are processes on a first-come-first-served basis.
+    queue_t *realtime_queue = malloc(sizeof(queue_t));
+    realtime_queue->head = NULL;
+    realtime_queue->tail = NULL;
+
+    // After a process has been run for 1 second, its removed from the queue and
+    // added to the next lower priority queue
+    queue_t *prior1_queue = malloc(sizeof(queue_t));
+    prior1_queue->head = NULL;
+    prior1_queue->tail = NULL;
+
+    // After a process has been run for 1 second, its removed from the queue and
+    // added to the next lower priority queue
+    queue_t *prior2_queue = malloc(sizeof(queue_t));
+    prior2_queue->head = NULL;
+    prior2_queue->tail = NULL;
+
+    // Once processes are added to it, they are run for 1 second then added back
+    // to the priority 3 queue
+    queue_t *prior3_queue = malloc(sizeof(queue_t));
+    prior3_queue->head = NULL;
+    prior3_queue->tail = NULL;
     
     // Load the dispatchlist
     
