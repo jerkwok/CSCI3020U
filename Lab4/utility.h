@@ -13,19 +13,24 @@
 
 // Resources structure containing integers for each resource constraint and an
 // array of 1024 for the memory
-// typedef struct {
-//  ...
-//  ...
-// } resources;
+typedef struct {
+ 	// printer, scanner, modem and CD drives will be stored here
+ 	// memory array
+} resources;
 
 
 // Processes structure containing all of the process details parsed from the 
 // input file, should also include the memory address (an index) which indicates
 // where in the resources memory array its memory was allocated
-// typedef struct {
-//  ...
-//  ...
-// } process;
+typedef struct {
+	char name[MAX_LENGTH];
+	int priority;
+	int pid;
+	int address;
+	int memory;
+	int runtime;
+	bool suspended;
+} process;
 
 
 // Include your relevant functions declarations here they must start with the 

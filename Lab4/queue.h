@@ -13,16 +13,6 @@
 #define MAX_LENGTH 256
 
 // Your linked list structure for your queue
-typedef struct {
-	char name[MAX_LENGTH];
-	int priority;
-	int pid;
-	int address;
-	int memory;
-	int runtime;
-	bool suspended;
-} proc;
-
 typedef struct node{
   proc val;
   struct node* next;

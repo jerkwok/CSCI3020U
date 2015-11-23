@@ -9,11 +9,7 @@
 #define HOSTD_H_
 
 // Include any relevant data structures here thay may be needed
- typedef struct resources {
- 	// printer, scanner, modem and CD drives will be stored here
- 	// memory array
- } resource;
-
+ 
 // Include any relevant functions declarations here they must start with the 
 // extern keyword such as in the following example:
 // extern void print_process(proc process);
