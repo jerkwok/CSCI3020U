@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     // Load the dispatchlist
     // Add each process structure instance to the job dispatch list queue
     readFile(&dispatcher);
-    print_list(dispatcher);
+    // print_list(dispatcher);
 
     // Iterate through each item in the job dispatch list, add each process
     // to the appropriate queues

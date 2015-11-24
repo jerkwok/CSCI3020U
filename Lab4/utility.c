@@ -18,30 +18,33 @@
 
 int alloc_mem(resources res, int size)
 {
-
+	return 0;
 }
 
 void free_mem(resources res, int index, int size)
 {
-
+	printf("Hello\n");
 }
 
 void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, queue** prior2_queue, queue** prior3_queue){
- //  		node_t *temp = dispatcher->head;
+  	queue *temp = *dispatcher;
+	print_list(temp);
+	node_t *current = temp->head;
 
-	// while (temp != NULL){
-	// 	//realtime 
-	// 	if(temp->val.priority == 0){
-	// 		// push(realtime_queue,*temp);
-	// 	}else if(temp->val.priority == 1){
-	// 		// push(prior1_queue,*temp);
-	// 	}else if(temp->val.priority == 2){
-	// 		// push(prior2_queue,*temp);
-	// 	}else if(temp->val.priority == 3){
-	// 		// push(prior3_queue,*temp);			
-	// 	}
-	//  // *temp = pop(dispatcher);
-	// }
+	while (current != NULL){
+		//realtime 
+		if(current->val.priority == 0){
+			push(realtime_queue,current->val);
+		}else if(current->val.priority == 1){
+			push(prior1_queue,current->val);
+		}else if(current->val.priority == 2){
+			push(prior2_queue,current->val);
+		}else if(current->val.priority == 3){
+			push(prior3_queue,current->val);			
+		}
+      current=current->next;
+	}
+	// print_list(realtime_queue);
 }
 
 void readFile(queue** p1){
