@@ -44,32 +44,57 @@ void free_mem(resources res, int index, int size)
   }
 }
 
-void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, queue** prior2_queue, queue** prior3_queue){
+int freeMemoryAmount(int memory[],int length){
+  int freeMemory = 0;
+  for (int i = 0; i < length; i++){
+    if (memory[i] == 0){
+      freeMemory++;
+    }
+  }
+  return freeMemory;
+}
+
+void print_memory(int memory[],int length){
+  printf("[");
+  for (int i = 0; i < length; i++){
+    if (memory[i] == 1){
+      printf("|");
+    }else{
+      printf("_");
+    }
+  }
+  printf("]\n");
+}
+
+void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, queue** prior2_queue, queue** prior3_queue,int time){
   	queue *temp = *dispatcher;
-	print_list(temp);
+	// print_list(temp);
 	node_t *current = temp->head;
 
 	while (current != NULL){
 		//realtime 
-		if(current->val.priority == 0){
-			push(realtime_queue,current->val);
-		}else if(current->val.priority == 1){
-			push(prior1_queue,current->val);
-		}else if(current->val.priority == 2){
-			push(prior2_queue,current->val);
-		}else if(current->val.priority == 3){
-			push(prior3_queue,current->val);			
-		}
+    if (current->val.arrival <= time){
+
+      if(current->val.priority == 0){
+        push(realtime_queue,current->val);
+      }else if(current->val.priority == 1){
+        push(prior1_queue,current->val);
+      }else if(current->val.priority == 2){
+        push(prior2_queue,current->val);
+      }else if(current->val.priority == 3){
+        push(prior3_queue,current->val);      
+      }
+    }
       current=current->next;
-	}
-	// printf("Real Time:\n");
-	// print_list(*realtime_queue);
-	// printf("P1:\n");
-	// print_list(*prior1_queue);
-	// printf("P2:\n");
-	// print_list(*prior2_queue);
-	// printf("P3:\n");
-	// print_list(*prior3_queue);
+  }
+	printf("Real Time:\n");
+	print_list(*realtime_queue);
+	printf("P1:\n");
+	print_list(*prior1_queue);
+	printf("P2:\n");
+	print_list(*prior2_queue);
+	printf("P3:\n");
+	print_list(*prior3_queue);
 }
 
 void readFile(queue** p1){

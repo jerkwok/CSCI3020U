@@ -41,7 +41,6 @@ typedef struct {
 	int cd_drives;
 	int address;
 	int pid;
-	bool suspended;
 } proc;
 
 typedef struct node{
@@ -71,7 +70,7 @@ extern void free_mem(resources res, int index, int size);
 // it to your job dispatch list queue (linked list)
 extern void readFile(queue** p1);
 
-extern void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, queue** prior2_queue, queue** prior3_queue);
+extern void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, queue** prior2_queue, queue** prior3_queue, int time);
 
 extern char** tokenize2(char *input, char *delim);
 
@@ -80,5 +79,9 @@ extern void push(queue **q1, proc val);
 extern proc pop(queue **q1);
 
 extern void print_list(queue *q1);
+
+extern int freeMemoryAmount(int memory[],int length);
+
+extern void print_memory(int memory[],int length);
 
 #endif /* UTILITY_H_ */

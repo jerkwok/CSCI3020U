@@ -27,6 +27,8 @@
 int main(int argc, char *argv[]) {
     // ==================== YOUR CODE HERE ==================== //
 
+    int current_time = 0;
+
     // 4 queues: real time, and priority 1 - 3:
     // Processes are executed immediately until their runtime is completed.
     // Are processes on a first-come-first-served basis.
@@ -63,7 +65,6 @@ int main(int argc, char *argv[]) {
 
     // Iterate through each item in the job dispatch list, add each process
     // to the appropriate queues
-    dispatch(&dispatcher,&realtime_queue,&prior1_queue,&prior2_queue,&prior3_queue);
 
     // Allocate the resources for each process before it's executed
     resources res_avail;
@@ -75,11 +76,44 @@ int main(int argc, char *argv[]) {
         res_avail.avail_mem[i] = 0;
     }
 
-    // Execute the process binary using fork and exec
+    node_t *temp_real_time = realtime_queue->head;
+    node_t *temp_1 = prior1_queue->head;
+    node_t *temp_2 = prior2_queue->head;
+    node_t *temp_3 = prior3_queue->head;
 
-    // Perform the appropriate signal handling / resource allocation and de-alloaction
+    dispatch(&dispatcher,&realtime_queue,&prior1_queue,&prior2_queue,&prior3_queue,current_time);
+    while ((temp_real_time != NULL) || (temp_1 != NULL) || (temp_2 != NULL) || (temp_3 != NULL) || (dispatcher != NULL)){
 
-    // Repeat until all processes have been executed, all queues are empty
+        //dispatch any processes that have arrival times into the queues.
+        dispatch(&dispatcher,&realtime_queue,&prior1_queue,&prior2_queue,&prior3_queue,current_time);
+
+
+        // Execute the process binary using fork and exec
+
+        // Perform the appropriate signal handling / resource allocation and de-alloaction
+        
+        // Repeat until all processes have been executed, all queues are empty
+        // while ((temp_real_time != NULL) && (temp_1 != NULL) && (temp_2 != NULL) && (temp_3 != NULL)){
+        //     if (temp_real_time != NULL){
+        //         temp_real_time = temp_real_time -> next;
+        //     }
+
+        //     if (temp_1 != NULL){
+        //         temp_1 = temp_1 -> next;
+        //     }
+
+        //     if (temp_2 != NULL){
+        //         temp_2 = temp_2 -> next;
+        //     }
+
+        //     if (temp_3 != NULL){
+        //         temp_3 = temp_3 -> next;
+        //     }
+        // }
+        print_list(dispatcher);
+        current_time++;
+    }
+
      
     return EXIT_SUCCESS;
 }
