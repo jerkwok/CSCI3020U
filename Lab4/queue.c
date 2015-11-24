@@ -7,54 +7,37 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "queue.h"
 
 // Define your FIFO queue functions here, these will most likely be the
 // push and pop functions that you declared in your header file
 
-node_t *push(node_t *tail, proc process) {
-	
-	// Create new node
-	node_t *new_node;
-	new_node = (node_t*)malloc(sizeof(node_t));
-	if (node_t == NULL) {
-		fprintf(stderr, "Unable to malloc\n");
-		exit(0);
-	}
+proc pop(queue **q1){
+  node_t* next_node = NULL;
+  proc popped_val;
 
-	// Fill values
-	new_node->val = val;
-	new_node->next = NULL;
-
-	// Add at END of queue (tail)
-	if (some_queue->tail != NULL) {
-		some_queue->tail->next = new_node;
-		some_queue->tail = new_node;
-	}
-	else {
-		some_queue->head = new_node;
-		some_queue->tail = new_node;
-	}
-
-	return *new_node;
+  if ((*q1)->tail != NULL){  
+    next_node = (*q1)->head->next;
+    popped_val = (*q1)->head->val;
+    free((*q1)->head);
+    (*q1)->head = next_node;
+  }
+  return popped_val;
 }
 
-node_t *pop(node_t *tail) {
+void push(queue **q1, proc val){
+  //create a new node
+  node_t* newNode = malloc(sizeof(node_t));
+  newNode->val = val;
+  newNode->next = NULL;
 
-	node_t *next_node;
-	proc temp_proc;
-
-	if (*some_queue->head == NULL) {
-		// Queue is empty.
-		return 0;
-	}
-	else {
-		// Return first element and remove it
-		next_node = (*some_queue)->head->next;
-		temp_proc = (*some_queue)->head->val;
-		free((*some_queue)->head);
-		(*some_queue)->head = next_node;
-	}
-	return *next_node;
-
+  if ((*q1)->head == NULL){
+    //q1 is empty
+    (*q1)->head = newNode;
+    (*q1)->tail = newNode;
+  }else{
+    (*q1)->tail->next = newNode;
+    (*q1)->tail = newNode;
+  }
 }

@@ -7,6 +7,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "utility.h"
 
 // Define your utility functions here, you will likely need to add more...

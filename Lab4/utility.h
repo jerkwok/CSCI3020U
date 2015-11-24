@@ -8,14 +8,23 @@
 #ifndef UTILITY_H_
 #define UTILITY_H_
 
+#include "queue.h"
+
 // The amount of available memory
 #define MEMORY 1024
+#define MAX_LENGTH 256
+
 
 // Resources structure containing integers for each resource constraint and an
 // array of 1024 for the memory
 typedef struct {
  	// printer, scanner, modem and CD drives will be stored here
+ 	int printers;
+ 	int scanners;
+ 	int modems;
+ 	int cd_drives;
  	// memory array
+ 	int avail_mem[MEMORY];
 } resources;
 
 
@@ -30,7 +39,7 @@ typedef struct {
 	int memory;
 	int runtime;
 	bool suspended;
-} process;
+} proc;
 
 
 // Include your relevant functions declarations here they must start with the 
