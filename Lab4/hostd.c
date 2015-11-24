@@ -66,6 +66,14 @@ int main(int argc, char *argv[]) {
     dispatch(&dispatcher,&realtime_queue,&prior1_queue,&prior2_queue,&prior3_queue);
 
     // Allocate the resources for each process before it's executed
+    resources res_avail;
+    res_avail.printers = 2;
+    res_avail.scanners = 1;
+    res_avail.modems = 1;
+    res_avail.cd_drives = 1;
+    for (int i = 0; i < MEMORY;i++){
+        res_avail.avail_mem[i] = 0;
+    }
 
     // Execute the process binary using fork and exec
 

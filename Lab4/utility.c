@@ -18,12 +18,30 @@
 
 int alloc_mem(resources res, int size)
 {
+  bool free = false;
+  for (int i = 0; i < 1024 - 64; i++){
+    if ((res.avail_mem[i] == 0) && (i + 64 < 1024)){
+      free = true;
+      for (int j = i; j < size; j++){
+        if (res.avail_mem[j] == 0){
+          free = false;
+        }
+      }
+      if (free == true){
+        return i;
+      }
+    }
+  }
+
+  //not sure what to return on not founds
 	return 0;
 }
 
 void free_mem(resources res, int index, int size)
 {
-	printf("Hello\n");
+	for(int i = index; i < index+size; i++){
+    res.avail_mem[i] = 0;
+  }
 }
 
 void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, queue** prior2_queue, queue** prior3_queue){
@@ -44,7 +62,14 @@ void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, 
 		}
       current=current->next;
 	}
-	// print_list(realtime_queue);
+	// printf("Real Time:\n");
+	// print_list(*realtime_queue);
+	// printf("P1:\n");
+	// print_list(*prior1_queue);
+	// printf("P2:\n");
+	// print_list(*prior2_queue);
+	// printf("P3:\n");
+	// print_list(*prior3_queue);
 }
 
 void readFile(queue** p1){
