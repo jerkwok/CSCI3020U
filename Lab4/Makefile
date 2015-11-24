@@ -8,7 +8,7 @@ EXE = process hostd
 .PHONY: clean help
 
 .PHONY: debug
-debug: CFLAGS += -O0 -g3 -lm
+debug: CFLAGS += -O0 -g3
 debug: $(EXE)
 
 process : sigtrap.o

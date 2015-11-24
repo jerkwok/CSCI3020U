@@ -30,34 +30,40 @@ int main(int argc, char *argv[]) {
     // 4 queues: real time, and priority 1 - 3:
     // Processes are executed immediately until their runtime is completed.
     // Are processes on a first-come-first-served basis.
-    queue_t *realtime_queue = malloc(sizeof(queue_t));
+    queue *realtime_queue = malloc(sizeof(queue));
     realtime_queue->head = NULL;
     realtime_queue->tail = NULL;
 
     // After a process has been run for 1 second, its removed from the queue and
     // added to the next lower priority queue
-    queue_t *prior1_queue = malloc(sizeof(queue_t));
+    queue *prior1_queue = malloc(sizeof(queue));
     prior1_queue->head = NULL;
     prior1_queue->tail = NULL;
 
     // After a process has been run for 1 second, its removed from the queue and
     // added to the next lower priority queue
-    queue_t *prior2_queue = malloc(sizeof(queue_t));
+    queue *prior2_queue = malloc(sizeof(queue));
     prior2_queue->head = NULL;
     prior2_queue->tail = NULL;
 
     // Once processes are added to it, they are run for 1 second then added back
     // to the priority 3 queue
-    queue_t *prior3_queue = malloc(sizeof(queue_t));
+    queue *prior3_queue = malloc(sizeof(queue));
     prior3_queue->head = NULL;
     prior3_queue->tail = NULL;
+
+    queue *dispatcher = malloc(sizeof(queue));
+    dispatcher->head = NULL;
+    dispatcher->tail = NULL;
     
     // Load the dispatchlist
-    
     // Add each process structure instance to the job dispatch list queue
+    readFile(&dispatcher);
+    print_list(dispatcher);
 
     // Iterate through each item in the job dispatch list, add each process
     // to the appropriate queues
+    dispatch(&dispatcher,&realtime_queue,&prior1_queue,&prior2_queue,&prior3_queue);
 
     // Allocate the resources for each process before it's executed
 
