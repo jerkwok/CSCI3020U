@@ -406,8 +406,6 @@ int main(int argc, char *argv[]) {
     //     }
     // }
     printf("<=========CURRENT TIME:%d========>\n",current_time );
-    current_time++;
-
     // int c;
     // c = getchar( );
   }
