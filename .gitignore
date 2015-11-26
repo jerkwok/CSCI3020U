@@ -1,2 +1,8 @@
 .DS_Store
 *.exe
+*~
+*.o
+*.out
+test.c
+temp.md
+hostd
