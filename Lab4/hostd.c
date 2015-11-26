@@ -83,9 +83,10 @@ int main(int argc, char *argv[]) {
   node_t *temp_3 = prior3_queue->head;
   while ((temp_real_time != NULL) || (temp_1 != NULL) || (temp_2 != NULL) || (temp_3 != NULL) || (dispatcher->head != NULL)){
 
-    puts("-------------");
-  print_list(dispatcher);
-  puts("-------------");
+  //   puts("-------------");
+  // printf("Dispatcher Queue PRE:\n");
+  // print_list(dispatcher);
+  // puts("-------------");
 
     //dispatch any processes that have arrival times into the queues.
     dispatch(&dispatcher,&realtime_queue,&prior1_queue,&prior2_queue,&prior3_queue,current_time);
@@ -95,35 +96,51 @@ int main(int argc, char *argv[]) {
     temp_2 = prior2_queue->head;
     temp_3 = prior3_queue->head;
 
+    if(dispatcher->head == NULL){
+      printf("%s\n","<=DISPATCHER NULL=>" );
+    }else{
+      printf("-----------\n");
+      printf("Dispatcher Queue:\n");
+      print_list(dispatcher);
+      printf("-----------\n");
+    }
+
     if(temp_real_time == NULL){
       printf("%s\n","<=RT NULL=>" );
     }else{
+      printf("-----------\n");
+      printf("Real Time Queue:\n");
       print_list(realtime_queue);
+      printf("-----------\n");
     }
 
     if(temp_1 == NULL){
       printf("%s\n","<=1 NULL=>" );
     }else{
+      printf("-----------\n");
+      printf("1 Queue:\n");
       print_list(prior1_queue);
+      printf("-----------\n");
     }
 
     if(temp_2 == NULL){
       printf("%s\n","<=2 NULL=>" );
     }else{
+      printf("-----------\n");
+      printf("2 Queue:\n");
       print_list(prior2_queue);
+      printf("-----------\n");
     }
 
     if(temp_3 == NULL){
       printf("%s\n","<=3 NULL=>" );
     }else{
+      printf("-----------\n");
+      printf("3 Queue:\n");
       print_list(prior3_queue);
+      printf("-----------\n");
     }
 
-    if(dispatcher->head == NULL){
-      printf("%s\n","<=DISPATCHER NULL=>" );
-    }else{
-      print_list(dispatcher);
-    }
 
 
     //redundant but needed 
