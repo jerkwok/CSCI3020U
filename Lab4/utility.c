@@ -12,8 +12,6 @@
 #include "utility.h"
 #include "queue.h"
 
-#define FILE_LENGTH 10
-
 // Define your utility functions here, you will likely need to add more...
 
 int alloc_mem(resources res, int size)
@@ -78,10 +76,11 @@ void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, 
 
 	while (current != NULL){
 		//realtime 
-    if (current->val.arrival <= time){
-
+    if (current->val.arrival = time){
       if(current->val.priority == 0){
         push(realtime_queue,current->val);
+        printf("REAL TIME QUEUE" );
+        print_list(realtime_queue);
       }else if(current->val.priority == 1){
         push(prior1_queue,current->val);
       }else if(current->val.priority == 2){
@@ -89,6 +88,7 @@ void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, 
       }else if(current->val.priority == 3){
         push(prior3_queue,current->val);      
       }
+      pop(dispatcher);
     }
       current=current->next;
   }
@@ -115,8 +115,9 @@ void readFile(queue** p1){
     return;    
   }
 
-  for (int i = 0; i < FILE_LENGTH; i++){
-    fgets(buffer,MAX_LENGTH, f1);
+  // for (int i = 0; i < FILE_LENGTH; i++){
+  while(fgets(buffer,MAX_LENGTH, f1) != NULL){
+    printf("%s\n", buffer );
     proc *temp_proc = (proc *)  malloc(sizeof(proc));
     char **tokenized = tokenize2(buffer,", ");
     //priority is in tokenized[1]
@@ -140,8 +141,8 @@ void readFile(queue** p1){
 
       //push process onto queue
       push(p1,*temp_proc);
-    // }
-  }
+    }
+  // }
   fclose(f1);
 }
 

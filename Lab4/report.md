@@ -1,9 +1,5 @@
 #CSCI 3020U
-<<<<<<< HEAD
-#Lab #4: Host Dispatcher
-=======
 #Lab #4: Host Dispatcher Shell Project
->>>>>>> 7a421e3d827aa448b5cdec9cad2ddb928184ae14
 #####Alexandar Mihaylov 100536396
 #####Jeremy Kwok - 100341977
 #####Taylor Smith - 100372402
@@ -13,7 +9,6 @@
 --------------------------------
 
 ####Objective
-<<<<<<< HEAD
 Create a C program that dispatches and schedules the execution of processes in multiple queues.
 
 ####Program Flow
@@ -24,12 +19,10 @@ The Host Dispatcher program will initially take in a list of processes and their
 
 ######Multiple Job Queues:
 
+Each process in the dispatch queue has a priority associated with it. When a process comes off the dispatch queue, the dispatcher will put it into one of four queues depending on its priority. Processes with a priority of 0 will be put into the Real Time queue, and processes with priorities 1-3 will be placed into the priority 1-3 queue.
+
 ######Memory Allocation:
 
+The free memory that we have devoted to our dispatcher is represented by an integer array, where a 0 represents free memory and a 1 represents currently occupied memory. When a non real time process runs for 1 second, it is put into a lower queue and the memory is still occupied. The memory is only freed up once the process runs to completion, and because of this, we could have insufficient memory for a process to execute when it is on the front of the queue. To check if we have sufficient memory, we use a First Fit memory allocation scheme. When a process requires an amount of memory, the program will analyze our memory array, and find the first continuous amount of memory that the process requires. The benefit to this allocation scheme is that the allocation is very fast, as the dispacther stops as soon as it finds a large enough continious section of memory; it doesn't spend a long time analyzing the avaliable memory. The downside to a First Fit memory allocation scheme is that as multiple processes start and run to execution, the memory will be allocated and deallocated many times, and since we only perform a cursory analysis of the avaliable memory, we can end with with many small chunks of memory that are unable to be allocated, causing inefficiencies.   
+
 ######Multilevel Dispatching Schemes:
-=======
-
-####Background
-
-####Program Flow
->>>>>>> 7a421e3d827aa448b5cdec9cad2ddb928184ae14
