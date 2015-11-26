@@ -264,7 +264,7 @@ int main(int argc, char *argv[]) {
     }
 
     //Priority 2 Queue
-    if (temp_2 != NULL){
+    else if (temp_2 != NULL){
       puts("checkpoint");
       //pop the head from the queue
       proc popped_proc= pop(&prior2_queue);
@@ -322,7 +322,7 @@ int main(int argc, char *argv[]) {
     }
 
     //Priority 3 Queue
-    if (temp_3 != NULL){
+    else if (temp_3 != NULL){
       puts("checkpoint");
       //pop the head from the queue
       proc popped_proc= pop(&prior3_queue);
