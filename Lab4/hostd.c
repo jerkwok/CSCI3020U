@@ -98,7 +98,6 @@ int main(int argc, char *argv[]) {
     // Execute the process binary using fork and exec
 
     if (temp_real_time != NULL){
-      puts("checkpoint");
       //pop the head from the queue
       proc popped_proc= pop(&realtime_queue);
 
@@ -129,7 +128,7 @@ int main(int argc, char *argv[]) {
 	  exit(0);
 	}else if(pid > 0){
 	  //parent process
-	  printf("[parent] waiting %d seconds...:\n",popped_proc.runtime);
+	  printf("[parent Q0] waiting %d second(s)...:\n",popped_proc.runtime);
 	  sleep(popped_proc.runtime); //sleep for the needed runtime
 	  puts("[parent] Sending SIGINT...");
 	  kill(pid,SIGINT);
@@ -147,9 +146,178 @@ int main(int argc, char *argv[]) {
 	  puts("fork failed");
 	}
       }
+      temp_real_time = realtime_queue->head;
     }
 
-    return 0;
+    //Priority 1 Queue
+    if (temp_1 != NULL){
+      //pop the head from the queue
+      proc popped_proc= pop(&prior1_queue);
+
+      //get resources required
+      int printers_req = popped_proc.printers;
+      int scanners_req = popped_proc.scanners;
+      int modems_req = popped_proc.modems;
+      int cd_drives_req = popped_proc.cd_drives;
+
+      //check if there is enough memory for the process
+      int mem_index = alloc_mem(res_avail, popped_proc.memory);
+      if (mem_index == -1){
+	//not enough memory, must return the given memory
+	free_mem(res_avail, mem_index, popped_proc.memory);
+      }
+      //check if enough resources and memory are available
+      if (res_avail.printers >= printers_req &&
+	  res_avail.scanners >= scanners_req &&
+	  res_avail.modems >= modems_req &&
+	  res_avail.cd_drives >= cd_drives_req &&
+	  mem_index >= 0){
+	//there are enough resources and memory for the resorce
+	//EXECUTE THE NEXT RESOURCE
+	pid_t pid = fork();
+	if (pid == 0){
+	  //child process
+	  execlp("./process",NULL);
+	  exit(0);
+	}else if(pid > 0){
+	  //parent process
+	  printf("[parent Q1] waiting %d second...:\n",1);
+	  sleep(1); //sleep for only 1 second
+	  puts("[parent] Sending SIGINT...");
+	  kill(pid,SIGINT);
+	  waitpid(pid,0,0);
+	  //done with executing the proces----------------
+	  //free the memory
+	  free_mem(res_avail, mem_index, popped_proc.memory);
+	  //return the resources back to 
+	  res_avail.printers += printers_req;
+	  res_avail.scanners += scanners_req;
+	  res_avail.modems += modems_req;
+	  res_avail.cd_drives += cd_drives_req;
+	  //push the process to the next queue
+	  push(&prior2_queue, popped_proc);
+	}else{
+	  //fork failed
+	  puts("fork failed");
+	}
+      }
+      temp_1 = prior1_queue->head;
+    }
+
+    //Priority 2 Queue
+    if (temp_2 != NULL){
+      puts("checkpoint");
+      //pop the head from the queue
+      proc popped_proc= pop(&prior2_queue);
+
+      //get resources required
+      int printers_req = popped_proc.printers;
+      int scanners_req = popped_proc.scanners;
+      int modems_req = popped_proc.modems;
+      int cd_drives_req = popped_proc.cd_drives;
+
+      //check if there is enough memory for the process
+      int mem_index = alloc_mem(res_avail, popped_proc.memory);
+      if (mem_index == -1){
+	//not enough memory, must return the given memory
+	free_mem(res_avail, mem_index, popped_proc.memory);
+      }
+      //check if enough resources and memory are available
+      if (res_avail.printers >= printers_req &&
+	  res_avail.scanners >= scanners_req &&
+	  res_avail.modems >= modems_req &&
+	  res_avail.cd_drives >= cd_drives_req &&
+	  mem_index >= 0){
+	//there are enough resources and memory for the resorce
+	//EXECUTE THE NEXT RESOURCE
+	pid_t pid = fork();
+	if (pid == 0){
+	  //child process
+	  execlp("./process",NULL);
+	  exit(0);
+	}else if(pid > 0){
+	  //parent process
+	  printf("[parent Q2] waiting %d second...:\n",1);
+	  sleep(1); //sleep for only 1 second
+	  puts("[parent] Sending SIGINT...");
+	  kill(pid,SIGINT);
+	  waitpid(pid,0,0);
+	  //done with executing the proces----------------
+	  //free the memory
+	  free_mem(res_avail, mem_index, popped_proc.memory);
+	  //return the resources back to 
+	  res_avail.printers += printers_req;
+	  res_avail.scanners += scanners_req;
+	  res_avail.modems += modems_req;
+	  res_avail.cd_drives += cd_drives_req;
+	  //push the process to the next queue
+	  push(&prior3_queue, popped_proc);
+	}else{
+	  //fork failed
+	  puts("fork failed");
+	}
+      }
+      temp_2 = prior2_queue->head;
+    }
+
+    //Priority 3 Queue
+    if (temp_3 != NULL){
+      puts("checkpoint");
+      //pop the head from the queue
+      proc popped_proc= pop(&prior3_queue);
+
+      //get resources required
+      int printers_req = popped_proc.printers;
+      int scanners_req = popped_proc.scanners;
+      int modems_req = popped_proc.modems;
+      int cd_drives_req = popped_proc.cd_drives;
+
+      //check if there is enough memory for the process
+      int mem_index = alloc_mem(res_avail, popped_proc.memory);
+      if (mem_index == -1){
+	//not enough memory, must return the given memory
+	free_mem(res_avail, mem_index, popped_proc.memory);
+      }
+      //check if enough resources and memory are available
+      if (res_avail.printers >= printers_req &&
+	  res_avail.scanners >= scanners_req &&
+	  res_avail.modems >= modems_req &&
+	  res_avail.cd_drives >= cd_drives_req &&
+	  mem_index >= 0){
+	//there are enough resources and memory for the resorce
+	//EXECUTE THE NEXT RESOURCE
+	pid_t pid = fork();
+	if (pid == 0){
+	  //child process
+	  execlp("./process",NULL);
+	  exit(0);
+	}else if(pid > 0){
+	  //parent process
+	  printf("[parent Q3] waiting %d second...:\n",1);
+	  sleep(1); //sleep for only 1 second
+	  puts("[parent] Sending SIGINT...");
+	  kill(pid,SIGINT);
+	  waitpid(pid,0,0);
+	  //done with executing the proces----------------
+	  //free the memory
+	  free_mem(res_avail, mem_index, popped_proc.memory);
+	  //return the resources back to 
+	  res_avail.printers += printers_req;
+	  res_avail.scanners += scanners_req;
+	  res_avail.modems += modems_req;
+	  res_avail.cd_drives += cd_drives_req;
+	  //push the process to the next queue
+	  push(&prior3_queue, popped_proc);
+	}else{
+	  //fork failed
+	  puts("fork failed");
+	}
+      }
+      temp_3 = prior3_queue->head;
+    }
+
+    //    return 0;//temp for debugging
+
 
     // Perform the appropriate signal handling / resource allocation and de-alloaction
         
