@@ -28,18 +28,23 @@ int alloc_mem(resources res, int size)
         }
       }
       if (free == true){
+	//actually allocate the memory needed
+	for (; i < size; i++){
+	  res.avail_mem[i] = 1;
+	}
+	//return the starting index of the memory allocated
         return i;
       }
     }
   }
-
   //not sure what to return on not founds
-	return 0;
+  //negative means not enough memory
+  return -1;
 }
 
 void free_mem(resources res, int index, int size)
 {
-	for(int i = index; i < index+size; i++){
+  for(int i = index; i < index+size; i++){
     res.avail_mem[i] = 0;
   }
 }
@@ -87,6 +92,7 @@ void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, 
     }
       current=current->next;
   }
+	/*
 	printf("Real Time:\n");
 	print_list(*realtime_queue);
 	printf("P1:\n");
@@ -95,6 +101,7 @@ void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, 
 	print_list(*prior2_queue);
 	printf("P3:\n");
 	print_list(*prior3_queue);
+	*/
 }
 
 void readFile(queue** p1){
