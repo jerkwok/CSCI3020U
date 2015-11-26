@@ -76,17 +76,19 @@ void dispatch(queue** dispatcher, queue** realtime_queue, queue** prior1_queue, 
 
 	while (current != NULL){
 		//realtime 
-    if (current->val.arrival = time){
+    if (current->val.arrival <= time){
       if(current->val.priority == 0){
         push(realtime_queue,current->val);
-        printf("REAL TIME QUEUE" );
-        print_list(realtime_queue);
+        printf("PUSH TO RT QUEUE\n");
       }else if(current->val.priority == 1){
         push(prior1_queue,current->val);
+        printf("PUSH TO 1 QUEUE\n");
       }else if(current->val.priority == 2){
         push(prior2_queue,current->val);
+        printf("PUSH TO 2 QUEUE\n");
       }else if(current->val.priority == 3){
         push(prior3_queue,current->val);      
+        printf("PUSH TO 3 QUEUE\n");
       }
       pop(dispatcher);
     }
@@ -117,7 +119,6 @@ void readFile(queue** p1){
 
   // for (int i = 0; i < FILE_LENGTH; i++){
   while(fgets(buffer,MAX_LENGTH, f1) != NULL){
-    printf("%s\n", buffer );
     proc *temp_proc = (proc *)  malloc(sizeof(proc));
     char **tokenized = tokenize2(buffer,", ");
     //priority is in tokenized[1]

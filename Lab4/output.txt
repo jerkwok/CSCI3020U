@@ -1,0 +1,904 @@
+[32m[40m  16088; START[30m[0m
+[32m[40m  16088; tick 1[30m[0m
+[32m[40m  16088; SIGINT[30m[0m
+[31m[43m  16089; START[30m[0m
+[31m[43m  16089; tick 1[30m[0m
+[31m[43m  16089; SIGINT[30m[0m
+[36m[44m  16090; START[30m[0m
+[36m[44m  16090; tick 1[30m[0m
+[36m[44m  16090; tick 2[30m[0m
+[36m[44m  16090; tick 3[30m[0m
+[36m[44m  16090; SIGINT[30m[0m
+-------------
+arrival: 0, priority: 0, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 0, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 6, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 2, priority: 2, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 3, priority: 0, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+-------------
+PUSH TO RT QUEUE
+PUSH TO 1 QUEUE
+arrival: 0, priority: 0, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 0, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+<=2 NULL=>
+<=3 NULL=>
+arrival: 1, priority: 3, runtime: 6, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 2, priority: 2, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 3, priority: 0, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+[parent Q0] waiting 1 second(s)...:
+[parent] Sending SIGINT...
+[parent Q1] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:2========>
+-------------
+arrival: 1, priority: 3, runtime: 6, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 2, priority: 2, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 3, priority: 0, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+-------------
+PUSH TO 3 QUEUE
+PUSH TO 2 QUEUE
+PUSH TO 1 QUEUE
+PUSH TO RT QUEUE
+arrival: 3, priority: 0, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 0, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 2, priority: 2, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 1, priority: 3, runtime: 6, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+[parent Q0] waiting 3 second(s)...:
+[parent] Sending SIGINT...
+[paren[31m[42m  16093; START[30m[0m
+[31m[42m  16093; tick 1[30m[0m
+[31m[42m  16093; SIGINT[30m[0m
+[35m[46m  16095; START[30m[0m
+[35m[46m  16095; tick 1[30m[0m
+[35m[46m  16095; SIGINT[30m[0m
+[36m[41m  16097; START[30m[0m
+[36m[41m  16097; tick 1[30m[0m
+[36m[41m  16097; SIGINT[30m[0m
+[34m[43m  16099; START[30m[0m
+[34m[43m  16099; tick 1[30m[0m
+[34m[43m  16099; SIGINT[30m[0m
+[37m[41m  16101; START[30m[0m
+[37m[41m  16101; tick 1[30m[0m
+[37m[41m  16101; SIGINT[30m[0m
+[33m[45m  16103; START[30m[0m
+[33m[45m  16103; tick 1[30m[0m
+[33m[45m  16103; SIGINT[30m[0m
+[33m[41m  16105; START[30m[0m
+[33m[41m  16105; tick 1[30m[0m
+[33m[41m  16105; SIGINT[30m[0m
+[35m[47m  16107; START[30m[0m
+[35m[47m  16107; tick 1[30m[0m
+[35m[47m  16107; SIGINT[30m[0m
+[32m[41m  16109; START[30m[0m
+[32m[41m  16109; tick 1[30m[0m
+[32m[41m  16109; SIGINT[30m[0m
+[36m[45m  16111; START[30m[0m
+[36m[45m  16111; tick 1[30m[0m
+[36m[45m  16111; SIGINT[30m[0m
+[31m[46m  16113; START[30m[0m
+[31m[46m  16113; tick 1[30m[0m
+[31m[46m  16113; SIGINT[30m[0m
+[33m[44m  16115; START[30m[0m
+[33m[44m  16115; tick 1[30m[0m
+[33m[44m  16115; SIGINT[30m[0m
+t Q1] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q2] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:9========>
+-------------
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+-------------
+PUSH TO 2 QUEUE
+PUSH TO 1 QUEUE
+PUSH TO 1 QUEUE
+PUSH TO 1 QUEUE
+<=RT NULL=>
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 2, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 0, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 5, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+[parent Q1] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q2] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:13========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 1, priority: 3, runtime: 5, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 2, priority: 2, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 0, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+[parent Q1] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q2] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:17========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 2, runtime: 3, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 0, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 1, priority: 3, runtime: 4, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+[parent Q1] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q2] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:21========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+arrival: 4, priority: 1, runtime: 1[31m[47m  16117; START[30m[0m
+[31m[47m  16117; tick 1[30m[0m
+[31m[47m  16117; SIGINT[30m[0m
+[35m[43m  16119; START[30m[0m
+[35m[43m  16119; tick 1[30m[0m
+[35m[43m  16119; SIGINT[30m[0m
+[31m[43m  16121; START[30m[0m
+[31m[43m  16121; tick 1[30m[0m
+[31m[43m  16121; SIGINT[30m[0m
+[37m[45m  16123; START[30m[0m
+[37m[45m  16123; tick 1[30m[0m
+[37m[45m  16123; SIGINT[30m[0m
+[31m[42m  16125; START[30m[0m
+[31m[42m  16125; tick 1[30m[0m
+[31m[42m  16125; SIGINT[30m[0m
+[35m[46m  16127; START[30m[0m
+[35m[46m  16127; tick 1[30m[0m
+[35m[46m  16127; SIGINT[30m[0m
+[36m[41m  16129; START[30m[0m
+[36m[41m  16129; tick 1[30m[0m
+[36m[41m  16129; SIGINT[30m[0m
+0, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 0, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 1, priority: 3, runtime: 4, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 2, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q2] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:24========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 5, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 1, priority: 3, runtime: 4, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 2, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 0, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q2] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:27========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 4, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 2, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 0, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 4, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q2] waiting 1 second...:
+[parent] Sending SIGINT...
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:30========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 2, runtime: 5, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 2, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 0, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 4, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:32========>
+-------------
+<empty>
+----[30m[42m  16136; START[30m[0m
+[30m[42m  16136; tick 1[30m[0m
+[30m[42m  16136; SIGINT[30m[0m
+[34m[46m  16138; START[30m[0m
+[34m[46m  16138; tick 1[30m[0m
+[34m[46m  16138; SIGINT[30m[0m
+[30m[43m  16140; START[30m[0m
+[30m[43m  16140; tick 1[30m[0m
+[30m[43m  16140; SIGINT[30m[0m
+[36m[45m  16143; START[30m[0m
+[36m[45m  16143; tick 1[30m[0m
+[36m[45m  16143; SIGINT[30m[0m
+---------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 2, priority: 2, runtime: 2, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 0, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 4, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:34========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 10, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 0, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 4, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:36========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 0, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 0, cd_drives: 1
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 4, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:38========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 6, priority: 1, runtime: 5, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 4, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:40========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 2, priority: 1, runtime: 4, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanner[31m[46m  16145; START[30m[0m
+[31m[46m  16145; tick 1[30m[0m
+[31m[46m  16145; SIGINT[30m[0m
+[33m[44m  16147; START[30m[0m
+[33m[44m  16147; tick 1[30m[0m
+[33m[44m  16147; SIGINT[30m[0m
+[31m[47m  16149; START[30m[0m
+[31m[47m  16149; tick 1[30m[0m
+[31m[47m  16149; SIGINT[30m[0m
+[35m[43m  16151; START[30m[0m
+[35m[43m  16151; tick 1[30m[0m
+[35m[43m  16151; SIGINT[30m[0m
+s: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 4, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:42========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 8, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 4, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:44========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 1, priority: 3, runtime: 3, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 4, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:46========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 2, runtime: 4, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 4, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:48========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 2, priority: 2, runtime: 1, memory: 64, printers: 0, scanners: 0, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 4, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 3, memory: 256, printers: 0, scanners: 1, modems: 0, [31m[43m  16153; START[30m[0m
+[31m[43m  16153; tick 1[30m[0m
+[31m[43m  16153; SIGINT[30m[0m
+[37m[45m  16155; START[30m[0m
+[37m[45m  16155; tick 1[30m[0m
+[37m[45m  16155; SIGINT[30m[0m
+[31m[42m  16157; START[30m[0m
+[31m[42m  16157; tick 1[30m[0m
+[31m[42m  16157; SIGINT[30m[0m
+[35m[46m  16159; START[30m[0m
+[35m[46m  16159; tick 1[30m[0m
+[35m[46m  16159; SIGINT[30m[0m
+[36m[41m  16161; START[30m[0m
+[36m[41m  16161; tick 1[30m[0m
+[36m[41m  16161; SIGINT[30m[0m
+[34m[43m  16163; START[30m[0m
+[34m[43m  16163; tick 1[30m[0m
+[34m[43m  16163; SIGINT[30m[0m
+cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:50========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 9, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 4, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 3, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:52========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 6, priority: 1, runtime: 4, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 3, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 8, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:54========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 2, priority: 1, runtime: 3, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 3, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 8, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:56========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 8, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 3, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 8, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:58========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 1, priority: 3, runtime: 2, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 3, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 8, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CU[37m[41m  16165; START[30m[0m
+[37m[41m  16165; tick 1[30m[0m
+[37m[41m  16165; SIGINT[30m[0m
+[33m[45m  16167; START[30m[0m
+[33m[45m  16167; tick 1[30m[0m
+[33m[45m  16167; SIGINT[30m[0m
+[33m[41m  16169; START[30m[0m
+[33m[41m  16169; tick 1[30m[0m
+[33m[41m  16169; SIGINT[30m[0m
+[35m[47m  16171; START[30m[0m
+[35m[47m  16171; tick 1[30m[0m
+[35m[47m  16171; SIGINT[30m[0m
+[32m[41m  16173; START[30m[0m
+[32m[41m  16173; tick 1[30m[0m
+[32m[41m  16173; SIGINT[30m[0m
+RRENT TIME:60========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 2, runtime: 3, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 8, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:62========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 8, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 2, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:64========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 6, priority: 1, runtime: 3, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 2, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 7, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:66========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 2, priority: 1, runtime: 2, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 8, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 2, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 7, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:68========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 8, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 1
+arrival: 1, priority: 3, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 2, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 7, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:70========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 1, priority: 3[36m[45m  16175; START[30m[0m
+[36m[45m  16175; tick 1[30m[0m
+[36m[45m  16175; SIGINT[30m[0m
+[31m[46m  16177; START[30m[0m
+[31m[46m  16177; tick 1[30m[0m
+[31m[46m  16177; SIGINT[30m[0m
+[33m[44m  16179; START[30m[0m
+[33m[44m  16179; tick 1[30m[0m
+[33m[44m  16179; SIGINT[30m[0m
+[31m[47m  16181; START[30m[0m
+[31m[47m  16181; tick 1[30m[0m
+[31m[47m  16181; SIGINT[30m[0m
+[35m[43m  16183; START[30m[0m
+[35m[43m  16183; tick 1[30m[0m
+[35m[43m  16183; SIGINT[30m[0m
+[31m[43m  16185; START[30m[0m
+[31m[43m  16185; tick 1[30m[0m
+[31m[43m  16185; SIGINT[30m[0m
+[37m[45m  16187; START[30m[0m
+[37m[45m  16187; tick 1[30m[0m
+[37m[45m  16187; SIGINT[30m[0m
+, runtime: 1, memory: 128, printers: 1, scanners: 0, modems: 1, cd_drives: 2
+arrival: 4, priority: 2, runtime: 2, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 7, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:72========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 2, runtime: 2, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 7, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:74========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 7, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 1, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:76========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 6, priority: 1, runtime: 2, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 2, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 1, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 6, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:78========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 2, priority: 1, runtime: 1, memory: 128, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 2, runtime: 1, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 6, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:80========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 2, runtime: 1, memory: 256, printers: 0, scanners: 1, modems: 0, cd_drives: 0
+arrival: 4, priority: 1, runtime: 6, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:82========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 6, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+arrival: 6, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:84========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 6, priority: 1, runtime: 1, memory: 128, printers: 1, scanners: 1, modems: 0, cd_drives: 1
+arrival: 4, priority: 1, runtime: 5, memory: 51[31m[42m  16189; START[30m[0m
+[31m[42m  16189; tick 1[30m[0m
+[31m[42m  16189; SIGINT[30m[0m
+[35m[46m  16191; START[30m[0m
+[35m[46m  16191; tick 1[30m[0m
+[35m[46m  16191; SIGINT[30m[0m
+[36m[41m  16193; START[30m[0m
+[36m[41m  16193; tick 1[30m[0m
+[36m[41m  16193; SIGINT[30m[0m
+[34m[43m  16195; START[30m[0m
+[34m[43m  16195; tick 1[30m[0m
+[34m[43m  16195; SIGINT[30m[0m
+[37m[41m  16197; START[30m[0m
+[37m[41m  16197; tick 1[30m[0m
+[37m[41m  16197; SIGINT[30m[0m
+[33m[45m  16199; START[30m[0m
+[33m[45m  16199; tick 1[30m[0m
+[33m[45m  16199; SIGINT[30m[0m
+2, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:86========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 5, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:88========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 4, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:90========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 3, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:92========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 2, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:94========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+arrival: 4, priority: 1, runtime: 1, memory: 512, printers: 2, scanners: 1, modems: 1, cd_drives: 2
+<=DISPATCHER NULL=>
+checkpoint
+[parent Q3] waiting 1 second...:
+[parent] Sending SIGINT...
+<=========CURRENT TIME:96========>
+-------------
+<empty>
+-------------
+<=RT NULL=>
+<=1 NULL=>
+<=2 NULL=>
+<=3 NULL=>
+<=DISPATCHER NULL=>
+<=========CURRENT TIME:97========>

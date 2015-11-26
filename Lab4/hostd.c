@@ -81,9 +81,6 @@ int main(int argc, char *argv[]) {
   node_t *temp_1 = prior1_queue->head;
   node_t *temp_2 = prior2_queue->head;
   node_t *temp_3 = prior3_queue->head;
-  puts("-------------");
-  print_list(dispatcher);
-  puts("-------------");
   while ((temp_real_time != NULL) || (temp_1 != NULL) || (temp_2 != NULL) || (temp_3 != NULL) || (dispatcher->head != NULL)){
 
     puts("-------------");
@@ -93,30 +90,33 @@ int main(int argc, char *argv[]) {
     //dispatch any processes that have arrival times into the queues.
     dispatch(&dispatcher,&realtime_queue,&prior1_queue,&prior2_queue,&prior3_queue,current_time);
 
-    print_list(realtime_queue);
+    temp_real_time = realtime_queue->head;
+    temp_1 = prior1_queue->head;
+    temp_2 = prior2_queue->head;
+    temp_3 = prior3_queue->head;
 
     if(temp_real_time == NULL){
       printf("%s\n","<=RT NULL=>" );
     }else{
-      print_list(temp_real_time);
+      print_list(realtime_queue);
     }
 
     if(temp_1 == NULL){
       printf("%s\n","<=1 NULL=>" );
     }else{
-      print_list(temp_1);
+      print_list(prior1_queue);
     }
 
     if(temp_2 == NULL){
       printf("%s\n","<=2 NULL=>" );
     }else{
-      print_list(temp_2);
+      print_list(prior2_queue);
     }
 
     if(temp_3 == NULL){
       printf("%s\n","<=3 NULL=>" );
     }else{
-      print_list(temp_3);
+      print_list(prior3_queue);
     }
 
     if(dispatcher->head == NULL){
@@ -168,6 +168,8 @@ int main(int argc, char *argv[]) {
 	  //parent process
 	  printf("[parent Q0] waiting %d second(s)...:\n",popped_proc.runtime);
 	  sleep(popped_proc.runtime); //sleep for the needed runtime
+    current_time+=popped_proc.runtime;
+
 	  puts("[parent] Sending SIGINT...");
 	  kill(pid,SIGINT);
 	  waitpid(pid,0,0);
@@ -221,6 +223,8 @@ int main(int argc, char *argv[]) {
 	  //parent process
 	  printf("[parent Q1] waiting %d second...:\n",1);
 	  sleep(1); //sleep for only 1 second
+    current_time++;
+
 	  puts("[parent] Sending SIGINT...");
 	  kill(pid,SIGINT);
 	  waitpid(pid,0,0);
@@ -277,6 +281,8 @@ int main(int argc, char *argv[]) {
 	  //parent process
 	  printf("[parent Q2] waiting %d second...:\n",1);
 	  sleep(1); //sleep for only 1 second
+    current_time++;
+
 	  puts("[parent] Sending SIGINT...");
 	  kill(pid,SIGINT);
 	  waitpid(pid,0,0);
@@ -333,6 +339,8 @@ int main(int argc, char *argv[]) {
 	  //parent process
 	  printf("[parent Q3] waiting %d second...:\n",1);
 	  sleep(1); //sleep for only 1 second
+    current_time++;
+
 	  puts("[parent] Sending SIGINT...");
 	  kill(pid,SIGINT);
 	  waitpid(pid,0,0);
@@ -344,8 +352,11 @@ int main(int argc, char *argv[]) {
 	  res_avail.scanners += scanners_req;
 	  res_avail.modems += modems_req;
 	  res_avail.cd_drives += cd_drives_req;
+    popped_proc.runtime--;
 	  //push the process to the next queue
-	  push(&prior3_queue, popped_proc);
+    if (popped_proc.runtime >0){
+  	  push(&prior3_queue, popped_proc);
+    }
 	}else{
 	  //fork failed
 	  puts("fork failed");
