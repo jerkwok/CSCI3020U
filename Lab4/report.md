@@ -1,5 +1,9 @@
 #CSCI 3020U
+<<<<<<< HEAD
 #Lab #4: Host Dispatcher
+=======
+#Lab #4: Host Dispatcher Shell Project
+>>>>>>> 7a421e3d827aa448b5cdec9cad2ddb928184ae14
 #####Alexandar Mihaylov 100536396
 #####Jeremy Kwok - 100341977
 #####Taylor Smith - 100372402
@@ -9,6 +13,7 @@
 --------------------------------
 
 ####Objective
+<<<<<<< HEAD
 Create a C program that dispatches and schedules the execution of processes in multiple queues.
 
 ####Program Flow
@@ -22,3 +27,9 @@ The Host Dispatcher program will initially take in a list of processes and their
 ######Memory Allocation:
 
 ######Multilevel Dispatching Schemes:
+=======
+
+####Background
+
+####Program Flow
+>>>>>>> 7a421e3d827aa448b5cdec9cad2ddb928184ae14
