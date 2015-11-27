@@ -41,7 +41,6 @@ typedef struct {
   int cd_drives;
   int address;
   int pid;
-  bool suspended;
 } proc;
 
 typedef struct node{

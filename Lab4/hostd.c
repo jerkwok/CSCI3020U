@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
       int cd_drives_req = popped_proc->val.cd_drives;
 
       int mem_index = -1;
-      if (popped_proc->val.suspended == false){
+      if (popped_proc->val.address == -1){
 	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
 	//there is enough memory, must set where memory is held
 	popped_proc->val.address = mem_index;
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
       }else if(pid > 0){
 	//parent process
 	printf("[parent Q0] waiting %d second...:\n",1);
-	if (popped_proc->val.suspended == true){
+	if (popped_proc->val.address > -1){
 	  puts("[parent] Sending SIGCONT...");
 	  kill(pid,SIGCONT);
 	  //	  waitpid(pid,0,0);
@@ -200,7 +200,6 @@ int main(int argc, char *argv[]) {
 	  pop(&realtime_queue);//pop it off
 	}else{
 	  kill(pid,SIGTSTP);
-	  popped_proc->val.suspended = true;
 	}
       }else{
 	//fork failed
@@ -222,8 +221,9 @@ int main(int argc, char *argv[]) {
       bool pass = false;
 
       int mem_index = -1;
-      if (popped_proc->val.suspended == true){
+      if (popped_proc->val.address > -1){
 	pass = true;
+	printf("SUSPENDED TRUE\n");
       }else{
 	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	//first time process is run, need to allocate memory
@@ -252,64 +252,72 @@ int main(int argc, char *argv[]) {
 	    res_avail.cd_drives -= cd_drives_req;
 	    //process is ready for execution
 	    pass = true;	    
-	  }
-	  
-	  
-	  //run process only if it has resources + memory allocated
-	  if (pass == true){
-	    //there are enough resources and memory for the resorce
-
-	    //EXECUTE THE NEXT RESOURCE
-	    pid_t pid = fork();
-	    if (pid == 0){
-	      //child process
-	      execlp("./process",NULL);
-	      exit(0);
-	    }else if(pid > 0){
-	      //parent process
-	      printf("[parent Q1] waiting %d second...:\n",1);
-	      if (popped_proc->val.suspended == true){
-		puts("[parent] Sending SIGCONT...");
-		kill(pid,SIGCONT);
-		waitpid(pid,0,0);
-	      }
-	      sleep(1); //sleep for the needed runtime
-	      popped_proc->val.runtime--;
-	      if (popped_proc->val.runtime == 0){
-		//done with executing the proces----------------
-		kill(pid,SIGINT);
-		waitpid(pid,0,0);	  
-		//free the memory	  
-		free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
-		//return the I/O resources 
-		res_avail.printers += printers_req; 
-		res_avail.scanners += scanners_req;
-		res_avail.modems += modems_req;
-		res_avail.cd_drives += cd_drives_req;
-	      }else{
-		
-		kill(pid,SIGTSTP);
-		popped_proc->val.suspended = true;
-		proc proc_moved = pop(&prior1_queue);		
-		push(&prior2_queue, proc_moved);
-	      }
-	    }else{
-	      //fork failed
-	      puts("fork failed");
-	    }
 	  }else{
-	    //doesn't pass
-	    //don't do anything
+      free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	  }
 	}
       }
+	  
+	  
+      //run process only if it has resources + memory allocated
+      if (pass == true){
+	//there are enough resources and memory for the resorce
+
+	//EXECUTE THE NEXT RESOURCE
+	pid_t pid = fork();
+	if (pid == 0){
+	  //child process
+	  execlp("./process",NULL);
+	  exit(0);
+	}else if(pid > 0){
+	  //parent process
+	  printf("[parent Q1] waiting %d second...:\n",1);
+	  if (popped_proc->val.address > -1){
+	    puts("[parent] Sending SIGCONT...");
+	    kill(pid,SIGCONT);
+	    //	    waitpid(pid,0,0);
+	  }
+	  sleep(1); //sleep for the needed runtime
+	  popped_proc->val.runtime--;
+	  if (popped_proc->val.runtime == 0){
+	    //done with executing the proces----------------
+	    kill(pid,SIGINT);
+	    waitpid(pid,0,0);	  
+	    //free the memory	  
+	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+	    //return the I/O resources 
+	    res_avail.printers += printers_req; 
+	    res_avail.scanners += scanners_req;
+	    res_avail.modems += modems_req;
+	    res_avail.cd_drives += cd_drives_req;
+	  }else{
+		
+	    kill(pid,SIGTSTP);
+	    proc proc_moved = pop(&prior1_queue);		
+	    push(&prior2_queue, proc_moved);
+	  }
+	}else{
+	  //fork failed
+	  puts("fork failed");
+	}
+      }else{
+	//doesn't pass
+	//don't do anything
+        printf("TEST\n");
+  proc proc_moved = pop(&prior1_queue);   
+  printf("TEST1\n");
+  push(&prior2_queue, proc_moved);
+  printf("TEST2\n");
+      }
+  printf("TEST3\n");
       temp_1 = prior1_queue->head;
+  printf("TEST4\n");
     }
 
     //Priority 2 Queue
     else if (temp_2 != NULL){
       //pop the head from the queue
-      node_t *popped_proc= prior1_queue->head;
+      node_t *popped_proc= prior2_queue->head;
 
       //get resources required
       int printers_req = popped_proc->val.printers;
@@ -319,23 +327,27 @@ int main(int argc, char *argv[]) {
       bool pass = false;
 
       int mem_index = -1;
-      if (popped_proc->val.suspended == true){
+      if (popped_proc->val.address > -1){
 	pass = true;
       }else{
-	//first time process is run, need to allocate memory
-	//check if there is enough memory for the process
-	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
-	if (mem_index != -1){
-	  //not enough memory, must return the given memory
-	  //check if there are enough resources
-	  if(res_avail.printers >= printers_req &&
-	     res_avail.scanners >= scanners_req &&
-	     res_avail.modems >= modems_req &&
-	     res_avail.cd_drives >= cd_drives_req ){
-	    //enough resources for the process
-	    //save the memory address for the process
-	    popped_proc->val.address = mem_index;
-	    printf("[Q2: allocating %d memory\n]", popped_proc->val.memory);
+  printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
+  //first time process is run, need to allocate memory
+  //check if there is enough memory for the process
+  printf("popped_proc->val.memory%d\n", popped_proc->val.memory);
+  mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
+  printf("mem index:%d\n",mem_index);
+  printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
+  if (mem_index != -1){
+    //not enough memory, must return the given memory
+    //check if there are enough resources
+    if(res_avail.printers >= printers_req &&
+       res_avail.scanners >= scanners_req &&
+       res_avail.modems >= modems_req &&
+       res_avail.cd_drives >= cd_drives_req ){
+      //enough resources for the process
+      //save the memory address for the process
+      popped_proc->val.address = mem_index;
+	    printf("[Q1: allocating %d memory\n]", popped_proc->val.memory);
 	    //actually need the allocated memory, print an update
 	    print_memory(res_avail.avail_mem,MEMORY);
 	    //allocate the needed resources
@@ -345,54 +357,61 @@ int main(int argc, char *argv[]) {
 	    res_avail.cd_drives -= cd_drives_req;
 	    //process is ready for execution
 	    pass = true;	    
-	  }	  	  
-	  //run process only if it has resources + memory allocated
-	  if (pass == true){
-	    //there are enough resources and memory for the resorce
-
-	    //EXECUTE THE NEXT RESOURCE
-	    pid_t pid = fork();
-	    if (pid == 0){
-	      //child process
-	      execlp("./process",NULL);
-	      exit(0);
-	    }else if(pid > 0){
-	      //parent process
-	      printf("[parent Q2] waiting %d second...:\n",1);
-	      if (popped_proc->val.suspended == true){
-		puts("[parent] Sending SIGCONT...");
-		kill(pid,SIGCONT);
-		waitpid(pid,0,0);
-	      }
-	      sleep(1); //sleep for the needed runtime
-	      popped_proc->val.runtime--;
-	      if (popped_proc->val.runtime == 0){
-		//done with executing the proces----------------
-		kill(pid,SIGINT);
-		waitpid(pid,0,0);	  
-		//free the memory	  
-		free_mem(&res_avail, mem_index, popped_proc->val.memory);
-		//return the I/O resources 
-		res_avail.printers += printers_req; 
-		res_avail.scanners += scanners_req;
-		res_avail.modems += modems_req;
-		res_avail.cd_drives += cd_drives_req;
-	      }else{
-		
-		kill(pid,SIGTSTP);
-		popped_proc->val.suspended = true;
-		proc proc_moved = pop(&prior2_queue);		
-		push(&prior3_queue, proc_moved);
-	      }
-	    }else{
-	      //fork failed
-	      puts("fork failed");
-	    }
 	  }else{
-	    //doesn't pass
-	    //don't do anything
+	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+	    proc proc_moved = pop(&prior2_queue);   
+	    push(&prior3_queue, proc_moved);
 	  }
 	}
+      }
+	  
+	  
+      //run process only if it has resources + memory allocated
+      if (pass == true){
+	//there are enough resources and memory for the resorce
+
+	//EXECUTE THE NEXT RESOURCE
+	pid_t pid = fork();
+	if (pid == 0){
+	  //child process
+	  execlp("./process",NULL);
+	  exit(0);
+	}else if(pid > 0){
+	  //parent process
+	  printf("[parent Q2] waiting %d second...:\n",1);
+	  if (popped_proc->val.address > -1){
+	    puts("[parent Q2] Sending SIGCONT...");
+	    kill(pid,SIGCONT);
+	    //waitpid(pid,0,0);
+	  }
+	  sleep(1); //sleep for the needed runtime
+	  popped_proc->val.runtime--;
+	  if (popped_proc->val.runtime == 0){
+	    //done with executing the proces----------------
+	    kill(pid,SIGINT);
+	    waitpid(pid,0,0);	  
+	    //free the memory	  
+	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+	    //return the I/O resources 
+	    res_avail.printers += printers_req; 
+	    res_avail.scanners += scanners_req;
+	    res_avail.modems += modems_req;
+	    res_avail.cd_drives += cd_drives_req;
+	  }else{
+		
+	    kill(pid,SIGTSTP);
+	    proc proc_moved = pop(&prior2_queue);		
+	    push(&prior3_queue, proc_moved);
+	  }
+	}else{
+	  //fork failed
+	  puts("fork failed");
+	}
+      }else{
+	//doesn't pass
+	//don't do anything
+	proc proc_moved = pop(&prior2_queue);   
+	push(&prior3_queue, proc_moved);
       }
       temp_2 = prior2_queue->head;
     }
@@ -400,7 +419,7 @@ int main(int argc, char *argv[]) {
     //Priority 3 Queue
     else if (temp_3 != NULL){
       //pop the head from the queue
-      node_t *popped_proc= prior1_queue->head;
+      node_t *popped_proc= prior3_queue->head;
 
       //get resources required
       int printers_req = popped_proc->val.printers;
@@ -410,12 +429,17 @@ int main(int argc, char *argv[]) {
       bool pass = false;
 
       int mem_index = -1;
-      if (popped_proc->val.suspended == true){
+      if (popped_proc->val.address > -1){
 	pass = true;
+	printf("SUSPENDED TRUE\n");
       }else{
+	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	//first time process is run, need to allocate memory
 	//check if there is enough memory for the process
+	printf("popped_proc->val.memory%d\n", popped_proc->val.memory);
 	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
+	printf("mem index:%d\n",mem_index);
+	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	if (mem_index != -1){
 	  //not enough memory, must return the given memory
 	  //check if there are enough resources
@@ -426,7 +450,7 @@ int main(int argc, char *argv[]) {
 	    //enough resources for the process
 	    //save the memory address for the process
 	    popped_proc->val.address = mem_index;
-	    printf("[Q3: allocating %d memory\n]", popped_proc->val.memory);
+	    printf("[Q1: allocating %d memory\n]", popped_proc->val.memory);
 	    //actually need the allocated memory, print an update
 	    print_memory(res_avail.avail_mem,MEMORY);
 	    //allocate the needed resources
@@ -436,57 +460,64 @@ int main(int argc, char *argv[]) {
 	    res_avail.cd_drives -= cd_drives_req;
 	    //process is ready for execution
 	    pass = true;	    
-	  }	  	  
-	  //run process only if it has resources + memory allocated
-	  if (pass == true){
-	    //there are enough resources and memory for the resorce
-
-	    //EXECUTE THE NEXT RESOURCE
-	    pid_t pid = fork();
-	    if (pid == 0){
-	      //child process
-	      execlp("./process",NULL);
-	      exit(0);
-	    }else if(pid > 0){
-	      //parent process
-	      printf("[parent Q3] waiting %d second...:\n",1);
-	      if (popped_proc->val.suspended == true){
-		puts("[parent] Sending SIGCONT...");
-		kill(pid,SIGCONT);
-		waitpid(pid,0,0);
-	      }
-	      sleep(1); //sleep for the needed runtime
-	      popped_proc->val.runtime--;
-	      if (popped_proc->val.runtime == 0){
-		//done with executing the proces----------------
-		kill(pid,SIGINT);
-		waitpid(pid,0,0);	  
-		//free the memory	  
-		free_mem(&res_avail, mem_index, popped_proc->val.memory);
-		//return the I/O resources 
-		res_avail.printers += printers_req; 
-		res_avail.scanners += scanners_req;
-		res_avail.modems += modems_req;
-		res_avail.cd_drives += cd_drives_req;
-	      }else{
-		
-		kill(pid,SIGTSTP);
-		popped_proc->val.suspended = true;
-		proc proc_moved = pop(&prior3_queue);		
-		push(&prior3_queue, proc_moved);
-	      }
-	    }else{
-	      //fork failed
-	      puts("fork failed");
-	    }
 	  }else{
-	    //doesn't pass
-	    //don't do anything
+	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+	    proc proc_moved = pop(&prior3_queue);   
+	    push(&prior3_queue, proc_moved);
 	  }
 	}
       }
+	  
+	  
+      //run process only if it has resources + memory allocated
+      if (pass == true){
+	//there are enough resources and memory for the resorce
+
+	//EXECUTE THE NEXT RESOURCE
+	pid_t pid = fork();
+	if (pid == 0){
+	  //child process
+	  execlp("./process",NULL);
+	  exit(0);
+	}else if(pid > 0){
+	  //parent process
+	  printf("[parent Q2] waiting %d second...:\n",1);
+	  if (popped_proc->val.address > -1){
+	    puts("[parent Q2] Sending SIGCONT...");
+	    kill(pid,SIGCONT);
+	    waitpid(pid,0,0);
+	  }
+	  sleep(1); //sleep for the needed runtime
+	  popped_proc->val.runtime--;
+	  if (popped_proc->val.runtime == 0){
+	    //done with executing the proces----------------
+	    kill(pid,SIGINT);
+	    waitpid(pid,0,0);	  
+	    //free the memory	  
+	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+	    //return the I/O resources 
+	    res_avail.printers += printers_req; 
+	    res_avail.scanners += scanners_req;
+	    res_avail.modems += modems_req;
+	    res_avail.cd_drives += cd_drives_req;
+	  }else{
+		
+	    kill(pid,SIGTSTP);
+	    proc proc_moved = pop(&prior3_queue);		
+	    push(&prior3_queue, proc_moved);
+	  }
+	}else{
+	  //fork failed
+	  puts("fork failed");
+	}
+      }else{
+	//doesn't pass
+	//don't do anything
+	proc proc_moved = pop(&prior3_queue);   
+	push(&prior3_queue, proc_moved);
+      }
       temp_3 = prior3_queue->head;
-    }    
+    }
 
     //    return 0;//temp for debugging
 
