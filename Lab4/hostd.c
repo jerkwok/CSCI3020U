@@ -254,7 +254,11 @@ int main(int argc, char *argv[]) {
 	    res_avail.cd_drives -= cd_drives_req;
 	    //process is ready for execution
 	    pass = true;	    
-	  }
+	  }else{
+      free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+      proc proc_moved = pop(&prior1_queue);   
+      push(&prior2_queue, proc_moved);
+    }
   }
 }
 	  
@@ -305,6 +309,8 @@ int main(int argc, char *argv[]) {
 	  }else{
 	    //doesn't pass
 	    //don't do anything
+      proc proc_moved = pop(&prior1_queue);   
+    push(&prior2_queue, proc_moved);
 	  }
 	     temp_1 = prior1_queue->head;
     }
