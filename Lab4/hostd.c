@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
       int cd_drives_req = popped_proc->val.cd_drives;
 
       int mem_index = -1;
-      if (popped_proc->val.suspended == false){
+      if (popped_proc->val.address == -1){
 	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
 	//there is enough memory, must set where memory is held
 	popped_proc->val.address = mem_index;
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
       }else if(pid > 0){
 	//parent process
 	printf("[parent Q0] waiting %d second...:\n",1);
-	if (popped_proc->val.suspended == true){
+	if (popped_proc->val.address > -1){
 	  puts("[parent] Sending SIGCONT...");
 	  kill(pid,SIGCONT);
 	  //	  waitpid(pid,0,0);
@@ -200,7 +200,6 @@ int main(int argc, char *argv[]) {
 	  pop(&realtime_queue);//pop it off
 	}else{
 	  kill(pid,SIGTSTP);
-	  popped_proc->val.suspended = 1;
 	}
       }else{
 	//fork failed
@@ -222,8 +221,7 @@ int main(int argc, char *argv[]) {
       bool pass = false;
 
       int mem_index = -1;
-      printf("%s\n",popped_proc->val.suspended );
-      if (popped_proc->val.suspended == 1){
+      if (popped_proc->val.address > -1){
 	pass = true;
 	printf("SUSPENDED TRUE\n");
       }else{
@@ -276,10 +274,10 @@ int main(int argc, char *argv[]) {
 	}else if(pid > 0){
 	  //parent process
 	  printf("[parent Q1] waiting %d second...:\n",1);
-	  if (popped_proc->val.suspended == true){
+	  if (popped_proc->val.address > -1){
 	    puts("[parent] Sending SIGCONT...");
 	    kill(pid,SIGCONT);
-	    waitpid(pid,0,0);
+	    //	    waitpid(pid,0,0);
 	  }
 	  sleep(1); //sleep for the needed runtime
 	  popped_proc->val.runtime--;
@@ -297,8 +295,6 @@ int main(int argc, char *argv[]) {
 	  }else{
 		
 	    kill(pid,SIGTSTP);
-	    popped_proc->val.suspended = true;
-	    printf("%d\n",popped_proc->val.suspended );
 	    proc proc_moved = pop(&prior1_queue);		
 	    push(&prior2_queue, proc_moved);
 	  }
@@ -328,8 +324,7 @@ int main(int argc, char *argv[]) {
       bool pass = false;
 
       int mem_index = -1;
-      printf("%s\n",popped_proc->val.suspended );
-      if (popped_proc->val.suspended == 1){
+      if (popped_proc->val.address > -1){
 	pass = true;
 	printf("SUSPENDED TRUE\n");
       }else{
@@ -382,10 +377,10 @@ int main(int argc, char *argv[]) {
 	}else if(pid > 0){
 	  //parent process
 	  printf("[parent Q2] waiting %d second...:\n",1);
-	  if (popped_proc->val.suspended == true){
+	  if (popped_proc->val.address > -1){
 	    puts("[parent Q2] Sending SIGCONT...");
 	    kill(pid,SIGCONT);
-	    waitpid(pid,0,0);
+	    //waitpid(pid,0,0);
 	  }
 	  sleep(1); //sleep for the needed runtime
 	  popped_proc->val.runtime--;
@@ -403,8 +398,6 @@ int main(int argc, char *argv[]) {
 	  }else{
 		
 	    kill(pid,SIGTSTP);
-	    popped_proc->val.suspended = true;
-	    printf("%d\n",popped_proc->val.suspended );
 	    proc proc_moved = pop(&prior2_queue);		
 	    push(&prior3_queue, proc_moved);
 	  }
@@ -434,8 +427,7 @@ int main(int argc, char *argv[]) {
       bool pass = false;
 
       int mem_index = -1;
-      printf("%s\n",popped_proc->val.suspended );
-      if (popped_proc->val.suspended == 1){
+      if (popped_proc->val.address > -1){
 	pass = true;
 	printf("SUSPENDED TRUE\n");
       }else{
@@ -488,7 +480,7 @@ int main(int argc, char *argv[]) {
 	}else if(pid > 0){
 	  //parent process
 	  printf("[parent Q2] waiting %d second...:\n",1);
-	  if (popped_proc->val.suspended == true){
+	  if (popped_proc->val.address > -1){
 	    puts("[parent Q2] Sending SIGCONT...");
 	    kill(pid,SIGCONT);
 	    waitpid(pid,0,0);
@@ -509,8 +501,6 @@ int main(int argc, char *argv[]) {
 	  }else{
 		
 	    kill(pid,SIGTSTP);
-	    popped_proc->val.suspended = true;
-	    printf("%d\n",popped_proc->val.suspended );
 	    proc proc_moved = pop(&prior3_queue);		
 	    push(&prior3_queue, proc_moved);
 	  }
