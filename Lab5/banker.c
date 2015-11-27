@@ -30,7 +30,7 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
 void print_available();
 void print_struct(customer_struct s);
 
-sem_t sem;
+pthread_mutex_t mutex;
 
 // Put global environment variables here
 // Available amount of each resource
@@ -107,8 +107,7 @@ bool request_res(int n_customer, int request[])
 // Release resources, returns true if successful
 bool release_res(int n_customer, int release[])
 {
-
-    printf("release call\n");
+  printf("release call\n");
 
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
@@ -133,16 +132,16 @@ int main(int argc, char *argv[])
       exit(EXIT_FAILURE);
     }
 
-    for(int i = 0; i < NUM_RESOURCES; i++)
+    for(int a = 0; a < NUM_RESOURCES; a++)
     {
-      available[i] = atoi(argv[i+1]);
+      available[a] = atoi(argv[a+1]);
     }
 
     print_available();
 
     // Initialize the pthreads, locks, mutexes, etc.
     pthread_t customers[NUM_CUSTOMERS]; //create array of threads
-    sem_init(&sem,0,1); //init the semaphore
+    pthread_mutex_init(&mutex,NULL);
 
     // Run the threads and continually loop
 
@@ -181,7 +180,7 @@ int main(int argc, char *argv[])
     // If you are having issues try and limit the number of threads (NUM_CUSTOMERS)
     // to just 2 and focus on getting the multithreading working for just two threads
 
-    sem_destroy(&sem); //destroy the semaphore
+    pthread_mutex_destroy(&mutex); //destroy the mutex
 
     return EXIT_SUCCESS;
 }
@@ -191,7 +190,8 @@ void *customer(void *arg)
   customer_struct* s = (customer_struct*) arg;
   int has[NUM_RESOURCES] = {0};
 
-  printf("entered thread %d \n", s->thread_num);
+  printf("entered thread %d\n", s->thread_num);
+  getchar();
 
   bool complete = false;
 
@@ -199,22 +199,24 @@ void *customer(void *arg)
   {
     sleep(2);
 
-    printf("thread %d itterating\n", s->thread_num);
+    printf("thread %d itterating press enter to continue\n", s->thread_num);
+    getchar();
 
     //create request array and generate random request
     int req[NUM_RESOURCES];
 
     for(int i = 0; i < NUM_RESOURCES; i++)
     {
+      printf("breaks here?\n");
       req[i] = rand() % (s->max[i] - has[i]);
     }
 
-    //Wait for semaphore and then issue a request
-    printf("#%d waiting for semaphore\n", s->thread_num);
+    //Wait for mutex and then issue a request
+    printf("#%d waiting for mutex\n", s->thread_num);
 
-    sem_wait(&sem);
+    pthread_mutex_lock(&mutex);
     bool request_granted = request_res(s->thread_num, req);
-    sem_post(&sem);
+    pthread_mutex_unlock(&mutex);
 
     if(request_granted)
     {
@@ -236,10 +238,10 @@ void *customer(void *arg)
         //If hasn't called break by last iteration of k, all are equal and release all resources
         if(k == NUM_RESOURCES - 1)
         {
-          //Wait for semaphore and then issue a release
-          sem_wait(&sem);
+          //Wait for mutex and then issue a release
+          pthread_mutex_lock(&mutex);
           release_res(s->thread_num, has);
-          sem_post(&sem);
+          pthread_mutex_unlock(&mutex);
 
           complete = true;
         }
