@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
 	if (popped_proc->val.runtime == 0){
 	  //done with executing the proces----------------
 	  kill(popped_proc->val.pid,SIGINT);
-	  //	    waitpid(popped_proc->val.pid,0,0);	  
+	  waitpid(popped_proc->val.pid,0,0);	  
 	  //free the memory	  
 	  free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	  popped_proc->val.address = -1;
@@ -311,7 +311,7 @@ int main(int argc, char *argv[]) {
 	    if (popped_proc->val.runtime == 0){
 	      //done with executing the proces----------------
 	      kill(popped_proc->val.pid,SIGINT);
-	      //waitpid(popped_proc->val.pid,0,0);	  
+	      waitpid(popped_proc->val.pid,0,0);	  
 	      //free the memory	  
 	      free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	      popped_proc->val.address = -1;
@@ -341,7 +341,7 @@ int main(int argc, char *argv[]) {
 	  if (popped_proc->val.runtime == 0){
 	    //done with executing the proces----------------
 	    kill(popped_proc->val.pid,SIGINT);
-	    //waitpid(popped_proc->val.pid,0,0);	  
+	    waitpid(popped_proc->val.pid,0,0);	  
 	    //free the memory	  
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	    popped_proc->val.address = -1;
@@ -450,7 +450,7 @@ int main(int argc, char *argv[]) {
 	    if (popped_proc->val.runtime == 0){
 	      //done with executing the proces----------------
 	      kill(popped_proc->val.pid,SIGINT);
-	      //waitpid(popped_proc->val.pid,0,0);	  
+	      waitpid(popped_proc->val.pid,0,0);	  
 	      //free the memory	  
 	      free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	      popped_proc->val.address = -1;
@@ -480,7 +480,7 @@ int main(int argc, char *argv[]) {
 	  if (popped_proc->val.runtime == 0){
 	    //done with executing the proces----------------
 	    kill(popped_proc->val.pid,SIGINT);
-	    //waitpid(popped_proc->val.pid,0,0);	  
+	    waitpid(popped_proc->val.pid,0,0);	  
 	    //free the memory	  
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	    popped_proc->val.address = -1;
@@ -590,7 +590,7 @@ int main(int argc, char *argv[]) {
 	    if (popped_proc->val.runtime == 0){
 	      //done with executing the proces----------------
 	      kill(popped_proc->val.pid,SIGINT);
-	      //waitpid(popped_proc->val.pid,0,0);	  
+	      waitpid(popped_proc->val.pid,0,0);	  
 	      //free the memory	  
 	      free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	      popped_proc->val.address = -1;
@@ -620,7 +620,7 @@ int main(int argc, char *argv[]) {
 	  if (popped_proc->val.runtime == 0){
 	    //done with executing the proces----------------
 	    kill(popped_proc->val.pid,SIGINT);
-	    //waitpid(popped_proc->val.pid,0,0);	  
+	    waitpid(popped_proc->val.pid,0,0);	  
 	    //free the memory	  
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	    popped_proc->val.address = -1;
