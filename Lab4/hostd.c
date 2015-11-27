@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
 	exit(0);
       }else if(pid > 0){
 	//parent process
-	printf("[parent Q0] waiting %d second(s)...:\n",popped_proc->val.runtime);
+	printf("[parent Q0] waiting %d second...:\n",1);
 	if (popped_proc->val.suspended == true){
 	  puts("[parent] Sending SIGCONT...");
 	  kill(pid,SIGCONT);
@@ -228,6 +228,7 @@ int main(int argc, char *argv[]) {
 	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	//first time process is run, need to allocate memory
 	//check if there is enough memory for the process
+	printf("popped_proc->val.memory%d\n", popped_proc->val.memory);
 	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
 	printf("mem index:%d\n",mem_index);
 	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
@@ -266,7 +267,7 @@ int main(int argc, char *argv[]) {
 	      exit(0);
 	    }else if(pid > 0){
 	      //parent process
-	      printf("[parent Q1] waiting %d second(s)...:\n",popped_proc->val.runtime);
+	      printf("[parent Q1] waiting %d second...:\n",1);
 	      if (popped_proc->val.suspended == true){
 		puts("[parent] Sending SIGCONT...");
 		kill(pid,SIGCONT);
@@ -280,6 +281,11 @@ int main(int argc, char *argv[]) {
 		waitpid(pid,0,0);	  
 		//free the memory	  
 		free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+		//return the I/O resources 
+		res_avail.printers += printers_req; 
+		res_avail.scanners += scanners_req;
+		res_avail.modems += modems_req;
+		res_avail.cd_drives += cd_drives_req;
 	      }else{
 		
 		kill(pid,SIGTSTP);
@@ -352,7 +358,7 @@ int main(int argc, char *argv[]) {
 	      exit(0);
 	    }else if(pid > 0){
 	      //parent process
-	      printf("[parent Q2] waiting %d second(s)...:\n",popped_proc->val.runtime);
+	      printf("[parent Q2] waiting %d second...:\n",1);
 	      if (popped_proc->val.suspended == true){
 		puts("[parent] Sending SIGCONT...");
 		kill(pid,SIGCONT);
@@ -366,6 +372,11 @@ int main(int argc, char *argv[]) {
 		waitpid(pid,0,0);	  
 		//free the memory	  
 		free_mem(&res_avail, mem_index, popped_proc->val.memory);
+		//return the I/O resources 
+		res_avail.printers += printers_req; 
+		res_avail.scanners += scanners_req;
+		res_avail.modems += modems_req;
+		res_avail.cd_drives += cd_drives_req;
 	      }else{
 		
 		kill(pid,SIGTSTP);
@@ -438,7 +449,7 @@ int main(int argc, char *argv[]) {
 	      exit(0);
 	    }else if(pid > 0){
 	      //parent process
-	      printf("[parent Q3] waiting %d second(s)...:\n",popped_proc->val.runtime);
+	      printf("[parent Q3] waiting %d second...:\n",1);
 	      if (popped_proc->val.suspended == true){
 		puts("[parent] Sending SIGCONT...");
 		kill(pid,SIGCONT);
@@ -452,6 +463,11 @@ int main(int argc, char *argv[]) {
 		waitpid(pid,0,0);	  
 		//free the memory	  
 		free_mem(&res_avail, mem_index, popped_proc->val.memory);
+		//return the I/O resources 
+		res_avail.printers += printers_req; 
+		res_avail.scanners += scanners_req;
+		res_avail.modems += modems_req;
+		res_avail.cd_drives += cd_drives_req;
 	      }else{
 		
 		kill(pid,SIGTSTP);
