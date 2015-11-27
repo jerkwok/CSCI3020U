@@ -160,9 +160,11 @@ int main(int argc, char *argv[]) {
       int scanners_req = popped_proc->val.scanners;
       int modems_req = popped_proc->val.modems;
       int cd_drives_req = popped_proc->val.cd_drives;
+      bool is_new_proc = false;
 
       int mem_index = -1;
       if (popped_proc->val.address == -1){
+	is_new_proc = true;
 	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
 	//there is enough memory, must set where memory is held
 	popped_proc->val.address = mem_index;
@@ -174,36 +176,57 @@ int main(int argc, char *argv[]) {
       }
       //there are enough resources and memory for the resorce
       
-      //EXECUTE THE NEXT RESOURCE
-      pid_t pid = fork();
-      if (pid == 0){
-	//child process
-	execlp("./process",NULL);
-	exit(0);
-      }else if(pid > 0){
-	//parent process
-	printf("[parent Q0] waiting %d second...:\n",1);
-	if (popped_proc->val.address > -1){
-	  puts("[parent] Sending SIGCONT...");
-	  kill(pid,SIGCONT);
-	  //	  waitpid(pid,0,0);
+      //EXECUTE THE NEXT RESOURCE if it is a new process
+      if (is_new_proc){
+	//start a new process
+	pid_t pid = fork();
+	if (pid == 0){
+	  //child process
+	  execlp("./process",NULL);
+	  exit(0);
+	}else if(pid > 0){
+	  //parent process
+	  //if it is a brand new processcheck
+	  popped_proc->val.pid = pid;
+
+	  printf("[parent Q0] waiting %d second...:\n",1);	  
+	  sleep(1); //sleep for the needed runtime
+	  popped_proc->val.runtime--;
+	  if (popped_proc->val.runtime == 0){
+	    //done with executing the proces----------------
+	    kill(popped_proc->val.pid,SIGINT);
+	    waitpid(popped_proc->val.pid,0,0);	  
+	    //free the memory	  
+	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+	    popped_proc->val.address = -1;
+	    pop(&realtime_queue);//pop it off
+	  }else{
+	    printf("[parent] Sending SIGSTP to %d...\n",popped_proc->val.pid);
+	    kill(popped_proc->val.pid,SIGTSTP);
+	  }
+	}else{
+	  //fork failed
+	  puts("fork failed");
 	}
+      }else{
+	//process already allocated resources, need to just continue and terminate if done
+	printf("[parent] Sending SIGCONT to %d...\n",popped_proc->val.pid);
+	kill(popped_proc->val.pid,SIGCONT);
+	printf("[parent Q0] waiting %d second...:\n",1);	  
 	sleep(1); //sleep for the needed runtime
 	popped_proc->val.runtime--;
 	if (popped_proc->val.runtime == 0){
-	  //done with executing the proces----------------
-	  kill(pid,SIGINT);
-	  waitpid(pid,0,0);	  
-	  //free the memory	  
-	  free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
-    popped_proc->val.address = -1;
-	  pop(&realtime_queue);//pop it off
-	}else{
-	  kill(pid,SIGTSTP);
-	}
-      }else{
-	//fork failed
-	puts("fork failed");
+	    //done with executing the proces----------------
+	    kill(popped_proc->val.pid,SIGINT);
+	    //	    waitpid(popped_proc->val.pid,0,0);	  
+	    //free the memory	  
+	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+	    popped_proc->val.address = -1;
+	    pop(&realtime_queue);//pop it off
+	  }else{
+	    printf("[parent] Sending SIGSTP to %d...\n",popped_proc->val.pid);
+	    kill(popped_proc->val.pid,SIGTSTP);
+	  }	
       }
       temp_real_time = realtime_queue->head;
     }
@@ -563,11 +586,11 @@ int main(int argc, char *argv[]) {
       print_memory(res_avail.avail_mem,MEMORY);
 
     printf("<=========CURRENT TIME:%d========>\n",current_time );
-    // int c;
-    // c = getchar( );
+    int c;
+    c = getchar( );
     current_time++;
   }
-
-     
-  return EXIT_SUCCESS;
+  puts("-----------------COMPLETE---------------------");
+  return 0;
+  //return EXIT_SUCCESS;
 }
