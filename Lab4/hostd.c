@@ -284,8 +284,8 @@ int main(int argc, char *argv[]) {
 		
 		kill(pid,SIGTSTP);
 		popped_proc->val.suspended = true;
-		pop(&prior1_queue);		
-		push(&prior2_queue, popped_proc->val);
+		proc proc_moved = pop(&prior1_queue);		
+		push(&prior2_queue, proc_moved);
 	      }
 	    }else{
 	      //fork failed
@@ -370,8 +370,8 @@ int main(int argc, char *argv[]) {
 		
 		kill(pid,SIGTSTP);
 		popped_proc->val.suspended = true;
-		pop(&prior2_queue);		
-		push(&prior3_queue, popped_proc->val);
+		proc proc_moved = pop(&prior2_queue);		
+		push(&prior3_queue, proc_moved);
 	      }
 	    }else{
 	      //fork failed
@@ -456,8 +456,8 @@ int main(int argc, char *argv[]) {
 		
 		kill(pid,SIGTSTP);
 		popped_proc->val.suspended = true;
-		pop(&prior3_queue);		
-		push(&prior3_queue, popped_proc->val);
+		proc proc_moved = pop(&prior3_queue);		
+		push(&prior3_queue, proc_moved);
 	      }
 	    }else{
 	      //fork failed
