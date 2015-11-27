@@ -230,6 +230,22 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
   int work[NUM_RESOURCES];
   bool finish[NUM_CUSTOMERS] = {false};
 
+  for(int h = 0; h < NUM_CUSTOMERS; h ++)
+  {
+    for(int g = 0; g < NUM_RESOURCES; g++)
+    {
+      if(need[h][g] != 0)
+      {
+        break;
+      }
+
+      if(g == NUM_RESOURCES -1)
+      {
+        finish[h] = true;
+      }
+    }
+  }
+
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
     work[i] = available[i];
