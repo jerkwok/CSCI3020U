@@ -141,6 +141,7 @@ void readFile(queue** p1){
       temp_proc->cd_drives = atoi(tokenized[7]);//memory
       temp_proc->pid = 0;//pid
       temp_proc->address = 0; //address
+      temp_proc->suspended = false;
 
       //push process onto queue
       push(p1,*temp_proc);
