@@ -20,7 +20,7 @@ int alloc_mem(resources *res, int size)
   for (int i = 0; i < 1024 - 64; i++){
     if ((res->avail_mem[i] == 0) && (i + 64 < 1024)){
       free = true;
-      for (int j = i; j < size; j++){
+      for (int j = i; j < i+ size; j++){
         if (res->avail_mem[j] == 1){
           free = false;
 	  break;
@@ -29,8 +29,9 @@ int alloc_mem(resources *res, int size)
       if (free == true){
 	//i is now the starting index of the free memory
 	//actually allocate the memory needed	
-	for (int k = i; k < size; k++){
+	for (int k = i; k < i+size; k++){
 	  res->avail_mem[k] = 1;
+    // printf("FREE MEMORY%d\n",freeMemoryAmount(res->avail_mem, 1024) );
 	}
 	//return the starting index of the memory allocated
         return i;
@@ -140,7 +141,7 @@ void readFile(queue** p1){
       temp_proc->modems = atoi(tokenized[6]);//memory
       temp_proc->cd_drives = atoi(tokenized[7]);//memory
       temp_proc->pid = 0;//pid
-      temp_proc->address = 0; //address
+      temp_proc->address = -1; //address
       temp_proc->suspended = false;
 
       //push process onto queue
@@ -170,7 +171,7 @@ void print_list(queue *q1){
   int runtime;
   bool suspended;*/
   //end temp
-  printf("arrival: %d, priority: %d, runtime: %d, memory: %d, printers: %d, scanners: %d, modems: %d, cd_drives: %d\n",
+  printf("arrival: %d, priority: %d, runtime: %d, memory: %d, printers: %d, scanners: %d, modems: %d, cd_drives: %d, address: %d\n",
   	current->val.arrival,
 	current->val.priority,
 	current->val.runtime,
@@ -178,7 +179,8 @@ void print_list(queue *q1){
 	current->val.printers,
 	current->val.scanners,
 	current->val.modems,
-	current->val.cd_drives
+	current->val.cd_drives,
+  current->val.address
 	 );
   //iterate to next item
     current = current->next;

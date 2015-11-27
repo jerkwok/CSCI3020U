@@ -200,7 +200,7 @@ int main(int argc, char *argv[]) {
 	  pop(&realtime_queue);//pop it off
 	}else{
 	  kill(pid,SIGTSTP);
-	  popped_proc->val.suspended = true;
+	  popped_proc->val.suspended = 1;
 	}
       }else{
 	//fork failed
@@ -222,8 +222,10 @@ int main(int argc, char *argv[]) {
       bool pass = false;
 
       int mem_index = -1;
-      if (popped_proc->val.suspended == true){
+      printf("%s\n",popped_proc->val.suspended );
+      if (popped_proc->val.suspended == 1){
 	pass = true;
+  printf("SUSPENDED TRUE\n");
       }else{
 	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	//first time process is run, need to allocate memory
@@ -253,6 +255,8 @@ int main(int argc, char *argv[]) {
 	    //process is ready for execution
 	    pass = true;	    
 	  }
+  }
+}
 	  
 	  
 	  //run process only if it has resources + memory allocated
@@ -290,6 +294,7 @@ int main(int argc, char *argv[]) {
 		
 		kill(pid,SIGTSTP);
 		popped_proc->val.suspended = true;
+    printf("%d\n",popped_proc->val.suspended );
 		proc proc_moved = pop(&prior1_queue);		
 		push(&prior2_queue, proc_moved);
 	      }
@@ -301,9 +306,7 @@ int main(int argc, char *argv[]) {
 	    //doesn't pass
 	    //don't do anything
 	  }
-	}
-      }
-      temp_1 = prior1_queue->head;
+	     temp_1 = prior1_queue->head;
     }
 
     //Priority 2 Queue
