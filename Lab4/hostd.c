@@ -253,9 +253,7 @@ int main(int argc, char *argv[]) {
 	    //process is ready for execution
 	    pass = true;	    
 	  }else{
-	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
-	    proc proc_moved = pop(&prior1_queue);   
-	    push(&prior2_queue, proc_moved);
+      free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	  }
 	}
       }
@@ -305,10 +303,15 @@ int main(int argc, char *argv[]) {
       }else{
 	//doesn't pass
 	//don't do anything
-	proc proc_moved = pop(&prior1_queue);   
-	push(&prior2_queue, proc_moved);
+        printf("TEST\n");
+  proc proc_moved = pop(&prior1_queue);   
+  printf("TEST1\n");
+  push(&prior2_queue, proc_moved);
+  printf("TEST2\n");
       }
+  printf("TEST3\n");
       temp_1 = prior1_queue->head;
+  printf("TEST4\n");
     }
 
     //Priority 2 Queue
@@ -326,25 +329,24 @@ int main(int argc, char *argv[]) {
       int mem_index = -1;
       if (popped_proc->val.address > -1){
 	pass = true;
-	printf("SUSPENDED TRUE\n");
       }else{
-	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
-	//first time process is run, need to allocate memory
-	//check if there is enough memory for the process
-	printf("popped_proc->val.memory%d\n", popped_proc->val.memory);
-	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
-	printf("mem index:%d\n",mem_index);
-	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
-	if (mem_index != -1){
-	  //not enough memory, must return the given memory
-	  //check if there are enough resources
-	  if(res_avail.printers >= printers_req &&
-	     res_avail.scanners >= scanners_req &&
-	     res_avail.modems >= modems_req &&
-	     res_avail.cd_drives >= cd_drives_req ){
-	    //enough resources for the process
-	    //save the memory address for the process
-	    popped_proc->val.address = mem_index;
+  printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
+  //first time process is run, need to allocate memory
+  //check if there is enough memory for the process
+  printf("popped_proc->val.memory%d\n", popped_proc->val.memory);
+  mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
+  printf("mem index:%d\n",mem_index);
+  printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
+  if (mem_index != -1){
+    //not enough memory, must return the given memory
+    //check if there are enough resources
+    if(res_avail.printers >= printers_req &&
+       res_avail.scanners >= scanners_req &&
+       res_avail.modems >= modems_req &&
+       res_avail.cd_drives >= cd_drives_req ){
+      //enough resources for the process
+      //save the memory address for the process
+      popped_proc->val.address = mem_index;
 	    printf("[Q1: allocating %d memory\n]", popped_proc->val.memory);
 	    //actually need the allocated memory, print an update
 	    print_memory(res_avail.avail_mem,MEMORY);
