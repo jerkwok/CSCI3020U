@@ -5,6 +5,7 @@
  * All rights reserved.
  *
  */
+#define _XOPEN_SOURCE 700 // required for barriers to work
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -18,15 +19,16 @@
 #define NUM_CUSTOMERS 5
 #define NUM_RESOURCES 3
 
-void *customer(void *arg);
-bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES]);
-
-
 typedef struct
 {
     int thread_num;
     int max[NUM_RESOURCES];
 }customer_struct;
+
+void *customer(void *arg);
+bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES]);
+void print_available();
+void print_struct(customer_struct s);
 
 sem_t sem;
 
@@ -46,6 +48,16 @@ int need[NUM_CUSTOMERS][NUM_RESOURCES];
 // Define functions declared in banker.h here
 bool request_res(int n_customer, int request[])
 {
+
+  printf("Req#%d: [ ", n_customer);
+
+  for(int p = 0; p < NUM_RESOURCES; p++)
+  {
+    printf("%d ", request[p]);
+  }
+
+  printf("]\n");
+
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
     if(request[i] > need[n_customer][i])
@@ -95,6 +107,9 @@ bool request_res(int n_customer, int request[])
 // Release resources, returns true if successful
 bool release_res(int n_customer, int release[])
 {
+
+    printf("release call\n");
+
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
     available[i] += release[i];
@@ -120,8 +135,10 @@ int main(int argc, char *argv[])
 
     for(int i = 0; i < NUM_RESOURCES; i++)
     {
-      available[i] = (int) argv[i+1];
+      available[i] = atoi(argv[i+1]);
     }
+
+    print_available();
 
     // Initialize the pthreads, locks, mutexes, etc.
     pthread_t customers[NUM_CUSTOMERS]; //create array of threads
@@ -137,7 +154,7 @@ int main(int argc, char *argv[])
 
       for(int j = 0; j < NUM_RESOURCES; j++)
       {
-          int resource_max = rand() % (int) argv[j];
+          int resource_max = rand() % atoi(argv[j+1]);
 
           s.max[j] = resource_max;
 
@@ -145,8 +162,9 @@ int main(int argc, char *argv[])
           maximum[i][j] = resource_max;
           need[i][j] = resource_max;
       }
+      print_struct(s);
 
-      pthread_create(&customers[i], 0, customer , (void *) &s);
+      pthread_create(&customers[i], 0, customer, (void *) &s);
     }
 
     //Join all threads
@@ -173,11 +191,15 @@ void *customer(void *arg)
   customer_struct* s = (customer_struct*) arg;
   int has[NUM_RESOURCES] = {0};
 
+  printf("entered thread %d \n", s->thread_num);
+
   bool complete = false;
 
   while(!complete)
   {
-    sleep(1);
+    sleep(2);
+
+    printf("thread %d itterating\n", s->thread_num);
 
     //create request array and generate random request
     int req[NUM_RESOURCES];
@@ -188,12 +210,15 @@ void *customer(void *arg)
     }
 
     //Wait for semaphore and then issue a request
+    printf("#%d waiting for semaphore\n", s->thread_num);
+
     sem_wait(&sem);
     bool request_granted = request_res(s->thread_num, req);
     sem_post(&sem);
 
     if(request_granted)
     {
+      printf("granted?");
       //Update has array.
       for(int j = 0; j < NUM_RESOURCES; j++)
       {
@@ -222,11 +247,14 @@ void *customer(void *arg)
     }
   }
 
+  printf("return from %d\n", s->thread_num);
   return (void *) NULL;
 }
 
 bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES])
 {
+  printf("check_safe called\n");
+
   int work[NUM_RESOURCES];
   bool finish[NUM_CUSTOMERS] = {false};
 
@@ -309,4 +337,30 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
       return true;
     }
   }
+}
+
+void print_available()
+{
+  printf("Available: [");
+
+  for(int p = 0; p < NUM_RESOURCES; p++)
+  {
+    printf(" %d ", available[p]);
+  }
+
+  printf("]\n");
+}
+
+void print_struct(customer_struct s)
+{
+  printf("Thread Num: %d\n", s.thread_num);
+
+  printf("Max Resources: [ ");
+
+  for(int p = 0; p < NUM_RESOURCES; p++)
+  {
+    printf("%d ", s.max[p]);
+  }
+
+  printf("]\n");
 }
