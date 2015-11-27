@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
   res_avail.printers = 2;
   res_avail.scanners = 1;
   res_avail.modems = 1;
-  res_avail.cd_drives = 1;
+  res_avail.cd_drives = 2;
   for (int i = 0; i < MEMORY;i++){
     res_avail.avail_mem[i] = 0;
   }
@@ -189,7 +189,6 @@ int main(int argc, char *argv[]) {
 	  //	  waitpid(pid,0,0);
 	}
 	sleep(1); //sleep for the needed runtime
-	printf("runtime:%d\n", popped_proc->val.runtime);
 	popped_proc->val.runtime--;
 	if (popped_proc->val.runtime == 0){
 	  //done with executing the proces----------------
@@ -197,6 +196,7 @@ int main(int argc, char *argv[]) {
 	  waitpid(pid,0,0);	  
 	  //free the memory	  
 	  free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+    popped_proc->val.address = -1;
 	  pop(&realtime_queue);//pop it off
 	}else{
 	  kill(pid,SIGTSTP);
@@ -223,25 +223,26 @@ int main(int argc, char *argv[]) {
       int mem_index = -1;
       if (popped_proc->val.address > -1){
 	pass = true;
-	printf("SUSPENDED TRUE\n");
       }else{
-	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
+          print_memory(res_avail.avail_mem,MEMORY);
+
+	printf("pre free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	//first time process is run, need to allocate memory
 	//check if there is enough memory for the process
-	printf("popped_proc->val.memory%d\n", popped_proc->val.memory);
 	mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
 	printf("mem index:%d\n",mem_index);
-	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
+	printf("post free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	if (mem_index != -1){
 	  //not enough memory, must return the given memory
 	  //check if there are enough resources
+    popped_proc->val.address = mem_index;
 	  if(res_avail.printers >= printers_req &&
 	     res_avail.scanners >= scanners_req &&
 	     res_avail.modems >= modems_req &&
 	     res_avail.cd_drives >= cd_drives_req ){
 	    //enough resources for the process
 	    //save the memory address for the process
-	    popped_proc->val.address = mem_index;
+	    
 	    printf("[Q1: allocating %d memory\n]", popped_proc->val.memory);
 	    //actually need the allocated memory, print an update
 	    print_memory(res_avail.avail_mem,MEMORY);
@@ -253,7 +254,16 @@ int main(int argc, char *argv[]) {
 	    //process is ready for execution
 	    pass = true;	    
 	  }else{
+      // printf("hello\n");
+      // print_memory(res_avail.avail_mem,MEMORY);
+      // printf("PRE\n");
+      // printf("%d\n", popped_proc->val.address);
       free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+      // printf("POST\n");
+      //       print_memory(res_avail.avail_mem,MEMORY);
+      popped_proc->val.address = -1;
+      // proc proc_moved = pop(&prior1_queue);   
+      // push(&prior2_queue, proc_moved);
 	  }
 	}
       }
@@ -285,11 +295,13 @@ int main(int argc, char *argv[]) {
 	    waitpid(pid,0,0);	  
 	    //free the memory	  
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+      popped_proc->val.address = -1;
 	    //return the I/O resources 
 	    res_avail.printers += printers_req; 
 	    res_avail.scanners += scanners_req;
 	    res_avail.modems += modems_req;
 	    res_avail.cd_drives += cd_drives_req;
+      pop(&prior1_queue);
 	  }else{
 		
 	    kill(pid,SIGTSTP);
@@ -303,15 +315,12 @@ int main(int argc, char *argv[]) {
       }else{
 	//doesn't pass
 	//don't do anything
-        printf("TEST\n");
+
   proc proc_moved = pop(&prior1_queue);   
-  printf("TEST1\n");
   push(&prior2_queue, proc_moved);
-  printf("TEST2\n");
+
       }
-  printf("TEST3\n");
       temp_1 = prior1_queue->head;
-  printf("TEST4\n");
     }
 
     //Priority 2 Queue
@@ -334,19 +343,21 @@ int main(int argc, char *argv[]) {
   //first time process is run, need to allocate memory
   //check if there is enough memory for the process
   printf("popped_proc->val.memory%d\n", popped_proc->val.memory);
+  print_memory(res_avail.avail_mem,MEMORY); 
   mem_index = alloc_mem(&res_avail, popped_proc->val.memory);
   printf("mem index:%d\n",mem_index);
   printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
   if (mem_index != -1){
     //not enough memory, must return the given memory
     //check if there are enough resources
+    popped_proc->val.address = mem_index;
     if(res_avail.printers >= printers_req &&
        res_avail.scanners >= scanners_req &&
        res_avail.modems >= modems_req &&
        res_avail.cd_drives >= cd_drives_req ){
       //enough resources for the process
       //save the memory address for the process
-      popped_proc->val.address = mem_index;
+      
 	    printf("[Q1: allocating %d memory\n]", popped_proc->val.memory);
 	    //actually need the allocated memory, print an update
 	    print_memory(res_avail.avail_mem,MEMORY);
@@ -359,8 +370,9 @@ int main(int argc, char *argv[]) {
 	    pass = true;	    
 	  }else{
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
-	    proc proc_moved = pop(&prior2_queue);   
-	    push(&prior3_queue, proc_moved);
+      popped_proc->val.address = -1;
+	    // proc proc_moved = pop(&prior2_queue);   
+	    // push(&prior3_queue, proc_moved);
 	  }
 	}
       }
@@ -392,11 +404,13 @@ int main(int argc, char *argv[]) {
 	    waitpid(pid,0,0);	  
 	    //free the memory	  
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+      popped_proc->val.address = -1;
 	    //return the I/O resources 
 	    res_avail.printers += printers_req; 
 	    res_avail.scanners += scanners_req;
 	    res_avail.modems += modems_req;
 	    res_avail.cd_drives += cd_drives_req;
+      pop(&prior2_queue);
 	  }else{
 		
 	    kill(pid,SIGTSTP);
@@ -431,7 +445,6 @@ int main(int argc, char *argv[]) {
       int mem_index = -1;
       if (popped_proc->val.address > -1){
 	pass = true;
-	printf("SUSPENDED TRUE\n");
       }else{
 	printf("free memory:%d\n",freeMemoryAmount(res_avail.avail_mem, MEMORY));
 	//first time process is run, need to allocate memory
@@ -443,14 +456,15 @@ int main(int argc, char *argv[]) {
 	if (mem_index != -1){
 	  //not enough memory, must return the given memory
 	  //check if there are enough resources
+    popped_proc->val.address = mem_index;
 	  if(res_avail.printers >= printers_req &&
 	     res_avail.scanners >= scanners_req &&
 	     res_avail.modems >= modems_req &&
 	     res_avail.cd_drives >= cd_drives_req ){
 	    //enough resources for the process
 	    //save the memory address for the process
-	    popped_proc->val.address = mem_index;
-	    printf("[Q1: allocating %d memory\n]", popped_proc->val.memory);
+	    
+	    printf("[Q3: allocating %d memory\n]", popped_proc->val.memory);
 	    //actually need the allocated memory, print an update
 	    print_memory(res_avail.avail_mem,MEMORY);
 	    //allocate the needed resources
@@ -462,8 +476,9 @@ int main(int argc, char *argv[]) {
 	    pass = true;	    
 	  }else{
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
-	    proc proc_moved = pop(&prior3_queue);   
-	    push(&prior3_queue, proc_moved);
+      popped_proc->val.address = -1;
+	    // proc proc_moved = pop(&prior3_queue);   
+	    // push(&prior3_queue, proc_moved);
 	  }
 	}
       }
@@ -481,28 +496,31 @@ int main(int argc, char *argv[]) {
 	  exit(0);
 	}else if(pid > 0){
 	  //parent process
-	  printf("[parent Q2] waiting %d second...:\n",1);
+	  printf("[parent Q3] waiting %d second...:\n",1);
 	  if (popped_proc->val.address > -1){
-	    puts("[parent Q2] Sending SIGCONT...");
+	    puts("[parent Q3] Sending SIGCONT...");
 	    kill(pid,SIGCONT);
-	    waitpid(pid,0,0);
+	    // waitpid(pid,0,0);
 	  }
 	  sleep(1); //sleep for the needed runtime
 	  popped_proc->val.runtime--;
 	  if (popped_proc->val.runtime == 0){
 	    //done with executing the proces----------------
 	    kill(pid,SIGINT);
-	    waitpid(pid,0,0);	  
+	    // waitpid(pid,0,0);	  
 	    //free the memory	  
 	    free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
+      popped_proc->val.address = -1;
 	    //return the I/O resources 
-	    res_avail.printers += printers_req; 
-	    res_avail.scanners += scanners_req;
-	    res_avail.modems += modems_req;
-	    res_avail.cd_drives += cd_drives_req;
+      res_avail.printers += printers_req; 
+      res_avail.scanners += scanners_req;
+      res_avail.modems += modems_req;
+      res_avail.cd_drives += cd_drives_req;
+      pop(&prior3_queue);
 	  }else{
 		
 	    kill(pid,SIGTSTP);
+      // free_mem(&res_avail, popped_proc->val.address, popped_proc->val.memory);
 	    proc proc_moved = pop(&prior3_queue);		
 	    push(&prior3_queue, proc_moved);
 	  }
@@ -511,10 +529,10 @@ int main(int argc, char *argv[]) {
 	  puts("fork failed");
 	}
       }else{
-	//doesn't pass
-	//don't do anything
-	proc proc_moved = pop(&prior3_queue);   
-	push(&prior3_queue, proc_moved);
+      	//doesn't pass
+      	//don't do anything
+      	proc proc_moved = pop(&prior3_queue);   
+      	push(&prior3_queue, proc_moved);
       }
       temp_3 = prior3_queue->head;
     }
@@ -542,9 +560,11 @@ int main(int argc, char *argv[]) {
     //         temp_3 = temp_3 -> next;
     //     }
     // }
+      print_memory(res_avail.avail_mem,MEMORY);
+
     printf("<=========CURRENT TIME:%d========>\n",current_time );
-    int c;
-    c = getchar( );
+    // int c;
+    // c = getchar( );
     current_time++;
   }
 
