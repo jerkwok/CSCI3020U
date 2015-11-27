@@ -18,29 +18,30 @@
 // Resources structure containing integers for each resource constraint and an
 // array of 1024 for the memory
 typedef struct {
- 	// printer, scanner, modem and CD drives will be stored here
- 	int printers;
- 	int scanners;
- 	int modems;
- 	int cd_drives;
- 	// memory array
- 	int avail_mem[MEMORY];
+  // printer, scanner, modem and CD drives will be stored here
+  int printers;
+  int scanners;
+  int modems;
+  int cd_drives;
+  // memory array
+  int avail_mem[MEMORY];
 } resources;
 
 // Processes structure containing all of the process details parsed from the 
 // input file, should also include the memory address (an index) which indicates
 // where in the resources memory array its memory was allocated
 typedef struct {
-	int arrival;
-	int priority;
-	int runtime;
-	int memory;
-	int printers;
-	int scanners;
-	int modems;
-	int cd_drives;
-	int address;
-	int pid;
+  int arrival;
+  int priority;
+  int runtime;
+  int memory;
+  int printers;
+  int scanners;
+  int modems;
+  int cd_drives;
+  int address;
+  int pid;
+  bool suspended;
 } proc;
 
 typedef struct node{
