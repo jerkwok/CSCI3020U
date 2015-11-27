@@ -50,7 +50,7 @@ bool request_res(int n_customer, int request[])
   {
     if(request[i] > need[n_customer][i])
     {
-      printf("ERROR: Thread number %d requested more resources than maximum", n_customer);
+      printf("ERROR: Thread number %d requested more resources than maximum\n", n_customer);
       exit (EXIT_FAILURE);
     }
   }
@@ -72,16 +72,20 @@ bool request_res(int n_customer, int request[])
 
   if(check_safe(available,allocation,need))
   {
+    for(int l = 0; l < NUM_RESOURCES; l++)
+    {
+      maximum[n_customer][l] = 0;
+    }
     return true;
   }
   else
   {
     //revert
-    for(int l = 0; l < NUM_RESOURCES; l++)
+    for(int m = 0; m < NUM_RESOURCES; m++)
     {
-        available[l] += request[l];
-        allocation[n_customer][l] -= request[l];
-        need[n_customer][l] += request[l];
+        available[m] += request[m];
+        allocation[n_customer][m] -= request[m];
+        need[n_customer][m] += request[m];
     }
 
     return false;
@@ -108,15 +112,15 @@ int main(int argc, char *argv[])
     // Read in arguments from CLI, NUM_RESOURCES is the number of arguments
     // Allocate the available resources
 
-    if(argc != NUM_RESOURCES)
+    if(argc -1 != NUM_RESOURCES)
     {
-      printf("ERROR: Expected %d reources, recieved %d", NUM_RESOURCES, argc);
+      printf("ERROR: Expected %d reources, recieved %d\n", NUM_RESOURCES, argc);
       exit(EXIT_FAILURE);
     }
 
     for(int i = 0; i < NUM_RESOURCES; i++)
     {
-      available[i] = (int) argv[i];
+      available[i] = (int) argv[i+1];
     }
 
     // Initialize the pthreads, locks, mutexes, etc.
@@ -223,9 +227,86 @@ void *customer(void *arg)
 
 bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES])
 {
-  available[0] = 0;
-  allocation[0][0] = 0;
-  need[0][0] = 0;
+  int work[NUM_RESOURCES];
+  bool finish[NUM_CUSTOMERS] = {false};
 
-  return true;
+  for(int h = 0; h < NUM_CUSTOMERS; h ++)
+  {
+    for(int g = 0; g < NUM_RESOURCES; g++)
+    {
+      if(need[h][g] != 0)
+      {
+        break;
+      }
+
+      if(g == NUM_RESOURCES -1)
+      {
+        finish[h] = true;
+      }
+    }
+  }
+
+  for(int i = 0; i < NUM_RESOURCES; i++)
+  {
+    work[i] = available[i];
+  }
+
+  while(1)
+  {
+    int n_start_finished_processes = 0;
+    int n_end_finished_processes = 0;
+
+    for(int n = 0; n < NUM_CUSTOMERS; n++)
+    {
+        if(finish[n])
+        {
+          n_start_finished_processes++;
+        }
+    }
+
+    bool can_finish = false;
+
+    for(int j = 0; j < NUM_CUSTOMERS; j++)
+    {
+      for(int k = 0; k < NUM_RESOURCES; k++)
+      {
+        if(work[k] < need[j][k])
+        {
+          break;
+        }
+        if(k == NUM_RESOURCES - 1)
+        {
+          can_finish = true;
+        }
+      }
+      if(can_finish)
+      {
+        for(int l = 0; l < NUM_RESOURCES; l++)
+        {
+          work[l] += allocation[j][l];
+          allocation[j][l] = 0;
+        }
+
+        finish[j] = true;
+        break;
+      }
+    }
+
+    for(int m = 0; m < NUM_CUSTOMERS; m++)
+    {
+      if(finish[m])
+      {
+        n_end_finished_processes++;
+      }
+    }
+
+    if(n_end_finished_processes == n_start_finished_processes)
+    {
+      return false;
+    }
+    if(n_end_finished_processes == NUM_CUSTOMERS)
+    {
+      return true;
+    }
+  }
 }
