@@ -163,10 +163,14 @@ int main(int argc, char *argv[]) {
       int cd_drives_req = popped_proc.cd_drives;
 
       //check if there is enough memory for the process
-      int mem_index = alloc_mem(res_avail, popped_proc.memory);
+      int mem_index = alloc_mem(&res_avail, popped_proc.memory);
       if (mem_index == -1){
 	//not enough memory, must return the given memory
-	free_mem(res_avail, mem_index, popped_proc.memory);
+	free_mem(&res_avail, mem_index, popped_proc.memory);
+      }else{
+	//actually need the allocated memory, print an update
+	//printf("mem_index:%d\n",mem_index);
+	print_memory(res_avail.avail_mem,MEMORY);
       }
       //check if enough resources and memory are available
       if (res_avail.printers >= printers_req &&
@@ -192,7 +196,7 @@ int main(int argc, char *argv[]) {
 	  waitpid(pid,0,0);
 	  //done with executing the proces----------------
 	  //free the memory
-	  free_mem(res_avail, mem_index, popped_proc.memory);
+	  free_mem(&res_avail, mem_index, popped_proc.memory);
 	  //return the resources back to 
 	  res_avail.printers += printers_req;
 	  res_avail.scanners += scanners_req;
@@ -218,10 +222,13 @@ int main(int argc, char *argv[]) {
       int cd_drives_req = popped_proc.cd_drives;
 
       //check if there is enough memory for the process
-      int mem_index = alloc_mem(res_avail, popped_proc.memory);
+      int mem_index = alloc_mem(&res_avail, popped_proc.memory);
       if (mem_index == -1){
 	//not enough memory, must return the given memory
-	free_mem(res_avail, mem_index, popped_proc.memory);
+	free_mem(&res_avail, mem_index, popped_proc.memory);
+      }else{
+	//actually need the allocated memory, print an update
+	print_memory(res_avail.avail_mem,MEMORY);
       }
       //check if enough resources and memory are available
       if (res_avail.printers >= printers_req &&
@@ -247,7 +254,7 @@ int main(int argc, char *argv[]) {
 	  waitpid(pid,0,0);
 	  //done with executing the proces----------------
 	  //free the memory
-	  free_mem(res_avail, mem_index, popped_proc.memory);
+	  free_mem(&res_avail, mem_index, popped_proc.memory);
 	  //return the resources back to 
 	  res_avail.printers += printers_req;
 	  res_avail.scanners += scanners_req;
@@ -276,10 +283,13 @@ int main(int argc, char *argv[]) {
       int cd_drives_req = popped_proc.cd_drives;
 
       //check if there is enough memory for the process
-      int mem_index = alloc_mem(res_avail, popped_proc.memory);
+      int mem_index = alloc_mem(&res_avail, popped_proc.memory);
       if (mem_index == -1){
 	//not enough memory, must return the given memory
-	free_mem(res_avail, mem_index, popped_proc.memory);
+	free_mem(&res_avail, mem_index, popped_proc.memory);
+      }else{
+	//actually need the allocated memory, print an update
+	print_memory(res_avail.avail_mem,MEMORY);
       }
       //check if enough resources and memory are available
       if (res_avail.printers >= printers_req &&
@@ -305,7 +315,7 @@ int main(int argc, char *argv[]) {
 	  waitpid(pid,0,0);
 	  //done with executing the proces----------------
 	  //free the memory
-	  free_mem(res_avail, mem_index, popped_proc.memory);
+	  free_mem(&res_avail, mem_index, popped_proc.memory);
 	  //return the resources back to 
 	  res_avail.printers += printers_req;
 	  res_avail.scanners += scanners_req;
@@ -334,10 +344,13 @@ int main(int argc, char *argv[]) {
       int cd_drives_req = popped_proc.cd_drives;
 
       //check if there is enough memory for the process
-      int mem_index = alloc_mem(res_avail, popped_proc.memory);
+      int mem_index = alloc_mem(&res_avail, popped_proc.memory);
       if (mem_index == -1){
 	//not enough memory, must return the given memory
-	free_mem(res_avail, mem_index, popped_proc.memory);
+	free_mem(&res_avail, mem_index, popped_proc.memory);
+      }else{
+	//actually need the allocated memory, print an update
+	print_memory(res_avail.avail_mem,MEMORY);
       }
       //check if enough resources and memory are available
       if (res_avail.printers >= printers_req &&
@@ -363,7 +376,7 @@ int main(int argc, char *argv[]) {
 	  waitpid(pid,0,0);
 	  //done with executing the proces----------------
 	  //free the memory
-	  free_mem(res_avail, mem_index, popped_proc.memory);
+	  free_mem(&res_avail, mem_index, popped_proc.memory);
 	  //return the resources back to 
 	  res_avail.printers += printers_req;
 	  res_avail.scanners += scanners_req;

@@ -14,21 +14,23 @@
 
 // Define your utility functions here, you will likely need to add more...
 
-int alloc_mem(resources res, int size)
+int alloc_mem(resources *res, int size)
 {
   bool free = false;
   for (int i = 0; i < 1024 - 64; i++){
-    if ((res.avail_mem[i] == 0) && (i + 64 < 1024)){
+    if ((res->avail_mem[i] == 0) && (i + 64 < 1024)){
       free = true;
       for (int j = i; j < size; j++){
-        if (res.avail_mem[j] == 0){
+        if (res->avail_mem[j] == 1){
           free = false;
+	  break;
         }
       }
       if (free == true){
-	//actually allocate the memory needed
-	for (; i < size; i++){
-	  res.avail_mem[i] = 1;
+	//i is now the starting index of the free memory
+	//actually allocate the memory needed	
+	for (int k = i; k < size; k++){
+	  res->avail_mem[k] = 1;
 	}
 	//return the starting index of the memory allocated
         return i;
@@ -40,10 +42,10 @@ int alloc_mem(resources res, int size)
   return -1;
 }
 
-void free_mem(resources res, int index, int size)
+void free_mem(resources *res, int index, int size)
 {
   for(int i = index; i < index+size; i++){
-    res.avail_mem[i] = 0;
+    res->avail_mem[i] = 0;
   }
 }
 
