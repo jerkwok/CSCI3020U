@@ -145,11 +145,14 @@ int main(int argc, char *argv[])
 
     // Run the threads and continually loop
 
+    puts("Before thread creation");
+    puts("======================");
+
     for (int i = 0; i < NUM_CUSTOMERS; i++)
     {
       customer_struct s;
 
-      s.thread_num = i;
+      s.thread_num = i - 1*i;
 
       for(int j = 0; j < NUM_RESOURCES; j++)
       {
@@ -187,11 +190,15 @@ int main(int argc, char *argv[])
 
 void *customer(void *arg)
 {
+  sleep(10);
+
+  puts("Inside a thread");
+  puts("===============");
+
   customer_struct* s = (customer_struct*) arg;
   int has[NUM_RESOURCES] = {0};
 
-  printf("entered thread %d\n", s->thread_num);
-  getchar();
+  print_struct(*s);
 
   bool complete = false;
 
