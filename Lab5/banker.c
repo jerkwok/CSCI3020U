@@ -5,7 +5,6 @@
  * All rights reserved.
  *
  */
-#define _XOPEN_SOURCE 700 // required for barriers to work
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -29,8 +28,12 @@ void *customer(void *arg);
 bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES]);
 void print_available();
 void print_struct(customer_struct s);
+void print_need();
+void print_array(char* title, int a[], int length, bool newline);
+void print_matricies();
 
 pthread_mutex_t mutex;
+pthread_mutex_t t_mutex;
 
 // Put global environment variables here
 // Available amount of each resource
@@ -58,6 +61,8 @@ bool request_res(int n_customer, int request[])
 
   printf("]\n");
 
+  print_array("Avl1", available, NUM_RESOURCES, true);
+
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
     if(request[i] > need[n_customer][i])
@@ -71,10 +76,13 @@ bool request_res(int n_customer, int request[])
   {
     if(request[j] > available[j])
     {
+      printf("DENIED: Resources not available\n");
+      puts("================================");
       return false;
     }
   }
 
+  //apply
   for(int k = 0; k < NUM_RESOURCES; k++)
   {
       available[k] -= request[k];
@@ -84,10 +92,9 @@ bool request_res(int n_customer, int request[])
 
   if(check_safe(available,allocation,need))
   {
-    for(int l = 0; l < NUM_RESOURCES; l++)
-    {
-      maximum[n_customer][l] = 0;
-    }
+    printf("GRANTED: %d now has", n_customer);
+    print_array("", allocation[n_customer], NUM_RESOURCES, true);
+    puts("================================");
     return true;
   }
   else
@@ -100,6 +107,8 @@ bool request_res(int n_customer, int request[])
         need[n_customer][m] += request[m];
     }
 
+    printf("DENIED: Unsafe state!\n");
+    puts("================================");
     return false;
   }
 }
@@ -107,7 +116,7 @@ bool request_res(int n_customer, int request[])
 // Release resources, returns true if successful
 bool release_res(int n_customer, int release[])
 {
-  printf("release call\n");
+  printf("Releasing all resources from process %d.\n", n_customer);
 
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
@@ -148,11 +157,13 @@ int main(int argc, char *argv[])
     puts("Before thread creation");
     puts("======================");
 
+    customer_struct array[NUM_CUSTOMERS];
+
     for (int i = 0; i < NUM_CUSTOMERS; i++)
     {
       customer_struct s;
 
-      s.thread_num = i - 1*i;
+      s.thread_num = i;
 
       for(int j = 0; j < NUM_RESOURCES; j++)
       {
@@ -166,7 +177,12 @@ int main(int argc, char *argv[])
       }
       print_struct(s);
 
-      pthread_create(&customers[i], 0, customer, (void *) &s);
+      array[i] = s;
+    }
+
+    for(int q = 0; q < NUM_CUSTOMERS; q++)
+    {
+      pthread_create(&customers[q], 0, customer, (void *) &array[q]);
     }
 
     //Join all threads
@@ -190,36 +206,30 @@ int main(int argc, char *argv[])
 
 void *customer(void *arg)
 {
-  sleep(10);
 
-  puts("Inside a thread");
-  puts("===============");
+  //pthread_mutex_lock(&t_mutex);
 
   customer_struct* s = (customer_struct*) arg;
   int has[NUM_RESOURCES] = {0};
-
-  print_struct(*s);
 
   bool complete = false;
 
   while(!complete)
   {
-    sleep(2);
-
-    printf("thread %d itterating press enter to continue\n", s->thread_num);
     getchar();
+
+    //printf("thread %d itterating\n", s->thread_num);
 
     //create request array and generate random request
     int req[NUM_RESOURCES];
 
     for(int i = 0; i < NUM_RESOURCES; i++)
     {
-      printf("breaks here?\n");
-      req[i] = rand() % (s->max[i] - has[i]);
+      req[i] = rand() % (s->max[i] - has[i] + 1);
     }
 
     //Wait for mutex and then issue a request
-    printf("#%d waiting for mutex\n", s->thread_num);
+    //printf("#%d waiting for mutex\n", s->thread_num);
 
     pthread_mutex_lock(&mutex);
     bool request_granted = request_res(s->thread_num, req);
@@ -227,7 +237,6 @@ void *customer(void *arg)
 
     if(request_granted)
     {
-      printf("granted?");
       //Update has array.
       for(int j = 0; j < NUM_RESOURCES; j++)
       {
@@ -256,30 +265,25 @@ void *customer(void *arg)
     }
   }
 
-  printf("return from %d\n", s->thread_num);
+  printf("Process %d completed.\n", s->thread_num);
   return (void *) NULL;
 }
 
 bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES])
 {
-  printf("check_safe called\n");
+  //printf("check_safe called\n");
 
-  int work[NUM_RESOURCES];
-  bool finish[NUM_CUSTOMERS] = {false};
+  int work[NUM_RESOURCES] = {0};
+  int finish[NUM_CUSTOMERS] = {0};
+  int local_allocation[NUM_CUSTOMERS][NUM_RESOURCES];
+  int local_need[NUM_CUSTOMERS][NUM_RESOURCES];
 
-  for(int h = 0; h < NUM_CUSTOMERS; h ++)
+  for(int e = 0; e < NUM_CUSTOMERS; e++)
   {
-    for(int g = 0; g < NUM_RESOURCES; g++)
+    for(int f = 0; f < NUM_RESOURCES; f++)
     {
-      if(need[h][g] != 0)
-      {
-        break;
-      }
-
-      if(g == NUM_RESOURCES -1)
-      {
-        finish[h] = true;
-      }
+      local_allocation[e][f] = allocation[e][f];
+      local_need[e][f] = need[e][f];
     }
   }
 
@@ -287,6 +291,30 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
   {
     work[i] = available[i];
   }
+  //
+  // for(int h = 0; h < NUM_CUSTOMERS; h ++)
+  // {
+  //   for(int g = 0; g < NUM_RESOURCES; g++)
+  //   {
+  //     if(need[h][g] != 0)
+  //     {
+  //       break;
+  //     }
+  //
+  //     if(g == NUM_RESOURCES -1)
+  //     {
+  //       finish[h] = 1;
+  //     }
+  //   }
+  // }
+
+  print_matricies();
+
+//  print_array("Finish", finish, NUM_CUSTOMERS);
+
+
+  print_array("Avl2", work, NUM_RESOURCES, true);
+  printf("\n");
 
   while(1)
   {
@@ -301,31 +329,55 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
         }
     }
 
-    bool can_finish = false;
 
     for(int j = 0; j < NUM_CUSTOMERS; j++)
     {
-      for(int k = 0; k < NUM_RESOURCES; k++)
+      bool can_finish = false;
+
+      if(finish[j] == 0)
       {
-        if(work[k] < need[j][k])
+        for(int k = 0; k < NUM_RESOURCES; k++)
         {
-          break;
+          if(work[k] < local_need[j][k])
+          {
+            break;
+          }
+
+          if(k == NUM_RESOURCES - 1)
+          {
+            can_finish = true;
+          }
         }
-        if(k == NUM_RESOURCES - 1)
+        if(can_finish)
         {
-          can_finish = true;
+          printf("%d", j);
+          print_array("", work, NUM_RESOURCES, false);
+          print_array("", local_need[j], NUM_RESOURCES, false);
+          print_array("", local_allocation[j],NUM_RESOURCES, false);
+
+          for(int l = 0; l < NUM_RESOURCES; l++)
+          {
+            work[l] += local_allocation[j][l];
+            local_allocation[j][l] = 0;
+          }
+
+        //  print_array("Work(A)", work, NUM_RESOURCES, true);
+          //print_array("Allocation(A)", local_allocation[j],NUM_RESOURCES);
+
+          finish[j] = 1;
+        //  printf("%d Fin  " , j);
         }
-      }
-      if(can_finish)
-      {
-        for(int l = 0; l < NUM_RESOURCES; l++)
+        else
         {
-          work[l] += allocation[j][l];
-          allocation[j][l] = 0;
+          printf("%d", j);
+          print_array("", work, NUM_RESOURCES, false);
+          print_array("", local_need[j], NUM_RESOURCES, false);
+          print_array("", local_allocation[j],NUM_RESOURCES, false);
+
+          //printf("%d !Fin ", j);
         }
 
-        finish[j] = true;
-        break;
+        print_array("", finish, NUM_CUSTOMERS, true);
       }
     }
 
@@ -372,4 +424,69 @@ void print_struct(customer_struct s)
   }
 
   printf("]\n");
+}
+
+void print_need()
+{
+
+  puts("Need Arrays");
+
+  for(int i = 0; i < NUM_CUSTOMERS; i++)
+  {
+    printf("%d : [ ", i);
+
+    for(int j = 0; j < NUM_RESOURCES; j++)
+    {
+      printf("%d ", need[i][j]);
+    }
+
+    puts("]");
+  }
+}
+
+void print_array(char* title, int a[], int length, bool newline)
+{
+  printf("%s : [ ", title);
+
+  for(int i = 0; i < length; i++)
+  {
+
+    printf("%d ", a[i]);
+  }
+
+  printf("]");
+
+  if(newline)
+  {
+    printf("\n");
+  }
+}
+
+void print_matricies()
+{
+  for(int i = 0; i < NUM_CUSTOMERS; i++)
+  {
+    printf("%d : [ ", i);
+
+    for(int j = 0; j < NUM_RESOURCES; j++)
+    {
+      printf("%d ", need[i][j]);
+    }
+
+    printf("] | [ ");
+
+    for(int j = 0; j < NUM_RESOURCES; j++)
+    {
+      printf("%d ", allocation[i][j]);
+    }
+
+    printf("] | [ ");
+
+    for(int j = 0; j < NUM_RESOURCES; j++)
+    {
+      printf("%d ", maximum[i][j]);
+    }
+
+    puts("]");
+  }
 }
