@@ -140,7 +140,7 @@ void readFile(queue** p1){
       temp_proc->scanners = atoi(tokenized[5]);//memory
       temp_proc->modems = atoi(tokenized[6]);//memory
       temp_proc->cd_drives = atoi(tokenized[7]);//memory
-      temp_proc->pid = 0;//pid
+      temp_proc->pid = -1;//pid
       temp_proc->address = -1; //address
 
       //push process onto queue
@@ -170,7 +170,8 @@ void print_list(queue *q1){
   int runtime;
   bool suspended;*/
   //end temp
-  printf("arrival: %d, priority: %d, runtime: %d, memory: %d, printers: %d, scanners: %d, modems: %d, cd_drives: %d, address: %d\n",
+  printf("arrival[pid=%d]: %d, priority: %d, runtime: %d, memory: %d, printers: %d, scanners: %d, modems: %d, cd_drives: %d, address: %d\n",
+	 current->val.pid,
   	current->val.arrival,
 	current->val.priority,
 	current->val.runtime,
