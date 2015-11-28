@@ -7,6 +7,7 @@
 #####Luisa Rojas - 100518772
 
 --------------------------------
+###*Note: Enter must be pressed after each iteration(intended)
 
 ####Objective
 The overall objective of this lab is to implement Banker's Algorithm by using threads to represent different processes/customers that make requests to the processor/banker. These requests can potentially put the system in a deadlock and as a result should be filtered to only allow requests that lead to a safe state of the system. This method allows a program to avoid deadlocking by essentially always keeping the system in a safe state. 
