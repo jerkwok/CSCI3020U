@@ -109,7 +109,7 @@ void *customer(void *arg)
   /*W*/ // issue a request. If the request is granted
   /*W*/while(!complete)
   /*W*/{
-  /*W*/  //getchar();
+  /*W*/  getchar();
   /*W*/
   /*W*/  //create request array and generate random request
   /*W*/  int req[NUM_RESOURCES];
@@ -154,10 +154,11 @@ void *customer(void *arg)
 
 bool request_res(int n_customer, int request[])
 {
-  printf("Process %d: ", n_customer);
-  print_array("Req", request, NUM_RESOURCES, true);
+  printf("Proc%d Req", n_customer);
+  print_array("", request, NUM_RESOURCES, true);
 
-  print_array("Cur Avl", available, NUM_RESOURCES, true);
+  print_array("Available", available, NUM_RESOURCES, true);
+  puts("");
 
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
@@ -173,7 +174,7 @@ bool request_res(int n_customer, int request[])
     if(request[j] > available[j])
     {
       printf("DENIED: Resources not available\n");
-      puts("================================");
+      puts("==============================");
       return false;
     }
   }
@@ -190,7 +191,8 @@ bool request_res(int n_customer, int request[])
   {
     printf("GRANTED: %d now has", n_customer);
     print_array("", allocation[n_customer], NUM_RESOURCES, true);
-    puts("================================");
+    puts("==============================");
+
     return true;
   }
   else
@@ -204,7 +206,8 @@ bool request_res(int n_customer, int request[])
     }
 
     printf("DENIED: Unsafe state!\n");
-    puts("================================");
+    puts("==============================");
+
     return false;
   }
 }
@@ -246,30 +249,16 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
   {
     work[i] = available[i];
   }
-  //
-  // for(int h = 0; h < NUM_CUSTOMERS; h ++)
-  // {
-  //   for(int g = 0; g < NUM_RESOURCES; g++)
-  //   {
-  //     if(need[h][g] != 0)
-  //     {
-  //       break;
-  //     }
-  //
-  //     if(g == NUM_RESOURCES -1)
-  //     {
-  //       finish[h] = 1;
-  //     }
-  //   }
-  // }
+
+  printf("#   [Require]   [ Alloc ]   [  Max  ]\n");
 
   print_matricies();
 
-//  print_array("Finish", finish, NUM_CUSTOMERS);
-
-
-  print_array("Avl2", work, NUM_RESOURCES, true);
   printf("\n");
+  print_array("Post Request", work, NUM_RESOURCES, true);
+  printf("\n");
+
+  bool printed = false;
 
   while(1)
   {
@@ -283,8 +272,11 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
           n_start_finished_processes++;
         }
     }
-
-
+    if(!printed)
+    {
+      printf("#   [ Avail ]   [Require]   [ Alloc ]   [    Fin    ]\n");
+      printed = true;
+    }
     for(int j = 0; j < NUM_CUSTOMERS; j++)
     {
       bool can_finish = false;
@@ -303,12 +295,16 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
             can_finish = true;
           }
         }
+
+        printf("%d", j);
+        print_array("", work, NUM_RESOURCES, false);
+        print_array("", local_need[j], NUM_RESOURCES, false);
+        print_array("", local_allocation[j],NUM_RESOURCES, false);
+        print_array("", finish, NUM_CUSTOMERS, false);
+
         if(can_finish)
         {
-          printf("%d", j);
-          print_array("", work, NUM_RESOURCES, false);
-          print_array("", local_need[j], NUM_RESOURCES, false);
-          print_array("", local_allocation[j],NUM_RESOURCES, false);
+          printf(" | Process %d can finish\n", j);
 
           for(int l = 0; l < NUM_RESOURCES; l++)
           {
@@ -316,23 +312,12 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
             local_allocation[j][l] = 0;
           }
 
-        //  print_array("Work(A)", work, NUM_RESOURCES, true);
-          //print_array("Allocation(A)", local_allocation[j],NUM_RESOURCES);
-
           finish[j] = 1;
-        //  printf("%d Fin  " , j);
         }
         else
         {
-          printf("%d", j);
-          print_array("", work, NUM_RESOURCES, false);
-          print_array("", local_need[j], NUM_RESOURCES, false);
-          print_array("", local_allocation[j],NUM_RESOURCES, false);
-
-          //printf("%d !Fin ", j);
+          printf(" | Process %d can't finish\n", j);
         }
-
-        print_array("", finish, NUM_CUSTOMERS, true);
       }
     }
 
