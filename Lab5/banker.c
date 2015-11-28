@@ -70,6 +70,10 @@ int main(int argc, char *argv[])
     /*G*/  processes[i] = s;
     /*G*/}
 
+    /*P*/ // Print prompt so user knows how to use the system.
+    /*P*/printf("\nPress enter to move to next step...\n");
+    /*P*/printf("===================================\n");
+
     /*T*/ // Create each thread passing it a generated struct containing its
     /*T*/ // thread number and the maximum resources required for a process
     /*T*/ // to complete. Each thread executes the customer function which
@@ -173,8 +177,8 @@ bool request_res(int n_customer, int request[])
   {
     if(request[j] > available[j])
     {
-      printf("DENIED: Resources not available\n");
-      puts("==============================");
+      printf("\nDENIED: Resources not available\n");
+      puts("===================================");
       return false;
     }
   }
@@ -189,9 +193,9 @@ bool request_res(int n_customer, int request[])
 
   if(check_safe(available,allocation,need))
   {
-    printf("GRANTED: %d now has", n_customer);
+    printf("\nGRANTED: Proc%d now has", n_customer);
     print_array("", allocation[n_customer], NUM_RESOURCES, true);
-    puts("==============================");
+    puts("===================================");
 
     return true;
   }
@@ -205,8 +209,8 @@ bool request_res(int n_customer, int request[])
         need[n_customer][m] += request[m];
     }
 
-    printf("DENIED: Unsafe state!\n");
-    puts("==============================");
+    printf("\nDENIED: Unsafe state!\n");
+    puts("===================================");
 
     return false;
   }
