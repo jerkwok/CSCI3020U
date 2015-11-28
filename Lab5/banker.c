@@ -1,10 +1,11 @@
 /*
  * Banker's Algorithm for SOFE 3950U / CSCI 3020U: Operating Systems
  *
- * Copyright (C) 2015, <GROUP MEMBERS>
+ * Copyright (C) 2015, Taylor Smith
  * All rights reserved.
  *
  */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -13,55 +14,150 @@
 #include "banker.h"
 #include <unistd.h>
 
-// Put any other macros or constants here using #define
-// May be any values >= 0
-#define NUM_CUSTOMERS 5
-#define NUM_RESOURCES 3
-
-typedef struct
-{
-    int thread_num;
-    int max[NUM_RESOURCES];
-}customer_struct;
-
-void *customer(void *arg);
-bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES]);
-void print_available();
-void print_struct(customer_struct s);
-void print_need();
-void print_array(char* title, int a[], int length, bool newline);
-void print_matricies();
-
 pthread_mutex_t mutex;
-pthread_mutex_t t_mutex;
 
-// Put global environment variables here
-// Available amount of each resource
-int available[NUM_RESOURCES];
+int available[NUM_RESOURCES];                 // Available amount of each resource
+int maximum[NUM_CUSTOMERS][NUM_RESOURCES];    // Maximum demand of each customer
+int allocation[NUM_CUSTOMERS][NUM_RESOURCES]; // Amount currently allocated to each customer
+int need[NUM_CUSTOMERS][NUM_RESOURCES];       // Remaining need of each customer
 
-// Maximum demand of each customer
-int maximum[NUM_CUSTOMERS][NUM_RESOURCES];
+int main(int argc, char *argv[])
+{
+    /*I*/ // Initialization: Check to make sure user entered the correct amount
+    /*I*/ // of resources and loads them into the available array and Initializes
+    /*I*/ // the mutex lock.
+    /*I*/system("clear");
+    /*I*/
+    /*I*/if(argc -1 != NUM_RESOURCES)
+    /*I*/{
+    /*I*/  printf("ERROR: Expected %d reources, recieved %d\n", NUM_RESOURCES, argc);
+    /*I*/  exit(EXIT_FAILURE);
+    /*I*/}
+    /*I*/
+    /*I*/for(int a = 0; a < NUM_RESOURCES; a++)
+    /*I*/{
+    /*I*/  available[a] = atoi(argv[a+1]);
+    /*I*/}
+    /*I*/
+    /*I*/print_array("Available Resources", available, NUM_RESOURCES, true);
+    /*I*/printf("\n");
+    /*I*/
+    /*I*/pthread_mutex_init(&mutex,NULL);
 
-// Amount currently allocated to each customer
-int allocation[NUM_CUSTOMERS][NUM_RESOURCES];
+    /*G*/ // Generate the initial max values for the processes and store them in
+    /*G*/ // an array. Max values have to be between 0 and the maximum available
+    /*G*/ // of any given resource.
+    /*G*/customer_struct processes[NUM_CUSTOMERS];
+    /*G*/
+    /*G*/for (int i = 0; i < NUM_CUSTOMERS; i++)
+    /*G*/{
+    /*G*/  customer_struct s;
+    /*G*/
+    /*G*/  s.thread_num = i;
+    /*G*/
+    /*G*/  for(int j = 0; j < NUM_RESOURCES; j++)
+    /*G*/  {
+    /*G*/      int resource_max = rand() % atoi(argv[j+1]);
+    /*G*/
+    /*G*/      s.max[j] = resource_max;
+    /*G*/
+    /*G*/      allocation[i][j] = 0;
+    /*G*/      maximum[i][j] = resource_max;
+    /*G*/      need[i][j] = resource_max;
+    /*G*/  }
+    /*G*/
+    /*G*/  print_struct(s);
+    /*G*/  processes[i] = s;
+    /*G*/}
 
-// Remaining need of each customer
-int need[NUM_CUSTOMERS][NUM_RESOURCES];
+    /*T*/ // Create each thread passing it a generated struct containing its
+    /*T*/ // thread number and the maximum resources required for a process
+    /*T*/ // to complete. Each thread executes the customer function which
+    /*T*/ // continually generates random requests and submits them to the banker
+    /*T*/ // until it recieves all required resources and then releases all of its
+    /*T*/ // resources.
+    /*T*/pthread_t customers[NUM_CUSTOMERS];
+    /*T*/
+    /*T*/for(int q = 0; q < NUM_CUSTOMERS; q++)
+    /*T*/{
+    /*T*/  pthread_create(&customers[q], 0, customer, (void *) &processes[q]);
+    /*T*/}
+    /*T*/
+    /*T*/for (int k = 0; k < NUM_CUSTOMERS; k++)
+    /*T*/{
+    /*T*/  pthread_join(customers[k],0);
+    /*T*/}
 
-// Define functions declared in banker.h here
+    /*C*/ // Clean-up
+    /*C*/pthread_mutex_destroy(&mutex);
+    /*C*/
+    /*C*/return EXIT_SUCCESS;
+} // main
+
+void *customer(void *arg)
+{
+  /*I*/ // Intialization: typecast the struct passed as an argument to the thread
+  /*I*/ // as well the has array, a local copy of this threads allocated resources
+  /*I*/ // and sets the looping variable to false.
+  /*I*/customer_struct* s = (customer_struct*) arg;
+  /*I*/int has[NUM_RESOURCES] = {0};
+  /*I*/bool complete = false;
+
+  /*W*/ // Loop the thread until it is complete by aquiring all needed resources.
+  /*W*/ // Waits for user to hit enter before proceeding, then generates a random
+  /*W*/ // request that ranges from [0,max needed] and then aquires the mutex to
+  /*W*/ // issue a request. If the request is granted
+  /*W*/while(!complete)
+  /*W*/{
+  /*W*/  //getchar();
+  /*W*/
+  /*W*/  //create request array and generate random request
+  /*W*/  int req[NUM_RESOURCES];
+  /*W*/  for(int i = 0; i < NUM_RESOURCES; i++)
+  /*W*/  {
+  /*W*/    req[i] = rand() % (s->max[i] - has[i] + 1);
+  /*W*/  }
+  /*W*/
+  /*W*/  pthread_mutex_lock(&mutex);
+  /*W*/  bool request_granted = request_res(s->thread_num, req);
+  /*W*/  pthread_mutex_unlock(&mutex);
+  /*W*/
+  /*W*/  if(request_granted)
+  /*W*/  {
+  /*W*/    //Update has array.
+  /*W*/    for(int j = 0; j < NUM_RESOURCES; j++)
+  /*W*/    {
+  /*W*/      has[j] += req[j];
+  /*W*/    }
+  /*W*/
+  /*W*/    //Check if customer has all required resources by comparing has array to max array
+  /*W*/    complete = true;
+  /*W*/    for(int k = 0; k < NUM_RESOURCES; k++)
+  /*W*/    {
+  /*W*/      if(has[k] != s->max[k])
+  /*W*/      {
+  /*W*/       complete = false;
+  /*W*/      }
+  /*W*/    }
+  /*W*/  }
+  /*W*/}
+
+  /*C*/ // Clean-up: release all resources and exit the thread.
+  /*C*/printf("Process %d completed.\n", s->thread_num);
+  /*C*/
+  /*C*/pthread_mutex_lock(&mutex);
+  /*C*/release_res(s->thread_num, has);
+  /*C*/pthread_mutex_unlock(&mutex);
+  /*C*/
+  /*C*/return (void *) NULL;
+}
+
 bool request_res(int n_customer, int request[])
 {
+  printf("Process %d: ", n_customer);
+  print_array("Req", request, NUM_RESOURCES, true);
 
-  printf("Req#%d: [ ", n_customer);
-
-  for(int p = 0; p < NUM_RESOURCES; p++)
-  {
-    printf("%d ", request[p]);
-  }
-
-  printf("]\n");
-
-  print_array("Avl1", available, NUM_RESOURCES, true);
+  print_array("Cur Avl", available, NUM_RESOURCES, true);
 
   for(int i = 0; i < NUM_RESOURCES; i++)
   {
@@ -126,147 +222,6 @@ bool release_res(int n_customer, int release[])
   }
 
   return true;
-}
-
-int main(int argc, char *argv[])
-{
-    // ==================== YOUR CODE HERE ==================== //
-
-    // Read in arguments from CLI, NUM_RESOURCES is the number of arguments
-    // Allocate the available resources
-
-    if(argc -1 != NUM_RESOURCES)
-    {
-      printf("ERROR: Expected %d reources, recieved %d\n", NUM_RESOURCES, argc);
-      exit(EXIT_FAILURE);
-    }
-
-    for(int a = 0; a < NUM_RESOURCES; a++)
-    {
-      available[a] = atoi(argv[a+1]);
-    }
-
-    print_available();
-
-    // Initialize the pthreads, locks, mutexes, etc.
-    pthread_t customers[NUM_CUSTOMERS]; //create array of threads
-    pthread_mutex_init(&mutex,NULL);
-
-    // Run the threads and continually loop
-
-    puts("Before thread creation");
-    puts("======================");
-
-    customer_struct array[NUM_CUSTOMERS];
-
-    for (int i = 0; i < NUM_CUSTOMERS; i++)
-    {
-      customer_struct s;
-
-      s.thread_num = i;
-
-      for(int j = 0; j < NUM_RESOURCES; j++)
-      {
-          int resource_max = rand() % atoi(argv[j+1]);
-
-          s.max[j] = resource_max;
-
-          allocation[i][j] = 0;
-          maximum[i][j] = resource_max;
-          need[i][j] = resource_max;
-      }
-      print_struct(s);
-
-      array[i] = s;
-    }
-
-    for(int q = 0; q < NUM_CUSTOMERS; q++)
-    {
-      pthread_create(&customers[q], 0, customer, (void *) &array[q]);
-    }
-
-    //Join all threads
-    for (int k = 0; k < NUM_CUSTOMERS; k++)
-    {
-      pthread_join(customers[k],0);
-    }
-
-    // The threads will request and then release random numbers of resources
-
-    // If your program hangs you may have a deadlock, otherwise you *may* have
-    // implemented the banker's algorithm correctly
-
-    // If you are having issues try and limit the number of threads (NUM_CUSTOMERS)
-    // to just 2 and focus on getting the multithreading working for just two threads
-
-    pthread_mutex_destroy(&mutex); //destroy the mutex
-
-    return EXIT_SUCCESS;
-}
-
-void *customer(void *arg)
-{
-
-  //pthread_mutex_lock(&t_mutex);
-
-  customer_struct* s = (customer_struct*) arg;
-  int has[NUM_RESOURCES] = {0};
-
-  bool complete = false;
-
-  while(!complete)
-  {
-    getchar();
-
-    //printf("thread %d itterating\n", s->thread_num);
-
-    //create request array and generate random request
-    int req[NUM_RESOURCES];
-
-    for(int i = 0; i < NUM_RESOURCES; i++)
-    {
-      req[i] = rand() % (s->max[i] - has[i] + 1);
-    }
-
-    //Wait for mutex and then issue a request
-    //printf("#%d waiting for mutex\n", s->thread_num);
-
-    pthread_mutex_lock(&mutex);
-    bool request_granted = request_res(s->thread_num, req);
-    pthread_mutex_unlock(&mutex);
-
-    if(request_granted)
-    {
-      //Update has array.
-      for(int j = 0; j < NUM_RESOURCES; j++)
-      {
-        has[j] += req[j];
-      }
-
-      //Check if customer has all required resources by comparing has array to max array
-      for(int k = 0; k < NUM_RESOURCES; k++)
-      {
-        if(has[k] != s->max[k])
-        {
-          break;
-        }
-
-        //If hasn't called break by last iteration of k, all are equal and release all resources
-        if(k == NUM_RESOURCES - 1)
-        {
-          //Wait for mutex and then issue a release
-          pthread_mutex_lock(&mutex);
-          release_res(s->thread_num, has);
-          pthread_mutex_unlock(&mutex);
-
-          complete = true;
-        }
-      }
-    }
-  }
-
-  printf("Process %d completed.\n", s->thread_num);
-  return (void *) NULL;
 }
 
 bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES])
@@ -400,21 +355,9 @@ bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM
   }
 }
 
-void print_available()
-{
-  printf("Available: [");
-
-  for(int p = 0; p < NUM_RESOURCES; p++)
-  {
-    printf(" %d ", available[p]);
-  }
-
-  printf("]\n");
-}
-
 void print_struct(customer_struct s)
 {
-  printf("Thread Num: %d\n", s.thread_num);
+  printf("Process Num: %d\n", s.thread_num);
 
   printf("Max Resources: [ ");
 
