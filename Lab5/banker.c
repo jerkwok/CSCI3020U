@@ -158,62 +158,73 @@ void *customer(void *arg)
 
 bool request_res(int n_customer, int request[])
 {
+
   printf("Proc%d Req", n_customer);
   print_array("", request, NUM_RESOURCES, true);
 
   print_array("Available", available, NUM_RESOURCES, true);
   puts("");
 
-  for(int i = 0; i < NUM_RESOURCES; i++)
-  {
-    if(request[i] > need[n_customer][i])
-    {
-      printf("ERROR: Thread number %d requested more resources than maximum\n", n_customer);
-      exit (EXIT_FAILURE);
-    }
-  }
+  /**/ // Check to see if the process requests more resources than its maximum
+  /**/ // need in which case something has gone wrong and the program is exited.
+  /**/ // Also checks if any of the resource requests are more than the current
+  /**/ // remaining available resources and denies the request if they are.
+  /**/for(int i = 0; i < NUM_RESOURCES; i++)
+  /**/{
+  /**/  if(request[i] > need[n_customer][i])
+  /**/  {
+  /**/    printf("ERROR: Thread number %d requested more resources than maximum\n", n_customer);
+  /**/    exit (EXIT_FAILURE);
+  /**/  }
+  /**/}
+  /**/
+  /**/for(int j = 0; j < NUM_RESOURCES; j++)
+  /**/{
+  /**/  if(request[j] > available[j])
+  /**/  {
+  /**/    printf("\nDENIED: Resources not available\n");
+  /**/    puts("===================================");
+  /**/    return false;
+  /**/  }
+  /**/}
 
-  for(int j = 0; j < NUM_RESOURCES; j++)
-  {
-    if(request[j] > available[j])
-    {
-      printf("\nDENIED: Resources not available\n");
-      puts("===================================");
-      return false;
-    }
-  }
+  /**/ // Assume the request will be granted and update the current available
+  /**/ // resources, the allocated resources to the process and the need of the
+  /**/ // process.
+  /**/for(int k = 0; k < NUM_RESOURCES; k++)
+  /**/{
+  /**/    available[k] -= request[k];
+  /**/    allocation[n_customer][k] += request[k];
+  /**/    need[n_customer][k] -= request[k];
+  /**/}
 
-  //apply
-  for(int k = 0; k < NUM_RESOURCES; k++)
-  {
-      available[k] -= request[k];
-      allocation[n_customer][k] += request[k];
-      need[n_customer][k] -= request[k];
-  }
-
-  if(check_safe(available,allocation,need))
-  {
-    printf("\nGRANTED: Proc%d now has", n_customer);
-    print_array("", allocation[n_customer], NUM_RESOURCES, true);
-    puts("===================================");
-
-    return true;
-  }
-  else
-  {
-    //revert
-    for(int m = 0; m < NUM_RESOURCES; m++)
-    {
-        available[m] += request[m];
-        allocation[n_customer][m] -= request[m];
-        need[n_customer][m] += request[m];
-    }
-
-    printf("\nDENIED: Unsafe state!\n");
-    puts("===================================");
-
-    return false;
-  }
+  /**/ // Check if the system will be in a safe state. If it will be return true
+  /**/ // and don't update as the system is already up to date. However if it
+  /**/ // will not be in a safe state revert all previous changes to the safe
+  /**/ // state before the request was made.
+  /**/if(check_safe(available,allocation,need))
+  /**/{
+  /**/  printf("\nGRANTED: Proc%d now has", n_customer);
+  /**/  print_array("", allocation[n_customer], NUM_RESOURCES, true);
+  /**/  puts("===================================");
+  /**/
+  /**/  return true;
+  /**/}
+  /**/else
+  /**/{
+  /**/  // Revert all changes made to the system state
+  /**/  for(int m = 0; m < NUM_RESOURCES; m++)
+  /**/  {
+  /**/      available[m] += request[m];
+  /**/      allocation[n_customer][m] -= request[m];
+  /**/      need[n_customer][m] += request[m];
+  /**/  }
+  /**/
+  /**/  printf("\nDENIED: Unsafe state!\n");
+  /**/  puts("===================================");
+  /**/
+  /**/  return false;
+  /**/}
 }
 
 // Release resources, returns true if successful
@@ -356,24 +367,6 @@ void print_struct(customer_struct s)
   }
 
   printf("]\n");
-}
-
-void print_need()
-{
-
-  puts("Need Arrays");
-
-  for(int i = 0; i < NUM_CUSTOMERS; i++)
-  {
-    printf("%d : [ ", i);
-
-    for(int j = 0; j < NUM_RESOURCES; j++)
-    {
-      printf("%d ", need[i][j]);
-    }
-
-    puts("]");
-  }
 }
 
 void print_array(char* title, int a[], int length, bool newline)

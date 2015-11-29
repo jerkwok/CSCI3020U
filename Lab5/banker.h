@@ -32,7 +32,6 @@ extern bool release_res(int n_customer, int release[]);
 extern void *customer(void *arg);
 extern bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES]);
 extern void print_struct(customer_struct s);
-extern void print_need();
 extern void print_array(char* title, int a[], int length, bool newline);
 extern void print_matricies();
 
