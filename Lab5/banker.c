@@ -234,7 +234,8 @@ bool request_res(int n_customer, int request[])
 bool release_res(int n_customer, int release[])
 {
   /*P*/ // Print which process is returning its resources.
-  /*P*/printf("Releasing all resources from process %d.\n", n_customer);
+  /*P*/printf("Process %d Releasing all resources.\n", n_customer);
+  /*P*/puts("===================================");
 
   /*R*/ // Release the resources from the completed process.
   /*R*/for(int i = 0; i < NUM_RESOURCES; i++)
