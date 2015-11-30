@@ -1,7 +1,7 @@
 /*
  * Banker's Algorithm for SOFE 3950U / CSCI 3020U: Operating Systems
  *
- * Copyright (C) 2015, <GROUP MEMBERS>
+ * Copyright (C) 2015, Taylor Smith
  * All rights reserved.
  *
  */

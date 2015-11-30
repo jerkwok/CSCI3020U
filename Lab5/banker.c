@@ -10,22 +10,22 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <pthread.h>
-#include <semaphore.h>
 #include "banker.h"
 #include <unistd.h>
 
-pthread_mutex_t mutex;
-
-int available[NUM_RESOURCES];                 // Available amount of each resource
-int maximum[NUM_CUSTOMERS][NUM_RESOURCES];    // Maximum demand of each customer
-int allocation[NUM_CUSTOMERS][NUM_RESOURCES]; // Amount currently allocated to each customer
-int need[NUM_CUSTOMERS][NUM_RESOURCES];       // Remaining need of each customer
+/*G*/ // Declare all global variables.
+/*G*/pthread_mutex_t mutex;
+/*G*/
+/*G*/int available[NUM_RESOURCES];
+/*G*/int maximum[NUM_CUSTOMERS][NUM_RESOURCES];
+/*G*/int allocation[NUM_CUSTOMERS][NUM_RESOURCES];
+/*G*/int need[NUM_CUSTOMERS][NUM_RESOURCES];
 
 int main(int argc, char *argv[])
 {
     /*I*/ // Initialization: Check to make sure user entered the correct amount
-    /*I*/ // of resources and loads them into the available array and Initializes
-    /*I*/ // the mutex lock.
+    /*I*/ // of resources and loads them into the available array and
+    /*I*/ // initializes the mutex lock.
     /*I*/system("clear");
     /*I*/
     /*I*/if(argc -1 != NUM_RESOURCES)
@@ -93,266 +93,300 @@ int main(int argc, char *argv[])
     /*T*/}
 
     /*C*/ // Clean-up
+    /*C*/printf("\nAll processes completed program exitting\n\n");
+    /*C*/
     /*C*/pthread_mutex_destroy(&mutex);
     /*C*/
     /*C*/return EXIT_SUCCESS;
-} // main
+}
 
 void *customer(void *arg)
 {
-  /*I*/ // Intialization: typecast the struct passed as an argument to the thread
-  /*I*/ // as well the has array, a local copy of this threads allocated resources
-  /*I*/ // and sets the looping variable to false.
-  /*I*/customer_struct* s = (customer_struct*) arg;
-  /*I*/int has[NUM_RESOURCES] = {0};
-  /*I*/bool complete = false;
+   /*I*/ // Intialization: typecast the struct passed as an argument to the
+   /*I*/ // thread as well the has array, a local copy of this threads allocated
+   /*I*/ // resources and sets the looping variable to false.
+   /*I*/customer_struct* s = (customer_struct*) arg;
+   /*I*/int has[NUM_RESOURCES] = {0};
+   /*I*/bool complete = false;
 
-  /*W*/ // Loop the thread until it is complete by aquiring all needed resources.
-  /*W*/ // Waits for user to hit enter before proceeding, then generates a random
-  /*W*/ // request that ranges from [0,max needed] and then aquires the mutex to
-  /*W*/ // issue a request. If the request is granted
-  /*W*/while(!complete)
-  /*W*/{
-  /*W*/  getchar();
-  /*W*/
-  /*W*/  //create request array and generate random request
-  /*W*/  int req[NUM_RESOURCES];
-  /*W*/  for(int i = 0; i < NUM_RESOURCES; i++)
-  /*W*/  {
-  /*W*/    req[i] = rand() % (s->max[i] - has[i] + 1);
-  /*W*/  }
-  /*W*/
-  /*W*/  pthread_mutex_lock(&mutex);
-  /*W*/  bool request_granted = request_res(s->thread_num, req);
-  /*W*/  pthread_mutex_unlock(&mutex);
-  /*W*/
-  /*W*/  if(request_granted)
-  /*W*/  {
-  /*W*/    //Update has array.
-  /*W*/    for(int j = 0; j < NUM_RESOURCES; j++)
-  /*W*/    {
-  /*W*/      has[j] += req[j];
-  /*W*/    }
-  /*W*/
-  /*W*/    //Check if customer has all required resources by comparing has array to max array
-  /*W*/    complete = true;
-  /*W*/    for(int k = 0; k < NUM_RESOURCES; k++)
-  /*W*/    {
-  /*W*/      if(has[k] != s->max[k])
-  /*W*/      {
-  /*W*/       complete = false;
-  /*W*/      }
-  /*W*/    }
-  /*W*/  }
-  /*W*/}
+   /*W*/ // Loop the thread until it completes by aquiring all needed resources.
+   /*W*/ // Waits for user to hit enter before proceeding, then generates a
+   /*W*/ // random request that ranges from [0,max needed] and then aquires the
+   /*W*/ // mutex to issue a request. If the request is granted the has array is
+   /*W*/ // updated and compared to max to determine if the process is complete.
+   /*W*/while(!complete)
+   /*W*/{
+   /*W*/  getchar();
+   /*W*/
+   /*W*/  //create request array and generate random request
+   /*W*/  int req[NUM_RESOURCES];
+   /*W*/  for(int i = 0; i < NUM_RESOURCES; i++)
+   /*W*/  {
+   /*W*/    req[i] = rand() % (s->max[i] - has[i] + 1);
+   /*W*/  }
+   /*W*/
+   /*W*/  pthread_mutex_lock(&mutex);
+   /*W*/  bool request_granted = request_res(s->thread_num, req);
+   /*W*/  pthread_mutex_unlock(&mutex);
+   /*W*/
+   /*W*/  if(request_granted)
+   /*W*/  {
+   /*W*/    //Update has array.
+   /*W*/    for(int j = 0; j < NUM_RESOURCES; j++)
+   /*W*/    {
+   /*W*/      has[j] += req[j];
+   /*W*/    }
+   /*W*/
+   /*W*/    //Check if customer has all required resources by comparing has
+   /*W*/    //array to max array.
+   /*W*/    complete = true;
+   /*W*/    for(int k = 0; k < NUM_RESOURCES; k++)
+   /*W*/    {
+   /*W*/      if(has[k] != s->max[k])
+   /*W*/      {
+   /*W*/       complete = false;
+   /*W*/      }
+   /*W*/    }
+   /*W*/  }
+   /*W*/}
 
-  /*C*/ // Clean-up: release all resources and exit the thread.
-  /*C*/printf("Process %d completed.\n", s->thread_num);
-  /*C*/
-  /*C*/pthread_mutex_lock(&mutex);
-  /*C*/release_res(s->thread_num, has);
-  /*C*/pthread_mutex_unlock(&mutex);
-  /*C*/
-  /*C*/return (void *) NULL;
+   /*C*/ // Clean-up: release all resources and exit the thread.
+   /*C*/printf("Process %d completed.\n", s->thread_num);
+   /*C*/
+   /*C*/pthread_mutex_lock(&mutex);
+   /*C*/release_res(s->thread_num, has);
+   /*C*/pthread_mutex_unlock(&mutex);
+   /*C*/
+   /*C*/return (void *) NULL;
 }
 
 bool request_res(int n_customer, int request[])
 {
+   /*P*/ // Print the incomming request and current available resources.
+   /*P*/printf("Proc%d Req", n_customer);
+   /*P*/print_array("", request, NUM_RESOURCES, true);
+   /*P*/
+   /*P*/print_array("Available", available, NUM_RESOURCES, true);
+   /*P*/puts("");
 
-  printf("Proc%d Req", n_customer);
-  print_array("", request, NUM_RESOURCES, true);
+   /**/ // Check to see if the process requests more resources than its maximum
+   /**/ // need in which case something has gone wrong and close the program.
+   /**/ // Also checks if any of the resource requests are more than the current
+   /**/ // remaining available resources and denies the request if they are.
+   /**/for(int i = 0; i < NUM_RESOURCES; i++)
+   /**/{
+   /**/  if(request[i] > need[n_customer][i])
+   /**/  {
+   /**/    printf("ERROR: Thread number %d requested more resources than maximum\n", n_customer);
+   /**/    exit (EXIT_FAILURE);
+   /**/  }
+   /**/}
+   /**/
+   /**/for(int j = 0; j < NUM_RESOURCES; j++)
+   /**/{
+   /**/  if(request[j] > available[j])
+   /**/  {
+   /**/    printf("DENIED: Resources not available\n");
+   /**/    puts("===================================");
+   /**/    return false;
+   /**/  }
+   /**/}
 
-  print_array("Available", available, NUM_RESOURCES, true);
-  puts("");
+   /*U*/ // Assume the request will be granted and update the current available
+   /*U*/ // resources, the allocated resources to the process and the need of
+   /*U*/ // the process.
+   /*U*/for(int k = 0; k < NUM_RESOURCES; k++)
+   /*U*/{
+   /*U*/    available[k] -= request[k];
+   /*U*/    allocation[n_customer][k] += request[k];
+   /*U*/    need[n_customer][k] -= request[k];
+   /*U*/}
 
-  /**/ // Check to see if the process requests more resources than its maximum
-  /**/ // need in which case something has gone wrong and the program is exited.
-  /**/ // Also checks if any of the resource requests are more than the current
-  /**/ // remaining available resources and denies the request if they are.
-  /**/for(int i = 0; i < NUM_RESOURCES; i++)
-  /**/{
-  /**/  if(request[i] > need[n_customer][i])
-  /**/  {
-  /**/    printf("ERROR: Thread number %d requested more resources than maximum\n", n_customer);
-  /**/    exit (EXIT_FAILURE);
-  /**/  }
-  /**/}
-  /**/
-  /**/for(int j = 0; j < NUM_RESOURCES; j++)
-  /**/{
-  /**/  if(request[j] > available[j])
-  /**/  {
-  /**/    printf("\nDENIED: Resources not available\n");
-  /**/    puts("===================================");
-  /**/    return false;
-  /**/  }
-  /**/}
-
-  /**/ // Assume the request will be granted and update the current available
-  /**/ // resources, the allocated resources to the process and the need of the
-  /**/ // process.
-  /**/for(int k = 0; k < NUM_RESOURCES; k++)
-  /**/{
-  /**/    available[k] -= request[k];
-  /**/    allocation[n_customer][k] += request[k];
-  /**/    need[n_customer][k] -= request[k];
-  /**/}
-
-  /**/ // Check if the system will be in a safe state. If it will be return true
-  /**/ // and don't update as the system is already up to date. However if it
-  /**/ // will not be in a safe state revert all previous changes to the safe
-  /**/ // state before the request was made.
-  /**/if(check_safe(available,allocation,need))
-  /**/{
-  /**/  printf("\nGRANTED: Proc%d now has", n_customer);
-  /**/  print_array("", allocation[n_customer], NUM_RESOURCES, true);
-  /**/  puts("===================================");
-  /**/
-  /**/  return true;
-  /**/}
-  /**/else
-  /**/{
-  /**/  // Revert all changes made to the system state
-  /**/  for(int m = 0; m < NUM_RESOURCES; m++)
-  /**/  {
-  /**/      available[m] += request[m];
-  /**/      allocation[n_customer][m] -= request[m];
-  /**/      need[n_customer][m] += request[m];
-  /**/  }
-  /**/
-  /**/  printf("\nDENIED: Unsafe state!\n");
-  /**/  puts("===================================");
-  /**/
-  /**/  return false;
-  /**/}
+   /*S*/ // Check if the system will be in a safe state. If it will be return true
+   /*S*/ // and don't update as the system is already up to date. However if it
+   /*S*/ // will not be in a safe state revert all previous changes to the safe
+   /*S*/ // state before the request was made.
+   /*S*/if(check_safe(available,allocation,need))
+   /*S*/{
+   /*S*/  printf("\nGRANTED: Proc%d now has", n_customer);
+   /*S*/  print_array("", allocation[n_customer], NUM_RESOURCES, true);
+   /*S*/  puts("===================================");
+   /*S*/
+   /*S*/  return true;
+   /*S*/}
+   /*S*/else
+   /*S*/{
+   /*S*/  // Revert all changes made to the system state
+   /*S*/  for(int m = 0; m < NUM_RESOURCES; m++)
+   /*S*/  {
+   /*S*/      available[m] += request[m];
+   /*S*/      allocation[n_customer][m] -= request[m];
+   /*S*/      need[n_customer][m] += request[m];
+   /*S*/  }
+   /*S*/
+   /*S*/  printf("\nDENIED: Unsafe state!\n");
+   /*S*/  puts("===================================");
+   /*S*/
+   /*S*/  return false;
+   /*S*/}
 }
 
-// Release resources, returns true if successful
 bool release_res(int n_customer, int release[])
 {
-  printf("Releasing all resources from process %d.\n", n_customer);
+  /*P*/ // Print which process is returning its resources.
+  /*P*/printf("Releasing all resources from process %d.\n", n_customer);
 
-  for(int i = 0; i < NUM_RESOURCES; i++)
-  {
-    available[i] += release[i];
-    allocation[n_customer][i] = 0;
-    maximum[n_customer][i] = 0;
-  }
+  /*R*/ // Release the resources from the completed process.
+  /*R*/for(int i = 0; i < NUM_RESOURCES; i++)
+  /*R*/{
+  /*R*/  available[i] += release[i];
+  /*R*/  allocation[n_customer][i] = 0;
+  /*R*/  maximum[n_customer][i] = 0;
+  /*R*/}
 
   return true;
 }
 
 bool check_safe(int available[], int allocation[][NUM_RESOURCES], int need[][NUM_RESOURCES])
 {
-  //printf("check_safe called\n");
+  /*I*/ // Intialize variables needed for bankers algorithm as well as local
+  /*I*/ // copies of need and allocation.
+  /*I*/int work[NUM_RESOURCES] = {0};
+  /*I*/int finish[NUM_CUSTOMERS] = {0};
+  /*I*/int local_allocation[NUM_CUSTOMERS][NUM_RESOURCES];
+  /*I*/int local_need[NUM_CUSTOMERS][NUM_RESOURCES];
+  /*I*/
+  /*I*/for(int e = 0; e < NUM_CUSTOMERS; e++)
+  /*I*/{
+  /*I*/  for(int f = 0; f < NUM_RESOURCES; f++)
+  /*I*/  {
+  /*I*/    local_allocation[e][f] = allocation[e][f];
+  /*I*/    local_need[e][f] = need[e][f];
+  /*I*/  }
+  /*I*/}
+  /*I*/
+  /*I*/for(int i = 0; i < NUM_RESOURCES; i++)
+  /*I*/{
+  /*I*/  work[i] = available[i];
+  /*I*/}
 
-  int work[NUM_RESOURCES] = {0};
-  int finish[NUM_CUSTOMERS] = {0};
-  int local_allocation[NUM_CUSTOMERS][NUM_RESOURCES];
-  int local_need[NUM_CUSTOMERS][NUM_RESOURCES];
+  /*P*/ // Print the required allocated and max of every process and the
+  /*P*/ // remaining available after the request has been implemented. Then
+  /*P*/ // print the header for the bankers algorithm loop.
+  /*P*/print_matricies();
+  /*P*/
+  /*P*/printf("\n");
+  /*P*/print_array("Post Request", work, NUM_RESOURCES, true);
+  /*P*/printf("\n");
+  /*P*/
+  /*P*/printf("#   [ Avail ]   [Require]   [ Alloc ]   [    Fin    ]\n");
 
-  for(int e = 0; e < NUM_CUSTOMERS; e++)
-  {
-    for(int f = 0; f < NUM_RESOURCES; f++)
-    {
-      local_allocation[e][f] = allocation[e][f];
-      local_need[e][f] = need[e][f];
-    }
-  }
-
-  for(int i = 0; i < NUM_RESOURCES; i++)
-  {
-    work[i] = available[i];
-  }
-
-  printf("#   [Require]   [ Alloc ]   [  Max  ]\n");
-
-  print_matricies();
-
-  printf("\n");
-  print_array("Post Request", work, NUM_RESOURCES, true);
-  printf("\n");
-
-  bool printed = false;
-
-  while(1)
-  {
-    int n_start_finished_processes = 0;
-    int n_end_finished_processes = 0;
-
-    for(int n = 0; n < NUM_CUSTOMERS; n++)
-    {
-        if(finish[n])
-        {
-          n_start_finished_processes++;
-        }
-    }
-    if(!printed)
-    {
-      printf("#   [ Avail ]   [Require]   [ Alloc ]   [    Fin    ]\n");
-      printed = true;
-    }
-    for(int j = 0; j < NUM_CUSTOMERS; j++)
-    {
-      bool can_finish = false;
-
-      if(finish[j] == 0)
-      {
-        for(int k = 0; k < NUM_RESOURCES; k++)
-        {
-          if(work[k] < local_need[j][k])
-          {
-            break;
-          }
-
-          if(k == NUM_RESOURCES - 1)
-          {
-            can_finish = true;
-          }
-        }
-
-        printf("%d", j);
-        print_array("", work, NUM_RESOURCES, false);
-        print_array("", local_need[j], NUM_RESOURCES, false);
-        print_array("", local_allocation[j],NUM_RESOURCES, false);
-        print_array("", finish, NUM_CUSTOMERS, false);
-
-        if(can_finish)
-        {
-          printf(" | Process %d can finish\n", j);
-
-          for(int l = 0; l < NUM_RESOURCES; l++)
-          {
-            work[l] += local_allocation[j][l];
-            local_allocation[j][l] = 0;
-          }
-
-          finish[j] = 1;
-        }
-        else
-        {
-          printf(" | Process %d can't finish\n", j);
-        }
-      }
-    }
-
-    for(int m = 0; m < NUM_CUSTOMERS; m++)
-    {
-      if(finish[m])
-      {
-        n_end_finished_processes++;
-      }
-    }
-
-    if(n_end_finished_processes == n_start_finished_processes)
-    {
-      return false;
-    }
-    if(n_end_finished_processes == NUM_CUSTOMERS)
-    {
-      return true;
-    }
-  }
+  /*W*/ // Repeat the algorithm until it is complete by looping over every
+  /*W*/ // process and counting the completed processes before itterating
+  /*W*/ // over every process as well as after. If they are equal return false
+  /*W*/ // as no new processes have completed and never will. If the number
+  /*W*/ // completed at the end is equal to the number of customers return true
+  /*W*/ // as all processes are complete.
+  /*W*/while(1)
+  /*W*/{
+  /*W*/  /*C*/ // Reset the conters to 0 and count the currently completed
+  /*W*/  /*C*/ // processes.
+  /*W*/  /*C*/int n_start_finished_processes = 0;
+  /*W*/  /*C*/int n_end_finished_processes = 0;
+  /*W*/  /*C*/
+  /*W*/  /*C*/for(int n = 0; n < NUM_CUSTOMERS; n++)
+  /*W*/  /*C*/{
+  /*W*/  /*C*/    if(finish[n])
+  /*W*/  /*C*/    {
+  /*W*/  /*C*/      n_start_finished_processes++;
+  /*W*/  /*C*/    }
+  /*W*/  /*C*/}
+  /*W*/
+  /*W*/  /*L*/ // Loop over all customers and if they are unfinished, determine
+  /*W*/  /*L*/ // if they can finish.
+  /*W*/  /*L*/for(int j = 0; j < NUM_CUSTOMERS; j++)
+  /*W*/  /*L*/{
+  /*W*/  /*L*/  if(finish[j] == 0)
+  /*W*/  /*L*/  {
+  /*W*/  /*L*/    /*F*/ // Check if the need of a process for each resource is
+  /*W*/  /*L*/    /*F*/ // greater than what is currently available. If it is go
+  /*W*/  /*L*/    /*F*/ // to the next process as the current one cannot finish.
+  /*W*/  /*L*/    /*F*/ // If all needed resources are less than or equal to
+  /*W*/  /*L*/    /*F*/ // those available the process can finish.
+  /*W*/  /*L*/    /*F*/ bool can_finish = false;
+  /*W*/  /*L*/    /*F*/
+  /*W*/  /*L*/    /*F*/ for(int k = 0; k < NUM_RESOURCES; k++)
+  /*W*/  /*L*/    /*F*/ {
+  /*W*/  /*L*/    /*F*/   if(work[k] < local_need[j][k])
+  /*W*/  /*L*/    /*F*/   {
+  /*W*/  /*L*/    /*F*/     break;
+  /*W*/  /*L*/    /*F*/   }
+  /*W*/  /*L*/    /*F*/
+  /*W*/  /*L*/    /*F*/   if(k == NUM_RESOURCES - 1)
+  /*W*/  /*L*/    /*F*/   {
+  /*W*/  /*L*/    /*F*/     can_finish = true;
+  /*W*/  /*L*/    /*F*/   }
+  /*W*/  /*L*/    /*F*/ }
+  /*W*/  /*L*/
+  /*W*/  /*L*/    /*P*/ // Print the state for the current process being tested.
+  /*W*/  /*L*/    /*P*/printf("%d", j);
+  /*W*/  /*L*/    /*P*/print_array("", work, NUM_RESOURCES, false);
+  /*W*/  /*L*/    /*P*/print_array("", local_need[j], NUM_RESOURCES, false);
+  /*W*/  /*L*/    /*P*/print_array("", local_allocation[j],NUM_RESOURCES, false);
+  /*W*/  /*L*/    /*P*/print_array("", finish, NUM_CUSTOMERS, false);
+  /*W*/  /*L*/
+  /*W*/  /*L*/    /*R*/ // If a process can finish print a confirmation message
+  /*W*/  /*L*/    /*R*/ // and release all of the resources allocated to that
+  /*W*/  /*L*/    /*R*/ // process back to the available. If the process cannot
+  /*W*/  /*L*/    /*R*/ // finish print the matching can't finish prompt.
+  /*W*/  /*L*/    /*R*/if(can_finish)
+  /*W*/  /*L*/    /*R*/{
+  /*W*/  /*L*/    /*R*/  //✓ - u2713
+  /*W*/  /*L*/    /*R*/  printf(" | \u2713 Process %d can finish\n", j);
+  /*W*/  /*L*/    /*R*/
+  /*W*/  /*L*/    /*R*/  for(int l = 0; l < NUM_RESOURCES; l++)
+  /*W*/  /*L*/    /*R*/  {
+  /*W*/  /*L*/    /*R*/    work[l] += local_allocation[j][l];
+  /*W*/  /*L*/    /*R*/    local_allocation[j][l] = 0;
+  /*W*/  /*L*/    /*R*/  }
+  /*W*/  /*L*/    /*R*/
+  /*W*/  /*L*/    /*R*/  finish[j] = 1;
+  /*W*/  /*L*/    /*R*/}
+  /*W*/  /*L*/    /*R*/else
+  /*W*/  /*L*/    /*R*/{
+  /*W*/  /*L*/    /*R*/  //✗ - u2717
+  /*W*/  /*L*/    /*R*/  printf(" | \u2717 Process %d can't finish\n", j);
+  /*W*/  /*L*/    /*R*/}
+  /*W*/  /*L*/  }
+  /*W*/  /*L*/}
+  /*W*/
+  /*W*/  /*C*/ // Count the number of processes completed after looping over
+  /*W*/  /*C*/ // every process.
+  /*W*/  /*C*/for(int m = 0; m < NUM_CUSTOMERS; m++)
+  /*W*/  /*C*/{
+  /*W*/  /*C*/  if(finish[m])
+  /*W*/  /*C*/  {
+  /*W*/  /*C*/    n_end_finished_processes++;
+  /*W*/  /*C*/  }
+  /*W*/  /*C*/}
+  /*W*/
+  /*W*/  /*F*/ // Check if the nummber of processes completed at the start is
+  /*W*/  /*F*/ // equal to the number that were completed at the start of the
+  /*W*/  /*F*/ // loop. If so then no more of the processes have been able to
+  /*W*/  /*F*/ // complete and the system is in an unsafe state. If the number
+  /*W*/  /*F*/ // of processes at the end of the loop is equal to the number of
+  /*W*/  /*F*/ // customers than all processes are completed.
+  /*W*/  /*F*/if(n_end_finished_processes == n_start_finished_processes)
+  /*W*/  /*F*/{
+  /*W*/  /*F*/  return false;
+  /*W*/  /*F*/}
+  /*W*/  /*F*/
+  /*W*/  /*F*/if(n_end_finished_processes == NUM_CUSTOMERS)
+  /*W*/  /*F*/{
+  /*W*/  /*F*/  return true;
+  /*W*/  /*F*/}
+  /*W*/
+  /*W*/}
 }
 
 void print_struct(customer_struct s)
@@ -375,7 +409,6 @@ void print_array(char* title, int a[], int length, bool newline)
 
   for(int i = 0; i < length; i++)
   {
-
     printf("%d ", a[i]);
   }
 
@@ -389,6 +422,8 @@ void print_array(char* title, int a[], int length, bool newline)
 
 void print_matricies()
 {
+  printf("#   [Require]   [ Alloc ]   [  Max  ]\n");
+
   for(int i = 0; i < NUM_CUSTOMERS; i++)
   {
     printf("%d : [ ", i);
